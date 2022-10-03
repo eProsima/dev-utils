@@ -1,3 +1,41 @@
+# Main CI for Dev Utils repository
+# This is executed with every PullRequest (new or update), any merge in main and every night
+#
+# These jobs that require to install fastrtps library uses the artifact generated for the nightly job
+# so they do not have to compile the whole fastrtps project. This saves huge amount of time.
+#
+# JOBS:
+#
+#   - coverage-test
+#     - ubuntu-20.04
+#     - Debug
+#     - build code ; run tests ; calculate coverage ; upload coverage
+#
+#   - ubuntu-test
+#     - [ ubuntu-20.04 | ubuntu-22.04 ]
+#     - [ Debug | Release ]
+#     - build code ; run tests
+#
+#   - windows-test
+#     - [ windows-2019 | windows-2022 ]
+#     - [ Debug | Release ]
+#     - build code ; run tests
+#
+#   - flaky-test
+#     - ubuntu-20.04
+#     - Debug
+#     - build code ; test flaky tests
+#
+#   - clang-tidy
+#     - ubuntu-20.04
+#     - Release
+#     - build code ; test clang-tidy
+#
+#   - uncrustify
+#     - ubuntu-20.04
+#     - test uncrustify
+#
+
 name: test
 
 on:
@@ -10,6 +48,373 @@ on:
     - cron: '0 1 * * *'
 
 jobs:
+
+###########################################################
+# COVERAGE TEST
+  coverage-test:
+    runs-on: ubuntu-20.04
+    environment:
+      name: codecov
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/dev-utils/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_dependencies.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_eprosima_dependencies_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          cat src/dev-utils/.github/workflows/coverage_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
+            --mixin coverage-gcc asan-gcc
+
+      - name: Run tests
+        uses: ./src/dev-utils/.github/actions/run-test-ubuntu
+        with:
+          package_name: cpp_utils
+
+      - name: Generate coverage report
+        run: |
+          cp src/dev-utils/codecov.yml .
+          mkdir coverage-report
+          gcovr \
+            --root src/dev-utils/ \
+            --output coverage-report/coverage.xml \
+            --xml-pretty \
+            --exclude='.*docs/.*' \
+            --exclude='.*test/.*' \
+            --exclude='.*github/.*' \
+            --exclude='.*common/.*' \
+            --exclude='.*dev/.*' \
+            --exclude='.*thirdparty/.*' \
+            --exclude='.*resources/.*' \
+            --exclude-unreachable-branches \
+            build/cpp_utils
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage-report
+          path: coverage-report/
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage-report/coverage.xml
+          root_dir: src/dev-utils
+          fail_ci_if_error: true
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: colcon-logs-ubuntu
+          path: log/
+        if: always()
+
+###########################################################
+# UBUNTU TEST
+  ubuntu-test:
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake-config:
+          - 'Release'
+          - 'Debug'
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/dev-utils/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_dependencies.yml
+          path: /home/runner/work/fastdds/install
+          name: ${{ matrix.ubuntu-version }}_eprosima_dependencies_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --cmake-args -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake-config }}
+
+      - name: Run tests
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select cpp_utils \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: colcon-logs-ubuntu
+          path: log/
+        if: always()
+
+###########################################################
+# WINDOWS TEST
+  windows-test:
+    runs-on: ${{ matrix.windows-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake-config:
+          - 'Release'
+          - 'Debug'
+        windows-version:
+          - 'windows-2019'
+          - 'windows-2022'
+    env:
+      CXXFLAGS: /MP
+      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: dev-utils
+
+      - name: Install OpenSSL
+        uses: ./dev-utils/.github/actions/install-openssl-windows
+
+      - name: Install GTest
+        uses: ./dev-utils/.github/actions/install-gtest-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+
+      - name: Install yaml-cpp
+        uses: ./dev-utils/.github/actions/install-yamlcpp-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+
+      - name: Get build eProsima dependencies Job Id
+        shell: pwsh
+        run: |
+          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_dependencies.yml/runs';
+          Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
+          $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
+          echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_dependencies.yml
+          path: ${{ github.workspace }}\..\fastdds\install
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_eprosima_dependencies_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      # This is needed for windows 2019 to use /Zc:preprocessor to use c++ std preprocessor for ENUMERATION_BUILDER
+      # due to a windows 2019 SDK non bug
+      - name: Set environment variables for Windows 2019 build
+        run: |
+          echo ("W2019_CMAKE_EXTRA_ARGS=-DCMAKE_SYSTEM_VERSION=10.0.19041.0") >> $env:GITHUB_ENV
+        if: contains( matrix.windows-version , '2019')
+
+      - name: Install cmake_utils
+        uses: ./dev-utils/.github/actions/install-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: cmake_utils
+          subpackage_dir: cmake_utils
+
+      - name: Install cpp_utils
+        uses: ./dev-utils/.github/actions/install-subpackage-windows
+        with:
+          cmake_extra_args: ${{ env.W2019_CMAKE_EXTRA_ARGS }}
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: cpp_utils
+          subpackage_dir: cpp_utils
+
+      - name: Run tests cpp_utils
+        uses: ./dev-utils/.github/actions/run-test-windows
+        with:
+          package_name: cpp_utils
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+###########################################################
+# FLAKY TEST
+  flaky-test:
+    runs-on: ubuntu-20.04
+    environment:
+      name: codecov
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/dev-utils/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | jq -r '.workflow_runs[0].id?')
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_dependencies.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_eprosima_dependencies_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          cat src/dev-utils/.github/workflows/coverage_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
+            --mixin coverage-gcc asan-gcc
+
+      - name: Run tests
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select cpp_utils \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-regex xfail \
+              --timeout 60
+
+###########################################################
+# CLANG TIDY
+  clang-tidy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/dev-utils/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | jq -r '.workflow_runs[0].id?')
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_dependencies.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_eprosima_dependencies_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Build workspace
+        run: |
+          cat src/dev-utils/.github/workflows/clang_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/dev-utils/.github/workflows/clang_colcon.meta
+
+      - name: Run clang-tidy
+        run: |
+          cd build/cpp_utils
+          run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
+
+      - name: Upload clang results
+        uses: actions/upload-artifact@v1
+        with:
+          name: clang_results
+          path: ${{ github.workspace }}/clang_results.yml
 
 ###########################################################
 # UNCRUSTIFY

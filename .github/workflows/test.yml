@@ -1,4 +1,4 @@
-# Main CI for DDS Router repository
+# Main CI for Dev Utils repository
 # This is executed with every PullRequest (new or update), any merge in main and every night
 #
 # These jobs that require to install fastrtps library uses the artifact generated for the nightly job
@@ -14,12 +14,12 @@
 #   - ubuntu-test
 #     - [ ubuntu-20.04 | ubuntu-22.04 ]
 #     - [ Debug | Release ]
-#     - compile up-to ddsrouter_tool ; run tests
+#     - build code ; run tests
 #
 #   - windows-test
 #     - [ windows-2019 | windows-2022 ]
 #     - [ Debug | Release ]
-#     - compile up-to ddsrouter_tool ; run tests
+#     - build code ; run tests
 #
 #   - flaky-test
 #     - ubuntu-20.04
@@ -73,7 +73,7 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | \
             jq '.workflow_runs[] | select(.status == "completed") | .id' | \
             head -n 1)
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
@@ -81,9 +81,9 @@ jobs:
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_fastdds.yml
+          workflow: build_dependencies.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
+          name: ubuntu-20.04_eprosima_dependencies_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
@@ -95,7 +95,7 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/test_colcon.meta
+          cat src/dev-utils/.github/workflows/coverage_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
@@ -111,8 +111,6 @@ jobs:
         run: |
           cp src/dev-utils/codecov.yml .
           mkdir coverage-report
-          mkdir build/ddsrouter
-          cp --recursive build/ddsrouter_* build/ddsrouter
           gcovr \
             --root src/dev-utils/ \
             --output coverage-report/coverage.xml \
@@ -125,7 +123,7 @@ jobs:
             --exclude='.*thirdparty/.*' \
             --exclude='.*resources/.*' \
             --exclude-unreachable-branches \
-            build/ddsrouter_*
+            build/cpp_utils
 
       - name: Upload coverage
         uses: actions/upload-artifact@v1
@@ -179,7 +177,7 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | \
             jq '.workflow_runs[] | select(.status == "completed") | .id' | \
             head -n 1)
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
@@ -187,9 +185,9 @@ jobs:
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_fastdds.yml
+          workflow: build_dependencies.yml
           path: /home/runner/work/fastdds/install
-          name: ${{ matrix.ubuntu-version }}_fastdds_install
+          name: ${{ matrix.ubuntu-version }}_eprosima_dependencies_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
@@ -210,8 +208,7 @@ jobs:
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select-regex ddsrouter \
-            --packages-skip ddsrouter_yaml_validator \
+            --packages-select cpp_utils \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
@@ -264,7 +261,7 @@ jobs:
       - name: Get build eProsima dependencies Job Id
         shell: pwsh
         run: |
-          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs';
+          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_dependencies.yml/runs';
           Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
           $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
           echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
@@ -272,9 +269,9 @@ jobs:
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_fastdds.yml
+          workflow: build_dependencies.yml
           path: ${{ github.workspace }}\..\fastdds\install
-          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_eprosima_dependencies_install
           run_id: ${{ env.fastdds_job_id }}
 
       # This is needed for windows 2019 to use /Zc:preprocessor to use c++ std preprocessor for ENUMERATION_BUILDER
@@ -284,45 +281,25 @@ jobs:
           echo ("W2019_CMAKE_EXTRA_ARGS=-DCMAKE_SYSTEM_VERSION=10.0.19041.0") >> $env:GITHUB_ENV
         if: contains( matrix.windows-version , '2019')
 
-      - name: Install ddsrouter_core
-        uses: ./dev-utils/.github/actions/install-router-subpackage-windows
+      - name: Install cmake_utils
+        uses: ./dev-utils/.github/actions/install-subpackage-windows
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_core
-          subpackage_dir: ddsrouter_core
+          subpackage: cmake_utils
+          subpackage_dir: cmake_utils
 
-      - name: Install ddsrouter_yaml
-        uses: ./dev-utils/.github/actions/install-router-subpackage-windows
+      - name: Install cpp_utils
+        uses: ./dev-utils/.github/actions/install-subpackage-windows
         with:
+          cmake_extra_args: ${{ env.W2019_CMAKE_EXTRA_ARGS }}
           cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_yaml
-          subpackage_dir: ddsrouter_yaml
+          subpackage: cpp_utils
+          subpackage_dir: cpp_utils
 
-      - name: Install ddsrouter_tool
-        uses: ./dev-utils/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_tool
-          subpackage_dir: tools/ddsrouter_tool
-
-      - name: Run tests ddsrouter_core
+      - name: Run tests cpp_utils
         uses: ./dev-utils/.github/actions/run-test-windows
         with:
-          package_name: ddsrouter_core
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        uses: ./dev-utils/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_yaml
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        uses: ./dev-utils/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_tool
+          package_name: cpp_utils
           cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
@@ -350,15 +327,15 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | jq -r '.workflow_runs[0].id?')
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
 
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_fastdds.yml
+          workflow: build_dependencies.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
+          name: ubuntu-20.04_eprosima_dependencies_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
@@ -370,19 +347,18 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/test_colcon.meta
+          cat src/dev-utils/.github/workflows/coverage_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/test_colcon.meta \
+            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select-regex ddsrouter \
-            --packages-skip ddsrouter_yaml_validator \
+            --packages-select cpp_utils \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
@@ -410,15 +386,15 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | jq -r '.workflow_runs[0].id?')
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
 
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_fastdds.yml
+          workflow: build_dependencies.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
+          name: ubuntu-20.04_eprosima_dependencies_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Build workspace
@@ -431,9 +407,7 @@ jobs:
 
       - name: Run clang-tidy
         run: |
-          mkdir build/ddsrouter
-          cp --recursive build/ddsrouter_* build/ddsrouter
-          cd build/ddsrouter
+          cd build/cpp_utils
           run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
 
       - name: Upload clang results

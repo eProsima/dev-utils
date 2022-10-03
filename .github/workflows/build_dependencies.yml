@@ -77,7 +77,7 @@ jobs:
       - name: Fetch repositories
         run: |
           vcs import src <  src/dev-utils/.github/workflows/ci.repos
-          cd src/fastrtps && git checkout ${{ inputs.fastdds_branch }} && cd ../..
+          cd src/fastdds && git checkout ${{ inputs.fastdds_branch }} && cd ../..
 
       - name: Build workspace
         run: |

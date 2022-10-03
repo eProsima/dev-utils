@@ -30,6 +30,7 @@ jobs:
       - name: Install apt packages
         uses: ./src/dev-utils/.github/actions/install-apt-packages
 
+      # TODO: check if Python packages are required in this repo
       - name: Install Python packages
         uses: ./src/dev-utils/.github/actions/install-python-packages
 

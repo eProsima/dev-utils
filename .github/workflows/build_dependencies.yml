@@ -1,0 +1,130 @@
+# Action to build the dependencies of this repository
+#
+# This downloads and build every dependency so the compilation and test execution of the repo is (much) faster.
+# It is executed nightly so every day there is the last version of the repositories.
+#
+# JOBS:
+#
+#   - ubuntu-build
+#     - [ubuntu-20.04 | ubuntu-22.04]
+#     - Release
+#     - compile all ; upload artifact
+#
+#   - windows-build
+#     - [windows-20.04 | windows-22.04] ; [Debug | Release]
+#     - compile all ; upload artifact
+#
+#
+# ARGUMENTS:
+#
+# - fastdds_branch
+#     - branch of the Fast DDS repo to use (Default: master)
+#
+#
+# ARTIFACTS RESULT:
+#
+# - ubuntu-20.04_eprosima_dependencies_install
+# - ubuntu-22.04_eprosima_dependencies_install
+#
+# - windows-2019_Release_eprosima_dependencies_install
+# - windows-2019_Debug_eprosima_dependencies_install
+# - windows-2022_Release_eprosima_dependencies_install
+# - windows-2022_Debug_eprosima_dependencies_install
+#
+
+name: build_dependencies
+
+on:
+  workflow_dispatch:
+    inputs:
+      fastdds_branch:
+        description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+        required: true
+        default: 'master'
+  schedule:
+    - cron: '0 0 * * *'
+
+
+jobs:
+
+###########################################################
+# UBUNTU BUILD
+  ubuntu-build:
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Avoid this repository build
+        run: |
+          touch ./src/dev-utils/COLCON_IGNORE
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Fetch repositories
+        run: |
+          vcs import src <  src/dev-utils/.github/workflows/ci.repos
+          cd src/fastrtps && git checkout ${{ inputs.fastdds_branch }} && cd ../..
+
+      - name: Build workspace
+        run: |
+          colcon build --event-handlers=console_direct+
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.ubuntu-version }}_eprosima_dependencies_install
+          path: install
+
+###########################################################
+# WINDOWS BUILD
+  windows-build:
+    runs-on: ${{ matrix.windows-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake-config:
+          - 'Release'
+          - 'Debug'
+        windows-version:
+          - 'windows-2019'
+          - 'windows-2022'
+    env:
+      CXXFLAGS: /MP
+      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: dev-utils
+
+      - name: Install OpenSSL
+        uses: ./dev-utils/.github/actions/install-openssl-windows
+
+      - name: Install eProsima dependencies
+        uses: ./dev-utils/.github/actions/install-eprosima-dependencies-windows
+        env:
+          DEFAULT_FASTDDS_BRANCH: 'master'
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          fastdds_branch: ${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }}
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_eprosima_dependencies_install
+          path: ${{ github.workspace }}\eprosima\install

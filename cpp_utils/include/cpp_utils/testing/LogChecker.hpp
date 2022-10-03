@@ -31,14 +31,14 @@ class LogChecker
 {
 public:
 
-    LogChecker(
+    CPP_UTILS_DllAPI LogChecker(
             utils::Log::Kind threshold = utils::Log::Kind::Warning,
             uint32_t expected_severe_logs = 0,
             uint32_t max_severe_logs = 0);
 
-    ~LogChecker();
+    CPP_UTILS_DllAPI ~LogChecker();
 
-    bool check_valid();
+    CPP_UTILS_DllAPI bool check_valid();
 
 protected:
 

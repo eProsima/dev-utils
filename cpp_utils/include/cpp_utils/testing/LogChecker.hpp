@@ -72,9 +72,10 @@ protected:
     std::unique_ptr< \
         eprosima::utils::test::LogChecker, \
         std::function<void(eprosima::utils::test::LogChecker*)>> \
-            log_tester( \
-                new eprosima::utils::test::LogChecker(threshold, expected, max), \
-                [](eprosima::utils::test::LogChecker* t){ ASSERT_TRUE( t->check_valid() ); delete t; })
+    log_tester( \
+        new eprosima::utils::test::LogChecker(threshold, expected, max), \
+        [](eprosima::utils::test::LogChecker* t){ ASSERT_TRUE( t->check_valid()); delete t; \
+        })
 
 /**
  * This macro only calls \c INSTANTIATE_LOG_TESTER with parameters by default.

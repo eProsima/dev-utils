@@ -14,7 +14,7 @@
 
 #include <algorithm>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <cpp_utils/ReturnCode.hpp>

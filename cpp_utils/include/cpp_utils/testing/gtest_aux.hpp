@@ -19,8 +19,7 @@
  * @file gtest_aux.hpp
  */
 
-#ifndef _EPROSIMA_DDSROUTER_TEST_TESTUTILS_GTEST_AUX_HPP_
-#define _EPROSIMA_DDSROUTER_TEST_TESTUTILS_GTEST_AUX_HPP_
+#pragma once
 
 #ifdef _WIN32
 

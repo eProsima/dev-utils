@@ -19,7 +19,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/event/PeriodicEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/event/LogEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/event/LogSevereEventHandler.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/testing/LogChecker.cpp
     )
 all_library_sources("${TEST_SOURCES}")
 

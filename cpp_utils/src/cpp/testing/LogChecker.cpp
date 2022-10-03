@@ -13,20 +13,17 @@
 // limitations under the License.
 
 /**
- * @file TestLogHandler.cpp
+ * @file LogChecker.cpp
  *
  */
 
-#include <gtest_aux.hpp>
-#include <gtest/gtest.h>
-
-#include <TestLogHandler.hpp>
+#include <cpp_utils/testing/LogChecker.hpp>
 
 namespace eprosima {
-
+namespace utils {
 namespace test {
 
-TestLogHandler::TestLogHandler(
+LogChecker::LogChecker(
         utils::Log::Kind threshold, /* Log::Kind::Warning */
         uint32_t expected_severe_logs /* = 0 */,
         uint32_t max_severe_logs /* = 0 */)
@@ -41,19 +38,19 @@ TestLogHandler::TestLogHandler(
 {
 }
 
-void TestLogHandler::check_valid()
+bool LogChecker::check_valid()
 {
-    ASSERT_GE(log_consumer_->event_count(), expected_severe_logs_);
-    ASSERT_LE(log_consumer_->event_count(), max_severe_logs_);
+    eprosima::utils::Log::Flush();
+    return
+        (log_consumer_->event_count() >= expected_severe_logs_) &&
+        (log_consumer_->event_count() <= max_severe_logs_);
 }
 
-TestLogHandler::~TestLogHandler()
+LogChecker::~LogChecker()
 {
-    utils::Log::Flush();
-    check_valid();
     utils::Log::Reset();
 }
 
 } /* namespace test */
-
+} /* namespace utils */
 } /* namespace eprosima */

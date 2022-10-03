@@ -16,10 +16,10 @@
 #include <memory>
 #include <thread>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <TestLogHandler.hpp>
+#include <cpp_utils/testing/LogChecker.hpp>
 
 #include <cpp_utils/time/Timer.hpp>
 #include <cpp_utils/Log.hpp>

@@ -2,15 +2,13 @@
 
 <a href="http://www.eprosima.com"><img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSd0PDlVz1U_7MgdTe0FRIWD0Jc9_YH-gGi0ZpLkr-qgCI6ZEoJZ5GBqQ" align="left" hspace="8" vspace="2" width="100" height="100" ></a>
 
-<!-- TODO -->
-<!-- [![License](https://img.shields.io/github/license/eProsima/DDS-Router.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Releases](https://img.shields.io/github/v/release/eProsima/DDS-Router?sort=semver)](https://github.com/eProsima/DDS-Router/releases)
-[![Issues](https://img.shields.io/github/issues/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/issues)
-[![Forks](https://img.shields.io/github/forks/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/network/members)
-[![Stars](https://img.shields.io/github/stars/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/stargazers)
-[![test](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/eProsima/DDS-Router/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/DDS-Router)
-[![Documentation Status](https://readthedocs.org/projects/eprosima-dds-router/badge/?version=latest)](https://eprosima-dds-router.readthedocs.io/en/latest/) -->
+[![License](https://img.shields.io/github/license/eProsima/dev-utils.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Releases](https://img.shields.io/github/v/release/eProsima/dev-utils?sort=semver)](https://github.com/eProsima/dev-utils/releases)
+[![Issues](https://img.shields.io/github/issues/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/issues)
+[![Forks](https://img.shields.io/github/forks/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/network/members)
+[![Stars](https://img.shields.io/github/stars/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/stargazers)
+[![test](https://github.com/eProsima/dev-utils/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/dev-utils/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
 
 The packages that conform this repository are:
 

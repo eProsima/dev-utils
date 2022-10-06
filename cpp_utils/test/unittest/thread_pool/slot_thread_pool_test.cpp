@@ -99,12 +99,12 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     eprosima::utils::Timer timer;
 
     // Create slot
-    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
+    for (uint32_t i = 1; i <= test::N_EXECUTIONS_IN_TEST; ++i)
     {
         TaskId task_id(i);
         thread_pool.slot(
             task_id,
-            [&waiter, &i]
+            [&waiter, i]
                 ()
             {
                 test::test_lambda_increase_waiter(waiter, i);
@@ -113,7 +113,7 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     }
 
     // Emit every task 1 time
-    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
+    for (uint32_t i = 1; i <= test::N_EXECUTIONS_IN_TEST; ++i)
     {
         thread_pool.emit(TaskId(i));
     }

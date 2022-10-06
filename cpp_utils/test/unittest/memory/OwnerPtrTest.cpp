@@ -143,10 +143,11 @@ TEST(OwnerPtrTest, owner_ptr_custom_deleter)
 {
     // Variable to store deleter calls
     int deleter_calls = 0;
+    int* internal_value = new int(42);
 
     // Create Ptr object from int with custom deleter
     OwnerPtr<int> ptr(
-        new int(42),
+        internal_value,
         [&deleter_calls](int*)
         {
             deleter_calls++;
@@ -163,6 +164,9 @@ TEST(OwnerPtrTest, owner_ptr_custom_deleter)
 
     // As deleter did not destroy object, it should still be accessible
     ASSERT_EQ(actual_value_inside, 42);
+
+    // Actually remove object as the deleter does not
+    delete internal_value;
 }
 
 /**

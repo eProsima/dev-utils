@@ -11,6 +11,11 @@
 #     - Debug
 #     - build code ; run tests ; calculate coverage ; upload coverage
 #
+#   - asan-test
+#     - ubuntu-20.04
+#     - Debug
+#     - build code ; run tests
+#
 #   - ubuntu-test
 #     - [ ubuntu-20.04 | ubuntu-22.04 ]
 #     - [ Debug | Release ]
@@ -193,7 +198,7 @@ jobs:
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --cmake-args -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug -DASAN_BUILD=ON
+            --metas src/dev-utils/.github/workflows/asan_colcon.meta
 
       - name: Run tests
         run: |

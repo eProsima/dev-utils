@@ -33,6 +33,7 @@
 # - BUILD_LIBRARY               : ON
 #
 # - CODE_COVERAGE               : OFF
+# - ASAN_BUILD                  : OFF
 # - CMAKE_BUILD_TYPE            : Release
 #
 # - LOG_INFO                    : OFF       // TODO change LOG cmake options to make them smarter
@@ -82,6 +83,11 @@ macro(configure_cmake_options)
     # COVERAGE
     if (NOT DEFINED CODE_COVERAGE)
         set(CODE_COVERAGE OFF)
+    endif()
+
+    # ASAN
+    if (NOT DEFINED ASAN_BUILD)
+        set(ASAN_BUILD OFF)
     endif()
 
     # CMake type

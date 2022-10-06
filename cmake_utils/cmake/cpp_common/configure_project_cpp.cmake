@@ -57,6 +57,10 @@ macro(configure_project_cpp)
         activate_code_coverage()
     endif()
 
+    if (ASAN_BUILD)
+        activate_address_sanitizer()
+    endif()
+
     # Set custom C++ Flags
     custom_cpp_flags()
 

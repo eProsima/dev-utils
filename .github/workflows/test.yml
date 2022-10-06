@@ -147,6 +147,73 @@ jobs:
         if: always()
 
 ###########################################################
+# ASAN TEST
+  asan-test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/dev-utils/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_dependencies.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_eprosima_dependencies_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --cmake-args -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug -DASAN_BUILD=ON
+
+      - name: Run tests
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select cpp_utils \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: asan-logs
+          path: log/
+        if: always()
+
+###########################################################
 # UBUNTU TEST
   ubuntu-test:
     runs-on: ${{ matrix.ubuntu-version }}

@@ -47,6 +47,7 @@ TEST(macrosTest, stringify)
             std::string(STRINGIFY(_random_value)),
             std::string("_random_value")
             );
+        static_cast<void>(_random_value);  // This is require to avoid unused-variable warning
 
         // String
         std::string _random_string = "other value";
@@ -54,6 +55,7 @@ TEST(macrosTest, stringify)
             std::string(STRINGIFY(_random_string)),
             std::string("_random_string")
             );
+        static_cast<void>(_random_string);  // This is require to avoid unused-variable warning
     }
 }
 

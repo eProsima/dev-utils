@@ -170,7 +170,7 @@ TEST(PausableTimerTest, play_and_pause)
     sleep_for(test::TIME_WAIT_TEST);
 
     // Check time
-    ASSERT_EQ(0, timer.elapsed_ms());
+    ASSERT_EQ(timer.elapsed_ms(), 0u);
 }
 
 int main(

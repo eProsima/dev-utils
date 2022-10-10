@@ -127,7 +127,7 @@ TEST(PeriodicEventHandlerTest, handler_period)
         // Wait twice for the period time
         handler.wait_for_event(2);
 
-        ASSERT_GE(calls.load(), 2) << calls;
+        ASSERT_GE(calls.load(), 2u) << calls;
     }
 }
 
@@ -143,7 +143,7 @@ TEST(PeriodicEventHandlerTest, handler_period_without_callback)
     std::this_thread::sleep_for(std::chrono::milliseconds(handler_period * 5)); // It should have activated 5 times
 
     // Check it has not been activated
-    ASSERT_EQ(handler.event_count(), 0);
+    ASSERT_EQ(handler.event_count(), 0u);
 }
 
 /**
@@ -165,7 +165,7 @@ TEST(PeriodicEventHandlerTest, limit_cases)
         // Wait 100 events for the period time
         handler.wait_for_event(100);
 
-        ASSERT_GE(handler.event_count(), 100);
+        ASSERT_GE(handler.event_count(), 100u);
     }
 
     // 1ms period and instant close

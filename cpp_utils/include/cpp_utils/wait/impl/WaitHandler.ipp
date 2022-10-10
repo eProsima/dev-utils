@@ -36,9 +36,9 @@ template <typename T>
 WaitHandler<T>::WaitHandler(
         T init_value,
         bool enabled /* = true */)
-    : enabled_(enabled)
+    : value_(init_value)
+    , enabled_(enabled)
     , threads_waiting_(0)
-    , value_(init_value)
 {
 }
 

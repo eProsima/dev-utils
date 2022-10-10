@@ -84,7 +84,7 @@ namespace utils {
     { os << to_string(e); return os; }         \
                                                                                                   \
     /* Number of elements in enumeration */                                                                           \
-    constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__);
+    constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__)
 
 
 } /* namespace utils */

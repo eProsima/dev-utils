@@ -102,7 +102,7 @@ TEST(enumerationBuilderMacrosTest, n_values)
 TEST(enumerationBuilderMacrosTest, from_string)
 {
     // x each element inside
-    for (int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
+    for (unsigned int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
     {
         test::TestCustomEnum value = test::from_string_TestCustomEnum(test::string_values[i]);
         ASSERT_TRUE(value == test::enum_values[i]);
@@ -121,7 +121,7 @@ TEST(enumerationBuilderMacrosTest, from_string)
 TEST(enumerationBuilderMacrosTest, to_string)
 {
     // x each element inside
-    for (int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
+    for (unsigned int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
     {
         ASSERT_EQ(test::to_string(test::enum_values[i]), test::string_values[i]);
     }
@@ -136,7 +136,7 @@ TEST(enumerationBuilderMacrosTest, to_string)
 TEST(enumerationBuilderMacrosTest, serializator)
 {
     // x each element inside
-    for (int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
+    for (unsigned int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
     {
         std::stringstream ss;
         ss << test::enum_values[i];

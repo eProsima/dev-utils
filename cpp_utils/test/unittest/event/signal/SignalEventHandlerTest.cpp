@@ -84,7 +84,7 @@ TEST(SignalEventHandlerTest, create_several_signal_handlers)
     // N signal handlers of SIGINT
     {
         std::vector<std::unique_ptr<SignalEventHandler<Signal::sigint>>> v;
-        for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
+        for (unsigned int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
             v.push_back(std::make_unique<SignalEventHandler<Signal::sigint>>());
         }
@@ -93,7 +93,7 @@ TEST(SignalEventHandlerTest, create_several_signal_handlers)
     // N signal handlers of SIGTERM
     {
         std::vector<std::unique_ptr<SignalEventHandler<Signal::sigterm>>> v;
-        for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
+        for (unsigned int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
             v.push_back(std::make_unique<SignalEventHandler<Signal::sigterm>>());
         }
@@ -102,7 +102,7 @@ TEST(SignalEventHandlerTest, create_several_signal_handlers)
     // N signal handlers of SIGINT & SIGTERM
     {
         std::vector<std::unique_ptr<IBaseSignalEventHandler>> v;
-        for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
+        for (unsigned int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
             v.push_back(std::make_unique<SignalEventHandler<Signal::sigint>>());
             v.push_back(std::make_unique<SignalEventHandler<Signal::sigterm>>());
@@ -131,7 +131,7 @@ TEST(SignalEventHandlerTest, receive_signal_trivial)
     handler.wait_for_event();
 
     // Check that signal has been received
-    ASSERT_EQ(1, calls);
+    ASSERT_EQ(calls, 1u);
 }
 
 /**
@@ -168,7 +168,7 @@ TEST(SignalEventHandlerTest, receive_signal)
         handler2.wait_for_event();
 
         // Check that signal has been received
-        ASSERT_EQ(2, calls);
+        ASSERT_EQ(calls, 2u);
     }
 
     // SIGINT double signal
@@ -190,7 +190,7 @@ TEST(SignalEventHandlerTest, receive_signal)
         handler.wait_for_event(2);
 
         // Check that signal has been received
-        ASSERT_EQ(2, calls);
+        ASSERT_EQ(calls, 2u);
     }
 
     // SIGINT receive signal after unset
@@ -211,7 +211,7 @@ TEST(SignalEventHandlerTest, receive_signal)
         handler.wait_for_event();
 
         // Check that signal has been received
-        ASSERT_EQ(1, calls);
+        ASSERT_EQ(calls, 1u);
 
         // Unset callback, so new signal raise is not listened
 
@@ -221,7 +221,7 @@ TEST(SignalEventHandlerTest, receive_signal)
         raise(static_cast<int>(Signal::sigint));
 
         // Check that signal has not been received
-        ASSERT_EQ(1, calls);
+        ASSERT_EQ(calls, 1u);
     }
 
     // SIGINT receive signal just before destroying
@@ -307,7 +307,7 @@ TEST(SignalEventHandlerTest, erase_callback_while_other_handling)
     handler2.wait_for_event();
 
     // Check that signal has been received by both
-    ASSERT_EQ(11, calls);
+    ASSERT_EQ(calls, 11u);
 
     // Unset handler 1 (adds 10)
     handler1.unset_callback();
@@ -319,7 +319,7 @@ TEST(SignalEventHandlerTest, erase_callback_while_other_handling)
     handler2.wait_for_event(2);
 
     // Check that signal has been received by only 2 (that adds 1)
-    ASSERT_EQ(12, calls);
+    ASSERT_EQ(calls, 12u);
 }
 
 int main(

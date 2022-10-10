@@ -28,8 +28,9 @@ namespace test {
 eprosima::utils::Duration_ms DEFAULT_TIME_TEST = 200u;
 eprosima::utils::Duration_ms RESIDUAL_TIME_TEST = DEFAULT_TIME_TEST / 2u;
 
-uint32_t N_THREADS_IN_TEST = 10;
-uint32_t N_EXECUTIONS_IN_TEST = 5;
+// NOTE: These values are int and not unsigned int to simplify test code, as it avoids a cast
+constexpr const int N_THREADS_IN_TEST = 10;
+constexpr const int N_EXECUTIONS_IN_TEST = 5;
 
 void test_lambda_increase_waiter(
         eprosima::utils::event::IntWaitHandler& counter,
@@ -73,7 +74,7 @@ TEST(slot_thread_pool_test, pool_one_thread_one_slot)
         );
 
     // Emit task n times
-    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
+    for (int i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
     {
         thread_pool.emit(task_id);
     }
@@ -99,7 +100,7 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     eprosima::utils::Timer timer;
 
     // Create slot
-    for (uint32_t i = 1; i <= test::N_EXECUTIONS_IN_TEST; ++i)
+    for (int i = 1; i <= test::N_EXECUTIONS_IN_TEST; ++i)
     {
         TaskId task_id(i);
         thread_pool.slot(
@@ -113,7 +114,7 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     }
 
     // Emit every task 1 time
-    for (uint32_t i = 1; i <= test::N_EXECUTIONS_IN_TEST; ++i)
+    for (int i = 1; i <= test::N_EXECUTIONS_IN_TEST; ++i)
     {
         thread_pool.emit(TaskId(i));
     }
@@ -150,7 +151,7 @@ TEST(slot_thread_pool_test, pool_n_threads_one_slot)
         );
 
     // Emit task n times
-    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST; ++i)
+    for (int i = 0; i < test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST; ++i)
     {
         thread_pool.emit(task_id);
     }

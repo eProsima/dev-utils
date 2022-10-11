@@ -20,11 +20,28 @@
 #
 # ARGUMENTS:
 # - EXTERNAL_PROJECT_NAMES: List of names of external projects to find
+#
+# If ${${EXTERNAL_PROJECT}_MINIMUM_VERSION} is set for any of the project names passed as argument, it will
+# be used in order to look for a minimum version for this package.
+#
+
 macro(find_external_projects EXTERNAL_PROJECT_NAMES)
 
     foreach(EXTERNAL_PROJECT ${EXTERNAL_PROJECT_NAMES})
-        find_package("${EXTERNAL_PROJECT}" REQUIRED)
-        message(STATUS "Package ${EXTERNAL_PROJECT} found")
+        # Check if this project requires a minimum version, set as ${EXTERNAL_PROJECT}_MINIMUM_VERSION
+        if (${${EXTERNAL_PROJECT}_MINIMUM_VERSION})
+
+            find_package("${EXTERNAL_PROJECT}" "${${EXTERNAL_PROJECT}_MINIMUM_VERSION}" REQUIRED)
+            message(
+                STATUS
+                "Package ${EXTERNAL_PROJECT} found higher than minimum version ${EXTERNAL_PROJECT}_MINIMUM_VERSION")
+
+        else()
+
+            find_package("${EXTERNAL_PROJECT}" REQUIRED)
+            message(STATUS "Package ${EXTERNAL_PROJECT} found")
+
+        endif()
     endforeach()
 
     # Finish macro

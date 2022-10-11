@@ -30,6 +30,8 @@ In order to compile a C++ library, use the following macros:
 1. To compile tests for the library: `compile_test(${<test path>})`
 1. To install the package following eprosima defaults `eprosima_packaging()`
 
+---
+
 ## Module Requirements
 
 In order create a package (called Module from now on) using this library,
@@ -49,8 +51,9 @@ The version will be loaded from this file if it is not set in `project_settings.
 
 Every module requires to have a `LICENSE` file in order to install it with the result of the module.
 
+---
 
-#### Project using cmake_utils variables
+## Project configuration using cmake_utils variables
 
 These are the variables that could/must be set in the `project_settings.cmake` file.
 Those variables which default is `x` must be set, and those with `-` are not required.
@@ -87,7 +90,21 @@ Those variables which default is `x` must be set, and those with `-` are not req
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 | MODULE_CPP_VERSION           | C++17                                                                   | C++ version                                                                                        |
 
-#### Project using cmake_utils CMake options
+### Minimum Package Version
+
+Setting the CMake variable `<library>_MINIMUM_VERSION` will force the `find_package` call to look for library
+`<library>` with minimum version `${<library>_MINIMUM_VERSION}`.
+
+e.g.
+
+```cmake
+set(MODULE_FIND_PACKAGES fastrtps)
+set(fastrtps_MINIMUM_VERSION "2.8")  # This will force to use a version of fastrtps higher or equal 2.8
+```
+
+---
+
+## Project using cmake_utils CMake options set
 
 There are default CMake options used within cmake_utils package that will always be set.
 In case the user sets these variables, they will have that value. Otherwise,

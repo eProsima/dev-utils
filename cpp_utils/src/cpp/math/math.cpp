@@ -33,7 +33,7 @@ bool is_even(
 bool is_power_of_2(
         unsigned int number) noexcept
 {
-    return number && (!(number & (number-1)));
+    return number && (!(number & (number - 1)));
 }
 
 unsigned int fast_module(

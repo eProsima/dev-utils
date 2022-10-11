@@ -20,12 +20,28 @@
 namespace eprosima {
 namespace utils {
 
+#include <assert.h>
+
 #include <cpp_utils/math/math.hpp>
 
-uint32_t fast_module(
-        uint32_t dividend,
-        uint32_t divisor) noexcept
+bool is_even(
+        unsigned int number) noexcept
 {
+    return (number & 0x1) == 0;
+}
+
+bool is_power_of_2(
+        unsigned int number) noexcept
+{
+    return number && (!(number & (number - 1)));
+}
+
+unsigned int fast_module(
+        unsigned int dividend,
+        unsigned int divisor) noexcept
+{
+    assert(divisor != 0);
+
     if (dividend < divisor)
     {
         // Optimize to 1 operation [if]
@@ -41,11 +57,66 @@ uint32_t fast_module(
         // Optimize to 4 operations [if, if, if, and]
         return dividend & 1;
     }
+    else if (is_power_of_2(divisor))
+    {
+        // Optimize to ~6 operations [if, if, if, if(and), and]
+        return dividend & (divisor - 1);
+    }
     else
     {
-        // Optimize to 7 operations [if, if, if, -, and, -, and] in case E(n){divisor = 2^n}
-        return divisor & (divisor - 1) ? dividend % divisor : dividend& (divisor - 1);
+        // Not optimum
+        return dividend % divisor;
     }
+}
+
+unsigned int fast_division(
+        unsigned int dividend,
+        unsigned int divisor) noexcept
+{
+    assert(divisor != 0);
+
+    if (dividend < divisor)
+    {
+        // Optimize to 1 operation [if]
+        return 0;
+    }
+    else if (dividend == divisor)
+    {
+        // Optimize to 2 operation [if, if]
+        return 1;
+    }
+    else if (divisor == 1)
+    {
+        // Optimize to 3 operations [if, if, if]
+        return dividend;
+    }
+    else if (divisor == 2)
+    {
+        // Optimize to 5 operations [if, if, if, if, swift]
+        return (dividend >> 1);
+    }
+    else if (is_power_of_2(divisor))
+    {
+        while (divisor != 1)
+        {
+            dividend >>= 1;
+            divisor >>= 1;
+        }
+        return dividend;
+    }
+    else
+    {
+        // Not optimum
+        return dividend / divisor;
+    }
+}
+
+unsigned int arithmetic_progression_sum(
+        unsigned int lowest,
+        unsigned int interval,
+        unsigned int steps) noexcept
+{
+    return (((2 * lowest + ((steps - 1) * interval)) * steps) / 2);
 }
 
 } /* namespace utils */

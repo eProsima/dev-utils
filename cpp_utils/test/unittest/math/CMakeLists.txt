@@ -21,6 +21,7 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         is_even
+        is_power_of_2
         fast_module
         fast_division
         arithmetic_progression_sum

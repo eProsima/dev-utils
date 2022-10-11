@@ -30,11 +30,23 @@ namespace utils {
 /**
  * @brief Optimize % 2 operation
  *
- * @param number
+ * @param number to calculate whether it is even
  *
- * @return whether \c number is odd
+ * @return whether \c number is even
  */
 CPP_UTILS_DllAPI bool is_even(
+        unsigned int number) noexcept;
+
+/**
+ * @brief Calculate whether the argument is a power of 2 value.
+ *
+ * is_power_of_2(x) <=> E(n) : 2^n = x
+ *
+ * @param number to calculate whether it is a power of 2
+ *
+ * @return whether \c number is power of 2
+ */
+CPP_UTILS_DllAPI bool is_power_of_2(
         unsigned int number) noexcept;
 
 /**

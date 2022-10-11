@@ -37,6 +37,26 @@ bool compare_is_even(
         (number % 2 == 0));
 }
 
+bool compare_is_power_of_2(
+        unsigned int number)
+{
+    // Check power of 2 numbers until they are equal or greater number
+    unsigned int x__ = 1;
+    while (x__ < number)
+    {
+        x__ *= 2;
+    }
+
+    // If x == number it means number is a power of 2
+    // Notice that 0 will not be power of 2, as expected
+    bool it_is_actually_power_of_2 = (x__ == number);
+
+    return (
+        is_power_of_2(number)
+        ==
+        it_is_actually_power_of_2);
+}
+
 bool compare_fast_module(
         unsigned int dividend,
         unsigned int divisor)
@@ -89,6 +109,19 @@ TEST(mathTest, is_even)
     for (unsigned int number = 0; number < test::NUMBERS_TO_TEST; ++number)
     {
         ASSERT_TRUE(test::compare_is_even(number))
+            << number;
+    }
+}
+
+/**
+ * Test \c is_even method
+ */
+TEST(mathTest, is_power_of_2)
+{
+    // calculate module in many cases
+    for (unsigned int number = 0; number < test::NUMBERS_TO_TEST; ++number)
+    {
+        ASSERT_TRUE(test::compare_is_power_of_2(number))
             << number;
     }
 }

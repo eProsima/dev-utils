@@ -27,8 +27,9 @@
 # - CMake Build Type set
 # - CMake C++ version set
 # - Set Build Shared Libs as default option
-# - Find packages and thirdparty headeronly libraries
-# - add subdirectory src/cpp
+# - Activate Code coverage if flag CODE_COVERAGE
+# - Activate Address sanitizer if flag ASAN_BUILD
+# - Configure log depending on LOG_INFO flag and CMake type
 #
 # ARGUMENTS:
 # NONE
@@ -59,6 +60,12 @@ macro(configure_project_cpp)
 
     # Set custom C++ Flags
     custom_cpp_flags()
+
+    # Activate Address sanitizer
+    option(ASAN_BUILD "Activate address sanitizer flags" OFF)
+    if (ASAN_BUILD)
+        activate_address_sanitizer()
+    endif()
 
     # Finish macro
     message(STATUS "C++ Project ${MODULE_NAME_LARGE} configured.")

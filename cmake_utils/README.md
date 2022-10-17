@@ -121,6 +121,7 @@ they will be initialized to their corresponding default value.
 | BUILD_TOOL          | ON                | Build only Application packages             |
 | BUILD_LIBRARY       | ON                | Build only Library packages                 |
 | CODE_COVERAGE       | OFF               | Activate Code Coverage flags                |
+| TSAN_BUILD          | OFF               | Activate thread sanitizer flags             |
 | ASAN_BUILD          | OFF               | Activate address sanitizer flags            |
 | CMAKE_BUILD_TYPE    | Release           | CMake Build Type                            |
 | LOG_INFO            | OFF (ON if Debug) | Activate log info verbosity level           |

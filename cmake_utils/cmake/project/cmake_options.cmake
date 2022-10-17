@@ -33,6 +33,7 @@
 # - BUILD_LIBRARY               : ON
 #
 # - CODE_COVERAGE               : OFF
+# - TSAN_BUILD                  : OFF
 # - ASAN_BUILD                  : OFF
 # - CMAKE_BUILD_TYPE            : Release
 #
@@ -83,6 +84,11 @@ macro(configure_cmake_options)
     # COVERAGE
     if (NOT DEFINED CODE_COVERAGE)
         set(CODE_COVERAGE OFF)
+    endif()
+
+    # TSAN
+    if (NOT DEFINED TSAN_BUILD)
+        set(TSAN_BUILD OFF)
     endif()
 
     # ASAN

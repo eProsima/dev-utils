@@ -57,8 +57,16 @@ macro(configure_project_cpp)
         activate_code_coverage()
     endif()
 
+    if (TSAN_BUILD)
+        activate_thread_sanitizer()
+    endif()
+
     if (ASAN_BUILD)
-        activate_address_sanitizer()
+        if (TSAN_BUILD)
+            message(FATAL_ERROR "Thread sanitizer activated, cannot activate address sanitizer. Aborting.")
+        else()
+            activate_address_sanitizer()
+        endif()
     endif()
 
     # Set custom C++ Flags

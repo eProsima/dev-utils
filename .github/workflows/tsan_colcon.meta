@@ -1,0 +1,22 @@
+{
+    "names":
+    {
+        "cmake_utils":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DBUILD_TESTS=ON"
+            ]
+        },
+        "cpp_utils":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DBUILD_TESTS=ON",
+                "-DTSAN_BUILD=ON"
+            ]
+        }
+    }
+}

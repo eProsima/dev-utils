@@ -82,6 +82,9 @@ TEST(slot_thread_pool_test, pool_one_thread_one_slot)
     // Wait for counter value to be greater than 0 (so 1 task is being executed)
     waiter.wait_greater_equal_than(test::N_EXECUTIONS_IN_TEST);
 
+    // Join threads before destroying waiter to avoid data race
+    thread_pool.disable();
+
     ASSERT_EQ(waiter.get_value(), test::N_EXECUTIONS_IN_TEST);
 }
 
@@ -122,6 +125,9 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     // Wait for counter value to be M being M = N*(N+1)/2 that is the increase value that should be achieved
     waiter.wait_greater_equal_than((test::N_EXECUTIONS_IN_TEST* (test::N_EXECUTIONS_IN_TEST + 1)) / 2);
 
+    // Join threads before destroying waiter to avoid data race
+    thread_pool.disable();
+
     ASSERT_EQ(waiter.get_value(), (test::N_EXECUTIONS_IN_TEST* (test::N_EXECUTIONS_IN_TEST + 1)) / 2);
 }
 
@@ -160,6 +166,9 @@ TEST(slot_thread_pool_test, pool_n_threads_one_slot)
     waiter.wait_greater_equal_than(test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST);
 
     auto time_elapsed = timer.elapsed();
+
+    // Join threads before destroying waiter to avoid data race
+    thread_pool.disable();
 
     // Check that the task has been executed in more than waiting time and less than waiting time + residual time
     // and that function has been called exactly once

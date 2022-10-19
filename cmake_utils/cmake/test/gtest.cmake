@@ -90,3 +90,12 @@ macro(add_windows_xfail_label LIST_FILE)
     endif()
 endmacro()
 
+macro(add_xtsan_label LIST_FILE)
+    if(EXISTS ${LIST_FILE})
+        file(STRINGS ${LIST_FILE} TEST_LIST)
+        foreach(XTSAN_TEST ${TEST_LIST})
+            set_property(TEST ${XTSAN_TEST} PROPERTY LABELS xtsan)
+        endforeach()
+    endif()
+endmacro()
+

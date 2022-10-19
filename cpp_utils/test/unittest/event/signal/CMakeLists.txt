@@ -42,3 +42,6 @@ add_unittest_executable(
     )
 
 add_windows_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/WINDOWS_TEST_XFAIL.list)
+
+# TSAN captures and handles raised signals, thus these tests cannot succeed
+add_xtsan_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XTSAN.list)

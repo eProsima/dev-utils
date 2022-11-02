@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file LogEventHandler.hpp
+ * @file LogConsumerConnection.hpp
  */
 
 #pragma once
@@ -31,41 +31,36 @@ namespace utils {
 namespace event {
 
 /**
- * It implements the functionality to raise callback every time a Log msg is consumed.
- *
- * @warning Fast DDS Log takes the ownership of the pointer of every new consumer (because of reasons...)
- * Thus, in order to create this kind of handler, it must be created from a pointer (new) and the ownership
- * of the pointer will be lost as soon as it is created.
+ * This class represents a \c LogConsumer that will be registered in Fast DDS Log as a unique_ptr and with each
+ * \c Entry consumed it will call a shared function from a \c LogEventHandler .
+ * As long as the EventHandler exists, it will manage these callbacks. When it dies, this object ptr to the function
+ * will no longer be valid and thus it will do nothing.
  */
 class LogConsumerConnection : public utils::LogConsumer
 {
 public:
 
-    // This class does not have constructor without callback.
-    // This is because of the lost of the pointer once it is registered in Fast. This makes it simpler.
-
-    /**
-     * Construct a Log Event Handler with callback and enable it.
-     *
-     * Calls \c set_callback
-     *
-     * @param callback callback to call every time a log entry is consumed.
-     */
+    //! Construct this class with a Lessee from the actual shared ptr.
     CPP_UTILS_DllAPI LogConsumerConnection(
             LesseePtr<LogConsumerConnectionCallbackType>&& callback);
 
-    /**
-     * @brief Destroy the LogEventHandler object
-     *
-     * Calls \c unset_callback
-     */
+    //! Default destructor
     CPP_UTILS_DllAPI ~LogConsumerConnection() noexcept = default;
 
+    /**
+     * @brief Implements \c LogConsumer \c Consume method.
+     *
+     * This will call \c callback_ as longs as it is valid.
+     * Notice that while calling it the function could not be removed, as it will be guarded from a \c GuardedPtr .
+     *
+     * @param entry entry to consume
+     */
     CPP_UTILS_DllAPI void Consume(
             const utils::Log::Entry& entry) override;
 
 protected:
 
+    //! Lessee to the shared callback object.
     LesseePtr<LogConsumerConnectionCallbackType> callback_;
 };
 

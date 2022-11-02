@@ -31,28 +31,36 @@ namespace eprosima {
 namespace utils {
 namespace event {
 
+//! Data Type to be shared between a LogEventHandler and a LogConsumerConnection.
 using LogConsumerConnectionCallbackType = std::function<void(const utils::Log::Entry&)>;
 
 /**
  * It implements the functionality to raise callback every time a Log msg is consumed.
  *
- * @warning Fast DDS Log takes the ownership of the pointer of every new consumer (because of reasons...)
- * Thus, in order to create this kind of handler, it must be created from a pointer (new) and the ownership
- * of the pointer will be lost as soon as it is created.
+ * As Fast DDS Log requires to own a unique_ptr with a consumer, this class is separated from \c LogConsumer.
+ * The actual \c LogConsumer used is of class \c LogConsumerConnection and every time it consumes an \c Entry ,
+ * it calls this class.
+ * As \c LogConsumerConnection variable will survive this object, an owner/lessee object is shared between
+ * both objects, so connection keeps calling this callback as long as this object lives, and after this death
+ * it will do nothing.
  */
 class LogEventHandler : public EventHandler<utils::Log::Entry>
 {
 public:
 
-    // This class does not have constructor without callback.
-    // This is because of the lost of the pointer once it is registered in Fast. This makes it simpler.
-
+    /**
+     * Construct without callback.
+     *
+     * It registers in Log the LogConsumer that will call this object.
+     */
     CPP_UTILS_DllAPI LogEventHandler();
 
     /**
      * Construct a Log Event Handler with callback and enable it.
      *
-     * Calls \c set_callback
+     * It registers in Log the LogConsumer that will call this object.
+     *
+     * Calls \c set_callback .
      *
      * @param callback callback to call every time a log entry is consumed.
      */
@@ -68,16 +76,26 @@ public:
 
 protected:
 
+    /**
+     * @brief Consumes an \c Entry given from the \c LogConsumerConnection .
+     *
+     * @param entry entry consumed.
+     */
     CPP_UTILS_DllAPI virtual void consume_(
             const utils::Log::Entry& entry);
 
-    //! TODO
+    /**
+     * @brief Shared object between this and \c LogConsumerConnection registered.
+     *
+     * When this is destroyed, the ptr is released and the lessee in \c LogConsumerConnection will no longer
+     * be valid, so that object will do nothing with any new Entry.
+     */
     OwnerPtr<LogConsumerConnectionCallbackType> connection_callback_;
 
     /**
-     * @brief  Vector of Log entries consumed so far.
+     * @brief Vector of Log entries consumed so far.
      *
-     * Guarded by \c entries_mutex_ .
+     * Guarded by itself.
      */
     SharedAtomicable<std::vector<utils::Log::Entry>> entries_consumed_;
 };

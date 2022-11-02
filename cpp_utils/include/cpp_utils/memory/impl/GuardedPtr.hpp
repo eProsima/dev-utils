@@ -51,10 +51,6 @@ public:
     // CONSTRUCTORS
     ///////////////////////
 
-    //! Move constructor
-    GuardedPtr(
-            GuardedPtr&&);
-
     //! Copy constructor not allowed
     GuardedPtr(
             const GuardedPtr&) = delete;
@@ -63,9 +59,13 @@ public:
     GuardedPtr<T>& operator =(
             const GuardedPtr<T>& other) = delete;
 
+    //! Move constructor
+    GuardedPtr(
+            GuardedPtr&&) noexcept = default;
+
     //! Move operator not allowed
     GuardedPtr<T>& operator =(
-            GuardedPtr<T>&& other) = delete;
+            GuardedPtr<T>&& other) noexcept = default;
 
     //! Unlock the shared mutex
     ~GuardedPtr();
@@ -75,10 +75,10 @@ public:
     ///////////////////////
 
     //! Secure access to internal ptr as long as this object is valid
-    T* operator ->();
+    T* operator ->() const noexcept;
 
     //! Secure access to internal ptr as long as this object is valid
-    T& operator *();
+    T& operator *() const noexcept;
 
     /**
      * @brief Access to raw ptr of the data (do not check if the internal data is valid)
@@ -88,7 +88,7 @@ public:
      *
      * @return T* raw ptr to data
      */
-    T* get();
+    T* get() const noexcept;
 
     //! Check whether the internal ptr is valid
     operator bool() const noexcept;
@@ -110,7 +110,7 @@ protected:
      * @param data_reference
      */
     GuardedPtr(
-            std::shared_ptr<InternalPtrData<T>> data_reference);
+            std::shared_ptr<InternalPtrData<T>> data_reference) noexcept;
 
     ////////////////////////////
     // INTERNAL VARIABLES
@@ -142,5 +142,3 @@ bool operator ==(
 
 // Include implementation template file
 #include <cpp_utils/memory/impl/GuardedPtr.ipp>
-
-

@@ -29,14 +29,14 @@ namespace utils {
 ///////////////////////
 
 template<typename T>
-InternalPtrData<T>::InternalPtrData()
+InternalPtrData<T>::InternalPtrData() noexcept
     : reference_(nullptr)
 {
 }
 
 template<typename T>
 InternalPtrData<T>::InternalPtrData(
-        InternalPtrData&& other)
+        InternalPtrData&& other) noexcept
     : reference_(std::move(other.reference_))
     , shared_mutex_(std::move(other.shared_mutex_))
     , deleter_(std::move(other.deleter_))
@@ -44,7 +44,7 @@ InternalPtrData<T>::InternalPtrData(
 }
 
 template<typename T>
-InternalPtrData<T>::~InternalPtrData()
+InternalPtrData<T>::~InternalPtrData() noexcept
 {
     // Release data in case it still exists
     release_reference_();
@@ -55,13 +55,13 @@ InternalPtrData<T>::~InternalPtrData()
 ///////////////////////
 
 template<typename T>
-void InternalPtrData<T>::lock_shared()
+void InternalPtrData<T>::lock_shared() noexcept
 {
     shared_mutex_.lock_shared();
 }
 
 template<typename T>
-void InternalPtrData<T>::unlock_shared()
+void InternalPtrData<T>::unlock_shared() noexcept
 {
     shared_mutex_.unlock_shared();
 }
@@ -71,19 +71,19 @@ void InternalPtrData<T>::unlock_shared()
 ///////////////////////
 
 template<typename T>
-T* InternalPtrData<T>::operator ->()
+T* InternalPtrData<T>::operator ->() const noexcept
 {
     return reference_;
 }
 
 template<typename T>
-T& InternalPtrData<T>::operator *()
+T& InternalPtrData<T>::operator *() const noexcept
 {
     return *reference_;
 }
 
 template<typename T>
-T* InternalPtrData<T>::get()
+T* InternalPtrData<T>::get() const noexcept
 {
     return reference_;
 }
@@ -101,7 +101,7 @@ InternalPtrData<T>::operator bool() const noexcept
 template<typename T>
 InternalPtrData<T>::InternalPtrData(
         T* reference,
-        const std::function<void(T*)>& deleter)
+        const std::function<void(T*)>& deleter) noexcept
     : reference_(reference)
     , deleter_(deleter)
 {
@@ -121,5 +121,3 @@ void InternalPtrData<T>::release_reference_()
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

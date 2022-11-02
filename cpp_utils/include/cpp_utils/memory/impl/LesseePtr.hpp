@@ -60,26 +60,25 @@ public:
      * This constructor is only used to create an empty object.
      * It could not contain any data.
      */
-    LesseePtr();
+    LesseePtr() noexcept = default;
 
     /**
      * @brief Destroy the Lessee Ptr object
      *
      * It does not destroy the data (it has not the ownership).
+     * Mutex of Internal reference is handled by GuardPtrs.
      */
-    ~LesseePtr();
+    ~LesseePtr() = default;
 
     //! Copy constructor from \c OwnerPtr
     LesseePtr(
-            const OwnerPtr<T>& owner);
+            const OwnerPtr<T>& owner) noexcept;
 
     //! Copy constructor
-    LesseePtr(
-            const LesseePtr<T>& other);
+    LesseePtr(const LesseePtr<T>& other) noexcept = default;
 
-    // Move constructor
-    LesseePtr(
-            LesseePtr<T>&& other);
+    //! Move constructor
+    LesseePtr(LesseePtr<T>&& other) noexcept = default;
 
     /**
      * @brief copy assigment
@@ -90,7 +89,7 @@ public:
      * @return this object
      */
     LesseePtr<T>& operator =(
-            const LesseePtr<T>& other);
+            const LesseePtr<T>& other) noexcept = default;
 
     /**
      * @brief move assigment
@@ -102,7 +101,7 @@ public:
      * @return this object
      */
     LesseePtr<T>& operator =(
-            LesseePtr<T>&& other);
+            LesseePtr<T>&& other) noexcept = default;
 
     ///////////////////////
     // ACCESS DATA METHODS
@@ -118,7 +117,7 @@ public:
      *
      * @throw ValueAccessException in case internal data no longer exists.
      */
-    T* operator ->();
+    T* operator ->() const;
 
     /**
      * @brief Access operator to internal ptr with exception calls in failure cases.
@@ -130,7 +129,7 @@ public:
      *
      * @throw ValueAccessException in case internal data no longer exists.
      */
-    T& operator *();
+    T& operator *() const;
 
     /**
      * @brief Create a smart reference to the data.
@@ -145,7 +144,7 @@ public:
      *
      * @return std::shared_ptr<T> to the data. nullptr if the reference is not valid anymore.
      */
-    GuardedPtr<T> lock() noexcept;
+    GuardedPtr<T> lock() const noexcept;
 
     /**
      * @brief Create a smart reference to the data or throw an exception if data is not available
@@ -160,13 +159,15 @@ public:
      * @return std::shared_ptr<T> to the data
      * @throw \c ValueAccessException if the data is not valid anymore.
      */
-    GuardedPtr<T> lock_with_exception();
+    GuardedPtr<T> lock_with_exception() const;
 
     /**
      * @brief Whether the internal data is still valid
      *
      * @warning this method does not protect the access to the internal data.
      * It could happen that data is destroyed right after this method returns.
+     *
+     * A \c true from this method is volatile, while a \c false is persistent.
      */
     operator bool() const noexcept;
 
@@ -188,21 +189,8 @@ protected:
      * @param shared_mutex shared mutex between owner and this.
      */
     LesseePtr(
-            std::shared_ptr<InternalPtrData<T>> data_reference);
+            std::shared_ptr<InternalPtrData<T>> data_reference) noexcept;
 
-    ////////////////////////////
-    // AUXILIARY METHODS
-    ////////////////////////////
-
-    /**
-     * @brief Generic lock method that throws an exception or return nullptr depending on the argument.
-     *
-     * @param throw_exception whether the method must throw an exception in case of error
-     * @return std::shared_ptr<T> to the data. nullptr if the reference is not valid anymore if not \c throw_exception .
-     * @throw \c InitializationException if the data is not valid anymore if \c throw_exception is \c true .
-     */
-    GuardedPtr<T> lock_(
-            bool throw_exception);
 
     ////////////////////////////
     // INTERNAL VARIABLES
@@ -217,5 +205,3 @@ protected:
 
 // Include implementation template file
 #include <cpp_utils/memory/impl/LesseePtr.ipp>
-
-

@@ -55,10 +55,10 @@ public:
      *
      * An empty object does not contain any data.
      */
-    OwnerPtr();
+    OwnerPtr() noexcept = default;
 
     /**
-     * @brief Construct a new Owner Ptr object
+     * @brief Construct a new Owner Ptr object with an internal value
      *
      * @param reference
      * @param deleter
@@ -79,17 +79,17 @@ public:
     OwnerPtr(
             const OwnerPtr<T>& other) = delete;
 
-    //! Movement constructor
-    OwnerPtr(
-            OwnerPtr<T>&& other);
-
     //! This class is not copyable
     OwnerPtr<T>& operator =(
             const OwnerPtr<T>& other) = delete;
 
+    //! Movement constructor
+    OwnerPtr(
+            OwnerPtr<T>&& other) noexcept = default;
+
     //! Movement operator
     OwnerPtr<T>& operator =(
-            OwnerPtr<T>&& other);
+            OwnerPtr<T>&& other) noexcept;
 
     ///////////////////////
     // INTERACTION METHODS
@@ -98,7 +98,7 @@ public:
     /**
      * @brief Create a new Lessee object that references the data owned by this object.
      */
-    LesseePtr<T> lease();
+    LesseePtr<T> lease() const noexcept;
 
     /**
      * @brief Destroys the data owned by this object without destroying the object itself.
@@ -131,7 +131,7 @@ public:
      *
      * @warning this method does not check if the data is valid.
      */
-    T* operator ->();
+    T* operator ->() const noexcept;
 
     /**
      * @brief Access to a reference of the data owned by this object.
@@ -139,7 +139,7 @@ public:
      * @warning this method does not check if the data is valid.
      * @warning this method does not block this reference, that could be destroyed while used.
      */
-    T& operator *();
+    T& operator *() const noexcept;
 
     /**
      * @brief Access to raw ptr of the data
@@ -149,7 +149,7 @@ public:
      *
      * @return T* raw ptr to data
      */
-    T* get();
+    T* get() const noexcept;
 
     /**
      * @brief Whether the data is not a nullptr.
@@ -211,5 +211,3 @@ bool operator ==(
 
 // Include implementation template file
 #include <cpp_utils/memory/impl/OwnerPtr.ipp>
-
-

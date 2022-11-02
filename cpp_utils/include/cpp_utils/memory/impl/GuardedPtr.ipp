@@ -25,9 +25,10 @@ namespace utils {
 
 template<typename T>
 GuardedPtr<T>::GuardedPtr(
-        std::shared_ptr<InternalPtrData<T>> data_reference)
+        std::shared_ptr<InternalPtrData<T>> data_reference) noexcept
     : data_reference_(data_reference)
 {
+    // Do nothing
 }
 
 template<typename T>
@@ -41,26 +42,19 @@ GuardedPtr<T>::~GuardedPtr()
 }
 
 template<typename T>
-GuardedPtr<T>::GuardedPtr(
-        GuardedPtr&& other)
-    : data_reference_(std::move(other.data_reference_))
-{
-}
-
-template<typename T>
-T* GuardedPtr<T>::operator ->()
+T* GuardedPtr<T>::operator ->() const noexcept
 {
     return data_reference_->operator ->();
 }
 
 template<typename T>
-T& GuardedPtr<T>::operator *()
+T& GuardedPtr<T>::operator *() const noexcept
 {
     return data_reference_->operator *();
 }
 
 template<typename T>
-T* GuardedPtr<T>::get()
+T* GuardedPtr<T>::get() const noexcept
 {
     return data_reference_->get();
 }
@@ -89,5 +83,3 @@ bool operator ==(
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

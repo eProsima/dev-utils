@@ -53,41 +53,41 @@ public:
     ///////////////////////
 
     //! Create an empty (non valid) data
-    InternalPtrData();
+    InternalPtrData() noexcept;
 
     //! Move constructor
     InternalPtrData(
-            InternalPtrData&& other);
+            InternalPtrData&& other) noexcept;
 
     /**
      * @brief Destruct object
      *
      * It should not happen, but in case the ptr is still valid, it will be released.
      */
-    ~InternalPtrData();
+    ~InternalPtrData() noexcept;
 
     ///////////////////////
     // INTERACTION METHODS
     ///////////////////////
 
     //! Lock this data in a shared way
-    void lock_shared();
+    void lock_shared() noexcept;
 
     //! Unlock this data in a shared way
-    void unlock_shared();
+    void unlock_shared() noexcept;
 
     ///////////////////////
     // ACCESS DATA METHODS
     ///////////////////////
 
     //! Access to operator-> of the internal data (do not check if the internal data is valid)
-    T* operator ->();
+    T* operator ->() const noexcept;
 
     //! Access to operator * of the internal data (do not check if the internal data is valid)
-    T& operator *();
+    T& operator *() const noexcept;
 
     //! Access to raw ptr of the data (do not check if the internal data is valid)
-    T* get();
+    T* get() const noexcept;
 
     //! Check if the internal data is valid (it is not nullptr)
     operator bool() const noexcept;
@@ -111,7 +111,7 @@ protected:
      */
     InternalPtrData(
             T* reference,
-            const std::function<void(T*)>& deleter);
+            const std::function<void(T*)>& deleter) noexcept;
 
     /**
      * @brief Delete the internal data
@@ -129,7 +129,7 @@ protected:
     T* reference_;
 
     //! Mutex to guard the data while using or destroying it
-    std::shared_timed_mutex shared_mutex_;
+    mutable std::shared_timed_mutex shared_mutex_;
 
     //! Deleter to use when dereferencing the data
     std::function<void(T*)> deleter_;
@@ -140,5 +140,3 @@ protected:
 
 // Include implementation template file
 #include <cpp_utils/memory/impl/InternalPtrData.ipp>
-
-

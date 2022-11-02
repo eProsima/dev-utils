@@ -22,16 +22,13 @@
 #include <functional>
 
 #include <cpp_utils/Log.hpp>
-#include <cpp_utils/types/Atomicable.hpp>
-#include <cpp_utils/event/EventHandler.hpp>
+#include <cpp_utils/event/LogEventHandler.hpp>
 #include <cpp_utils/memory/owner_ptr.hpp>
 #include <cpp_utils/library/library_dll.h>
 
 namespace eprosima {
 namespace utils {
 namespace event {
-
-using LogConsumerConnectionCallbackType = std::function<void(const utils::Log::Entry&)>;
 
 /**
  * It implements the functionality to raise callback every time a Log msg is consumed.
@@ -40,14 +37,12 @@ using LogConsumerConnectionCallbackType = std::function<void(const utils::Log::E
  * Thus, in order to create this kind of handler, it must be created from a pointer (new) and the ownership
  * of the pointer will be lost as soon as it is created.
  */
-class LogEventHandler : public EventHandler<utils::Log::Entry>
+class LogConsumerConnection : public utils::LogConsumer
 {
 public:
 
     // This class does not have constructor without callback.
     // This is because of the lost of the pointer once it is registered in Fast. This makes it simpler.
-
-    CPP_UTILS_DllAPI LogEventHandler();
 
     /**
      * Construct a Log Event Handler with callback and enable it.
@@ -56,30 +51,22 @@ public:
      *
      * @param callback callback to call every time a log entry is consumed.
      */
-    CPP_UTILS_DllAPI LogEventHandler(
-            std::function<void(utils::Log::Entry)> callback);
+    CPP_UTILS_DllAPI LogConsumerConnection(
+            LesseePtr<LogConsumerConnectionCallbackType>&& callback);
 
     /**
      * @brief Destroy the LogEventHandler object
      *
      * Calls \c unset_callback
      */
-    CPP_UTILS_DllAPI ~LogEventHandler();
+    CPP_UTILS_DllAPI ~LogConsumerConnection() noexcept = default;
+
+    CPP_UTILS_DllAPI void Consume(
+            const utils::Log::Entry& entry) override;
 
 protected:
 
-    CPP_UTILS_DllAPI virtual void consume_(
-            const utils::Log::Entry& entry);
-
-    //! TODO
-    OwnerPtr<LogConsumerConnectionCallbackType> connection_callback_;
-
-    /**
-     * @brief  Vector of Log entries consumed so far.
-     *
-     * Guarded by \c entries_mutex_ .
-     */
-    SharedAtomicable<std::vector<utils::Log::Entry>> entries_consumed_;
+    LesseePtr<LogConsumerConnectionCallbackType> callback_;
 };
 
 } /* namespace event */

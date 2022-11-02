@@ -25,7 +25,7 @@
 
 namespace eprosima {
 namespace utils {
-namespace test {
+namespace testing {
 
 class LogChecker
 {
@@ -70,11 +70,11 @@ protected:
  */
 #define INSTANTIATE_LOG_TESTER(threshold, expected, max) \
     std::unique_ptr< \
-        eprosima::utils::test::LogChecker, \
-        std::function<void(eprosima::utils::test::LogChecker*)>> \
+        eprosima::utils::testing::LogChecker, \
+        std::function<void(eprosima::utils::testing::LogChecker*)>> \
     log_tester( \
-        new eprosima::utils::test::LogChecker(threshold, expected, max), \
-        [](eprosima::utils::test::LogChecker* t){ ASSERT_TRUE( t->check_valid()); delete t; \
+        new eprosima::utils::testing::LogChecker(threshold, expected, max), \
+        [](eprosima::utils::testing::LogChecker* t){ ASSERT_TRUE( t->check_valid()); delete t; \
         })
 
 /**
@@ -83,6 +83,6 @@ protected:
  */
 #define DEFAULT_LOG_TESTER INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Warning, 0, 0)
 
-} /* namespace test */
+} /* namespace testing */
 } /* namespace utils */
 } /* namespace eprosima */

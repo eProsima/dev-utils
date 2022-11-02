@@ -21,15 +21,29 @@
 #include <cpp_utils/event/LogEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
 
+#include "event/logging/LogConsumerConnection.hpp"
+
 namespace eprosima {
 namespace utils {
 namespace event {
 
+LogEventHandler::LogEventHandler()
+    : EventHandler<utils::Log::Entry>()
+    , connection_callback_(
+        new LogConsumerConnectionCallbackType(
+            [this]
+            (const utils::Log::Entry& entry)
+            { this->consume_(entry); }))
+{
+    // Create LogConsumer and register it
+    Log::RegisterConsumer(std::make_unique<LogConsumerConnection>(connection_callback_.lease()));
+}
+
 LogEventHandler::LogEventHandler(
         std::function<void(utils::Log::Entry)> callback)
-    : EventHandler<utils::Log::Entry>()
-    , first_registered_(false)
+    : LogEventHandler()
 {
+    // Set callback
     set_callback(callback);
 }
 
@@ -38,23 +52,11 @@ LogEventHandler::~LogEventHandler()
     unset_callback();
 }
 
-void LogEventHandler::callback_set_nts_() noexcept
-{
-    if (!first_registered_)
-    {
-        utils::Log::RegisterConsumer(std::unique_ptr<utils::LogConsumer>(this));
-        logDebug(
-            DDSROUTER_LOGEVENTHANDLER,
-            "Log Event Handler Register as Log Consumer (user lost its pointer ownership).");
-    }
-    first_registered_ = true;
-}
-
-void LogEventHandler::Consume(
+void LogEventHandler::consume_(
         const utils::Log::Entry& entry)
 {
     {
-        std::lock_guard<std::mutex> lock(entries_mutex_);
+        std::lock_guard<SharedAtomicable<std::vector<utils::Log::Entry>>> lock(entries_consumed_);
         entries_consumed_.push_back(entry);
     }
 

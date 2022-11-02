@@ -21,7 +21,7 @@
 
 namespace eprosima {
 namespace utils {
-namespace test {
+namespace testing {
 
 LogChecker::LogChecker(
         utils::Log::Kind threshold, /* Log::Kind::Warning */
@@ -51,6 +51,6 @@ LogChecker::~LogChecker()
     utils::Log::Reset();
 }
 
-} /* namespace test */
+} /* namespace testing */
 } /* namespace utils */
 } /* namespace eprosima */

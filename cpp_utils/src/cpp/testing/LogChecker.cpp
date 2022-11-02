@@ -28,11 +28,8 @@ LogChecker::LogChecker(
         uint32_t expected_severe_logs /* = 0 */,
         uint32_t max_severe_logs /* = 0 */)
     : log_consumer_(
-        new utils::event::LogSevereEventHandler(
-            [](utils::Log::Entry entry)
-            {
-            },
-            threshold))
+        [](utils::Log::Entry entry){},  // dummy function
+        threshold)
     , expected_severe_logs_(expected_severe_logs)
     , max_severe_logs_(std::max(max_severe_logs, expected_severe_logs)) // Use max to avoid forcing set both args
 {
@@ -42,8 +39,8 @@ bool LogChecker::check_valid()
 {
     eprosima::utils::Log::Flush();
     return
-        (log_consumer_->event_count() >= expected_severe_logs_) &&
-        (log_consumer_->event_count() <= max_severe_logs_);
+        (log_consumer_.event_count() >= expected_severe_logs_) &&
+        (log_consumer_.event_count() <= max_severe_logs_);
 }
 
 LogChecker::~LogChecker()

@@ -47,7 +47,7 @@ protected:
      *
      * @attention: this must be a raw pointer as Fast takes ownership of the consumer.
      */
-    utils::event::LogSevereEventHandler* log_consumer_;
+    utils::event::LogSevereEventHandler log_consumer_;
 
     uint32_t expected_severe_logs_;
     uint32_t max_severe_logs_;

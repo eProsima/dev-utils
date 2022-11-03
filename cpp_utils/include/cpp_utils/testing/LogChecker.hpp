@@ -27,30 +27,60 @@ namespace eprosima {
 namespace utils {
 namespace testing {
 
+/**
+ * @brief This is an auxiliary class to check the logs produced in a test.
+ *
+ * The main idea is to create one of this objects at the beginning of a test execution, and it will
+ * have a counter of the logs consumed (only those higher than threshold given).
+ * At the end, \c check_valid() should be called in order to know if the logs consumed are between the minimum
+ * and maximum logs expected.
+ *
+ * In order to automatically check that no warnings nor errors are produced by a test,
+ * call \c DEFAULT_LOG_TESTER macro at the beginning of the test.
+ * To use specific arguments, use \c INSTANTIATE_LOG_TESTER instead.
+ */
 class LogChecker
 {
 public:
 
+    /**
+     * @brief Construct a LogChecker object.
+     *
+     * @param threshold minimum log level that will be taken into account when counting logs consumed.
+     * @param expected_severe_logs the number of logs this object expects to consumed.
+     * @param max_severe_logs the maximum number of logs this object will allow.
+     */
     CPP_UTILS_DllAPI LogChecker(
             utils::Log::Kind threshold = utils::Log::Kind::Warning,
-            uint32_t expected_severe_logs = 0,
-            uint32_t max_severe_logs = 0);
+            unsigned int expected_severe_logs = 0,
+            unsigned int max_severe_logs = 0);
 
-    CPP_UTILS_DllAPI ~LogChecker();
+    //! Default destructor.
+    CPP_UTILS_DllAPI ~LogChecker() = default;
 
+    /**
+     * @brief Whether the logs consumed so far are between the limits expected.
+     *
+     * @return true if logs consumed are equal ot higher than \c expected_severe_logs
+     * and equal or lower than \c max_severe_logs .
+     * false otherwise.
+     */
     CPP_UTILS_DllAPI bool check_valid();
 
 protected:
 
     /**
-     * @brief Pointer to the event handler log consumer
+     * @brief Log Handler object.
      *
-     * @attention: this must be a raw pointer as Fast takes ownership of the consumer.
+     * It is a Severe one to only take into account those logs higher than threashold
      */
     utils::event::LogSevereEventHandler log_consumer_;
 
-    uint32_t expected_severe_logs_;
-    uint32_t max_severe_logs_;
+    //! Expected minimum number of logs.
+    unsigned int expected_severe_logs_;
+
+    //! Expected maximum number of logs.
+    unsigned int max_severe_logs_;
 };
 
 /**

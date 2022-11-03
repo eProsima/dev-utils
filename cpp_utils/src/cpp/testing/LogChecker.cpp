@@ -43,11 +43,6 @@ bool LogChecker::check_valid()
         (log_consumer_.event_count() <= max_severe_logs_);
 }
 
-LogChecker::~LogChecker()
-{
-    utils::Log::Reset();
-}
-
 } /* namespace testing */
 } /* namespace utils */
 } /* namespace eprosima */

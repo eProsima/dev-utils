@@ -66,7 +66,7 @@ public:
      * @brief Destroy the Lessee Ptr object
      *
      * It does not destroy the data (it has not the ownership).
-     * Mutex of Internal reference is handled by GuardPtrs.
+     * Mutex of Internal reference is handled by GuardedPtrs.
      */
     ~LesseePtr() = default;
 

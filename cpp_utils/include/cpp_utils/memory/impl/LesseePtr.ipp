@@ -77,7 +77,7 @@ GuardedPtr<T> LesseePtr<T>::lock_with_exception() const
         // Internal mutex of guarded ptr would be released when guarded
         // object exits scope (after throw).
         throw ValueAccessException(
-                "Trying to access a data not available anymore.");
+                  "Trying to access a data not available anymore.");
     }
     else
     {

@@ -75,10 +75,12 @@ public:
             const OwnerPtr<T>& owner) noexcept;
 
     //! Copy constructor
-    LesseePtr(const LesseePtr<T>& other) noexcept = default;
+    LesseePtr(
+            const LesseePtr<T>& other) noexcept = default;
 
     //! Move constructor
-    LesseePtr(LesseePtr<T>&& other) noexcept = default;
+    LesseePtr(
+            LesseePtr<T>&& other) noexcept = default;
 
     /**
      * @brief copy assigment

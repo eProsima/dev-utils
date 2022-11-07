@@ -39,8 +39,11 @@ void LogConsumerConnection::Consume(
     // Check whether the callback still exists
     auto callback_persistent = callback_.lock();
 
-    // In case it still exists, call it
-    callback_persistent->operator()(entry);
+    if (callback_persistent)
+    {
+        // In case it still exists, call it
+        callback_persistent->operator()(entry);
+    }
 }
 
 } /* namespace event */

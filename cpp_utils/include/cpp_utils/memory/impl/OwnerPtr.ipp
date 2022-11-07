@@ -39,25 +39,11 @@ const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value)
 ///////////////////////
 
 template<typename T>
-OwnerPtr<T>::OwnerPtr()
-    : data_reference_()
-{
-}
-
-template<typename T>
 OwnerPtr<T>::OwnerPtr(
         T* reference,
         std::function<void(T*)> deleter /* = default_deleter() */)
 {
-    if (nullptr == reference)
-    {
-        throw InitializationException(
-                  "Trying to create an OwnerPtr from a nullptr.");
-    }
-
-    // NOTE: This cannot use make_shared because shared_ptr is not friend of InternalPtrData
-    data_reference_ = std::shared_ptr<InternalPtrData<T>>(
-        new InternalPtrData<T>(reference, deleter));
+    reset(reference, deleter);
 }
 
 template<typename T>
@@ -67,22 +53,14 @@ OwnerPtr<T>::~OwnerPtr()
 }
 
 template<typename T>
-OwnerPtr<T>::OwnerPtr(
-        OwnerPtr<T>&& other)
-{
-    this->data_reference_ = std::move(other.data_reference_);
-    // Move a shared ptr reset the internal ptr, so it points to null
-}
-
-template<typename T>
 OwnerPtr<T>& OwnerPtr<T>::operator =(
-        OwnerPtr<T>&& other)
+        OwnerPtr<T>&& other) noexcept
 {
     // In case this Ptr had data inside, it must be deleted
     reset();
 
     this->data_reference_ = std::move(other.data_reference_);
-    // Move a shared ptr reset the internal ptr, so it points to null
+    // Move a shared ptr reset the internal ptr, so other points to null
 
     return *this;
 }
@@ -92,7 +70,7 @@ OwnerPtr<T>& OwnerPtr<T>::operator =(
 ///////////////////////
 
 template<typename T>
-LesseePtr<T> OwnerPtr<T>::lease()
+LesseePtr<T> OwnerPtr<T>::lease() const noexcept
 {
     return LesseePtr<T>(
         data_reference_);
@@ -119,7 +97,7 @@ void OwnerPtr<T>::reset(
     if (nullptr == reference)
     {
         throw InitializationException(
-                  "Trying to reset an OwnerPtr with a nullptr.");
+                  "Trying to set an OwnerPtr with a nullptr.");
     }
     else
     {
@@ -132,19 +110,19 @@ void OwnerPtr<T>::reset(
 ///////////////////////
 
 template<typename T>
-T* OwnerPtr<T>::operator ->()
+T* OwnerPtr<T>::operator ->() const noexcept
 {
     return data_reference_->operator ->();
 }
 
 template<typename T>
-T& OwnerPtr<T>::operator *()
+T& OwnerPtr<T>::operator *() const noexcept
 {
     return data_reference_->operator *();
 }
 
 template<typename T>
-T* OwnerPtr<T>::get()
+T* OwnerPtr<T>::get() const noexcept
 {
     return data_reference_->get();
 }
@@ -189,5 +167,3 @@ bool operator ==(
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

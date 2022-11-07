@@ -29,60 +29,9 @@ namespace utils {
 
 template<typename T>
 LesseePtr<T>::LesseePtr(
-        std::shared_ptr<InternalPtrData<T>> data_reference)
+        std::shared_ptr<InternalPtrData<T>> data_reference) noexcept
     : data_reference_(data_reference)
 {
-}
-
-///////////////////////
-// CONSTRUCTORS
-///////////////////////
-
-template<typename T>
-LesseePtr<T>::LesseePtr()
-    : data_reference_()
-{
-}
-
-template<typename T>
-LesseePtr<T>::~LesseePtr()
-{
-    // Do nothing. Mutex is handled by GuardPtr and internal data is shared
-}
-
-template<typename T>
-LesseePtr<T>::LesseePtr(
-        const LesseePtr<T>& other)
-{
-    this->data_reference_ = other.data_reference_;
-}
-
-template<typename T>
-LesseePtr<T>::LesseePtr(
-        LesseePtr<T>&& other)
-{
-    this->data_reference_ = std::move(other.data_reference_);
-    // Move a shared ptr reset the internal ptr
-}
-
-template<typename T>
-LesseePtr<T>& LesseePtr<T>::operator =(
-        const LesseePtr<T>& other)
-{
-    this->data_reference_ = other.data_reference_;
-    this->shared_mutex_ = other.shared_mutex_;
-
-    return *this;
-}
-
-template<typename T>
-LesseePtr<T>& LesseePtr<T>::operator =(
-        LesseePtr<T>&& other)
-{
-    this->data_reference_ = std::move(other.data_reference_);
-    // Move a shared ptr reset the internal ptr
-
-    return *this;
 }
 
 ///////////////////////
@@ -90,58 +39,25 @@ LesseePtr<T>& LesseePtr<T>::operator =(
 ///////////////////////
 
 template<typename T>
-T* LesseePtr<T>::operator ->()
+T* LesseePtr<T>::operator ->() const
 {
     return this->lock_with_exception().operator ->();
 }
 
 template<typename T>
-T& LesseePtr<T>::operator *()
+T& LesseePtr<T>::operator *() const
 {
     return this->lock_with_exception().operator *();
 }
 
 template<typename T>
-GuardedPtr<T> LesseePtr<T>::lock() noexcept
-{
-    return lock_(false);
-}
-
-template<typename T>
-GuardedPtr<T> LesseePtr<T>::lock_with_exception()
-{
-    return lock_(true);
-}
-
-template<typename T>
-LesseePtr<T>::operator bool() const noexcept
-{
-    return data_reference_ && data_reference_->operator bool();
-}
-
-////////////////////////////
-// AUXILIARY METHODS
-////////////////////////////
-
-template<typename T>
-GuardedPtr<T> LesseePtr<T>::lock_(
-        bool throw_exception)
+GuardedPtr<T> LesseePtr<T>::lock() const noexcept
 {
     if (data_reference_)
     {
         // Lock mutex
         data_reference_->lock_shared();
         // From here, the validity cannot change until releasing lock
-
-        // If data inside is not valid and exception must be thrown
-        if (throw_exception && !data_reference_->operator bool())
-        {
-            // It will not be unlocked by the GuardedPtr, so unlock here
-            data_reference_->unlock_shared();
-
-            throw ValueAccessException(
-                      "Trying to access a data not available anymore.");
-        }
     }
 
     // Create a GuardedPtr that will unlock mutex in destruction
@@ -152,7 +68,28 @@ GuardedPtr<T> LesseePtr<T>::lock_(
         data_reference_);
 }
 
+template<typename T>
+GuardedPtr<T> LesseePtr<T>::lock_with_exception() const
+{
+    auto guarded = lock();
+    if (!guarded)
+    {
+        // Internal mutex of guarded ptr would be released when guarded
+        // object exits scope (after throw).
+        throw ValueAccessException(
+                  "Trying to access a data not available anymore.");
+    }
+    else
+    {
+        return guarded;
+    }
+}
+
+template<typename T>
+LesseePtr<T>::operator bool() const noexcept
+{
+    return data_reference_ && data_reference_->operator bool();
+}
+
 } /* namespace utils */
 } /* namespace eprosima */
-
-

@@ -22,6 +22,7 @@
 #include <condition_variable>
 #include <csignal>
 #include <functional>
+#include <map>
 #include <mutex>
 #include <string>
 #include <thread>

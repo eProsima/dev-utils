@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <iostream>
+
 // Use FastDDS log
 #include <fastdds/dds/log/Log.hpp>
 

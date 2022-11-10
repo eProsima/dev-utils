@@ -16,7 +16,7 @@ set(TEST_NAME fuzzyTest)
 
 set(TEST_SOURCES
         fuzzyTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
     )
 

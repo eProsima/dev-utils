@@ -43,6 +43,7 @@
 #include <cpp_utils/math/math.hpp>
 #include <cpp_utils/utils.hpp>
 #include <cpp_utils/Log.hpp>
+#include <cpp_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -89,9 +90,9 @@ void to_lowercase(
 }
 
 void tsnh(
-        const Formatter& formatter)
+        const std::string& message)
 {
-    logError(UTILS_TSNH, "This Should Not Have Happened: " << formatter.to_string());
+    logError(UTILS_TSNH, STR_ENTRY << "This Should Not Have Happened: " << message);
     Log::Flush();
 
     abort();

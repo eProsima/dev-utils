@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,23 +13,29 @@
 // limitations under the License.
 
 /**
- * @file Formatter.ipp
+ * @file utils.cpp
+ *
  */
 
-#pragma once
+#include <algorithm>
+#include <string>
+
+#include <cpp_utils/format/format_utils.hpp>
 
 namespace eprosima {
 namespace utils {
+namespace format {
 
-template<class Val>
-Formatter& Formatter::operator <<(
-        const Val& val)
+void to_lowercase(
+        std::string& st) noexcept
 {
-    ss_ << val;
-    return *this;
+    std::transform(st.begin(), st.end(), st.begin(),
+            [](unsigned char c)
+            {
+                return std::tolower(c);
+            });
 }
 
+} /* namespace format */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

@@ -27,7 +27,6 @@
 #include <vector>
 
 #include <cpp_utils/macros/macros.hpp>
-#include <cpp_utils/Formatter.hpp>
 #include <cpp_utils/library/library_dll.h>
 
 namespace eprosima {
@@ -67,43 +66,6 @@ CPP_UTILS_DllAPI bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept;
 
-/**
- * @brief Convert every alphabetic char in string to lower case
- *
- * @attention This function modifies the object given
- *
- * @param [in,out] st : string to modify
- */
-CPP_UTILS_DllAPI void to_lowercase(
-        std::string& st) noexcept;
-
-template <typename T, bool Ptr = false>
-std::ostream& element_to_stream(
-        std::ostream& os,
-        T element);
-
-/**
- * @brief Concatenate serialization of elements in an array separated by \c separator .
- *
- * @tparam T type of each element. This object must have an << operator
- * @param os stream to store the concatenation result
- * @param list list of elements
- * @param separator char or string separator between elements
- * @return std::ostream& with the result stream concatenated
- */
-template <typename T, bool Ptr = false>
-std::ostream& container_to_stream(
-        std::ostream& os,
-        std::vector<T> list,
-        std::string separator = ";");
-
-//! Concatenate a set by converting to vector.
-template <typename T, bool Ptr = false>
-std::ostream& container_to_stream(
-        std::ostream& os,
-        std::set<T> list,
-        std::string separator = ";");
-
 template <typename T>
 bool set_of_ptr_contains(
         const std::set<std::shared_ptr<T>> set,
@@ -123,10 +85,10 @@ bool are_set_of_ptr_equal(
  * Do not use this method when the error could come from user or output interaction, it should only be used
  * for inconsistency inside the program or C++ weird behaviours (e.g. enumeration values out of their range).
  *
- * @param formatter msg of the unexpected case.
+ * @param message of the unexpected case.
  */
 CPP_UTILS_DllAPI void tsnh(
-        const Formatter& formatter);
+        const std::string& message);
 
 /**
  * @brief Convert a elements set into a shared ptr elements set.
@@ -158,19 +120,6 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
 CPP_UTILS_DllAPI bool is_file_accessible(
         const char* file_path,
         FileAccessMode access_mode = FileAccessMode::exist) noexcept;
-
-/**
- * @brief Common function for every method with \c operator<< to convert it to string.
- *
- * This function uses \c operator<< of class \c T to parse any object to a string.
- *
- * @tparam T type of the element to convert to string
- * @param element element to parse to string
- * @return to string convertion of the element
- */
-template <typename T>
-CPP_UTILS_DllAPI std::string generic_to_string(
-        const T& element);
 
 template <typename T>
 CPP_UTILS_DllAPI void* copy_to_void_ptr(

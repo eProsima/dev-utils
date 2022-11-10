@@ -49,6 +49,8 @@ namespace utils {
  *
  * @note empty custom enumerations are not allowed, even when empty enum class are.
  *
+ * @warning it is not allowed to add a comma after final element
+ *
  * @example
  * ENUMERATION_BUILDER(CustomEnum, el1, el2);
  * CustomEnum my_value = CustomEnum::el1;  // Set my_value as el1 = 0

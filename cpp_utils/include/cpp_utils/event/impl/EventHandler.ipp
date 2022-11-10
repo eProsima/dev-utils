@@ -32,8 +32,7 @@ const std::function<void(Args...)> EventHandler<Args...>::DEFAULT_CALLBACK_ =
         [](Args...)
         {
             // This should never happen
-            utils::tsnh(
-                utils::Formatter() << "This callback must not be called.");
+            utils::tsnh("This callback must not be called.");
         };
 
 template <typename ... Args>
@@ -220,5 +219,3 @@ void EventHandler<Args...>::callback_unset_nts_() noexcept
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

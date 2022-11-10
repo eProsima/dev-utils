@@ -13,30 +13,35 @@
 // limitations under the License.
 
 /**
- * @file Exception.cpp
+ * @file Formatter.cpp
+ *
+ * This file contains class Formatter implementation.
  */
 
-#include <cpp_utils/exception/Exception.hpp>
+#include <cpp_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace utils {
+namespace format {
 
-Exception::Exception(
-        const char* message) noexcept
-    : message_(message)
+Formatter::operator std::string () const noexcept
 {
+    return to_string();
 }
 
-Exception::Exception(
-        const std::string& message)
-    : message_(message)
+std::string Formatter::to_string() const noexcept
 {
+    return ss_.str().c_str();
 }
 
-const char* Exception::what() const noexcept
+std::ostream& operator <<(
+        std::ostream& os,
+        const Formatter& f)
 {
-    return message_.c_str();
+    os << f.to_string();
+    return os;
 }
 
-} // namespace utils
-} // namespace eprosima
+} /* namespace format */
+} /* namespace utils */
+} /* namespace eprosima */

@@ -21,7 +21,7 @@
 #include <exception>
 #include <string>
 
-#include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/format/Formatter.hpp>
 #include <cpp_utils/library/library_dll.h>
 
 namespace eprosima {
@@ -51,17 +51,6 @@ public:
      */
     CPP_UTILS_DllAPI Exception(
             const std::string& message);
-
-    /**
-     * @brief Construct a new ddsrouter::Exception object by concatenating streams in a \c Formatter
-     *
-     * This constructor allows to concatenate several streams in the same object in the same constructor call.
-     * For example: Exception(Formatter() << " object1 stream: " << obj1 << " object2 stream: " << obj2);
-     *
-     * @param formatter The \c Formatter object where streams are concatenated
-     */
-    CPP_UTILS_DllAPI Exception(
-            const utils::Formatter& formatter);
 
     /**
      * @brief Copies the ddsrouter::Exception object into a new one

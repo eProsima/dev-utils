@@ -12,36 +12,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME utilsTest)
+###################################
+# Formatter Tests
+###################################
+
+set(TEST_NAME formatter_tests)
 
 set(TEST_SOURCES
-        utilsTest.cpp
+        formatter_tests.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/format/format_utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/math/math.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
     )
 
 set(TEST_LIST
-        set_of_ptr_contains_int
-        set_of_ptr_with_null_contains_int
-        set_of_ptr_contains_string
-        are_set_of_ptr_equal_int
-        to_lowercase
-        tsnh_call
-        is_file_accessible
-        combined_file_permissions
+        object_use
+        cast_string
+        to_string
+        serialization_operator_string
+        use_in_exception
     )
 
 set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
-        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
 set(TEST_NEEDED_SOURCES
-        resources/exist.test
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )
+
+
+###################################
+# format utils Tests
+###################################
+
+set(TEST_NAME format_utils_tests)
+
+set(TEST_SOURCES
+        format_utils_tests.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/format_utils.cpp
+    )
+
+set(TEST_LIST
+        to_lowercase
+        container_to_stream_vector
+        container_to_stream_set
+        generic_to_string
+    )
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+set(TEST_NEEDED_SOURCES
     )
 
 add_unittest_executable(

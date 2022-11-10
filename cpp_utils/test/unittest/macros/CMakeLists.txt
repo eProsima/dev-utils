@@ -48,7 +48,8 @@ set(TEST_NAME recursiveMacrosTest)
 
 set(TEST_SOURCES
         recursiveMacrosTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/format_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
     )
@@ -83,7 +84,7 @@ set(TEST_NAME enumerationBuilderMacrosTest)
 
 set(TEST_SOURCES
         enumerationBuilderMacrosTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
     )
 

@@ -15,7 +15,7 @@
 /**
  * @file Formatter.hpp
  *
- * This file contains class Formatter implementation.
+ * This file contains class Formatter declaration.
  */
 
 #pragma once
@@ -25,38 +25,51 @@
 
 #include <cpp_utils/library/library_dll.h>
 
-// Fast use of Formatter call, maybe simpler to the user
-#define STR_ENTRY eprosima::utils::Formatter()
-
 namespace eprosima {
 namespace utils {
+namespace format {
 
 /**
- * @brief Auxiliary function to concatenate inplace every kind of object << stream
+ * @brief Auxiliary function to concatenate inplace every kind of object with << to stream.
  *
  * The main case to use this class is in Exception creation. In order to generate an Exception message
  * using the << operator for the objects in the block, add them to Formatter() object and they will be
- * concatenated in a single string. For example:
- * Exception(Formatter() << " object1 stream: " << obj1 << " object2 stream: " << obj2);
+ * concatenated in a single string.
+ *
+ * @example
+ * Exception(STR_ENTRY << "object1 stream: " << obj1 << " object2 stream: " << obj2);
  */
 class Formatter
 {
 public:
 
-    //! Concatenate stream values to this formatter
+    /////
+    // CONSTRUCTOR
+    // All ctor, dtor, copy and moves are default.
+
+    /////
+    // OPERATORS
+
+    //! Concatenate stream values to this object.
     template<class Val>
     Formatter& operator <<(
             const Val& val);
 
-    //! Return a string with the concatenation of this object
+    /////
+    // TO STRING METHODS
+
+    //! Return a string with the concatenation of this object.
     CPP_UTILS_DllAPI operator std::string () const noexcept;
 
-    //! Return a string with the concatenation of this object
+    //! Return a string with the concatenation of this object.
     CPP_UTILS_DllAPI std::string to_string() const noexcept;
 
 protected:
 
-    //! Concatenated stream where the streams are added at the end
+    /////
+    // INTERNAL VARIABLES
+
+    //! Concatenated stream where the streams are added at the end.
     std::stringstream ss_;
 };
 
@@ -65,8 +78,12 @@ CPP_UTILS_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Formatter& f);
 
+} /* namespace format */
 } /* namespace utils */
 } /* namespace eprosima */
 
+// Fast use of Formatter call, simpler to the user
+#define STR_ENTRY eprosima::utils::format::Formatter()
+
 // Include implementation template file
-#include <cpp_utils/impl/Formatter.ipp>
+#include <cpp_utils/format/impl/Formatter.ipp>

@@ -17,6 +17,7 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <cpp_utils/format/format_utils.hpp>
 #include <cpp_utils/utils.hpp>
 
 using namespace eprosima::utils;
@@ -305,25 +306,25 @@ TEST(utilsTest, to_lowercase)
     // Uppercase
     {
         std::string str = "FOO";
-        to_lowercase(str);
+        format::to_lowercase(str);
         ASSERT_EQ(str, "foo");
     }
     // Invariant
     {
         std::string str = "foo";
-        to_lowercase(str);
+        format::to_lowercase(str);
         ASSERT_EQ(str, "foo");
     }
     // With non-letter characters
     {
         std::string str = "!_-.,FoO";
-        to_lowercase(str);
+        format::to_lowercase(str);
         ASSERT_EQ(str, "!_-.,foo");
     }
     // Empty
     {
         std::string str = "";
-        to_lowercase(str);
+        format::to_lowercase(str);
         ASSERT_EQ(str, "");
     }
 }
@@ -334,7 +335,7 @@ TEST(utilsTest, to_lowercase)
 TEST(utilsTest, tsnh_call)
 {
     // Call tsnh
-    ASSERT_DEATH(tsnh(Formatter() << "Calling tsnh from test."), "");
+    ASSERT_DEATH(tsnh("Calling tsnh from test."), "");
 }
 
 /**

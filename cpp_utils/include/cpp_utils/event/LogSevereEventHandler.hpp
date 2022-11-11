@@ -48,11 +48,11 @@ public:
             std::function<void(utils::Log::Entry)> callback,
             const utils::Log::Kind threshold = utils::Log::Kind::Warning);
 
-    //! Override parent \c Consume method but only consuming logs above the \c threshold_ kind.
-    CPP_UTILS_DllAPI void Consume(
-            const utils::Log::Entry& entry) override;
-
 protected:
+
+    //! Override parent \c consume_ method but only consuming logs above the \c threshold_ kind.
+    CPP_UTILS_DllAPI void consume_(
+            const utils::Log::Entry& entry) override;
 
     //! Minimum Log kind accepted to consumed.
     utils::Log::Kind threshold_;
@@ -61,5 +61,3 @@ protected:
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

@@ -12,31 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME PeriodicEventHandlerTest)
+set(TEST_NAME LogCheckerTest)
 
 set(TEST_SOURCES
-        PeriodicEventHandlerTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/event/PeriodicEventHandler.cpp
+        LogCheckerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/event/logging/LogConsumerConnection.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/event/logging/LogEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/event/logging/LogSevereEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/testing/LogChecker.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
     )
-all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
-        trivial_create_handler
-        wait_handler
-        handler_period
-        handler_period_without_callback
-        limit_cases
-        negative_cases
-        not_wait_in_destruction
+        trivial_create
+        non_logs_default
+        non_logs
+        minimum_logs
+        maximum_logs
+        exact_logs
+        severe_logs_info
+        severe_logs_warning
+        severe_logs_error
     )
 
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
-        cpp_utils
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
 add_unittest_executable(

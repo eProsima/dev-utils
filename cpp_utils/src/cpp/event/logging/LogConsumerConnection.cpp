@@ -13,35 +13,37 @@
 // limitations under the License.
 
 /**
- * @file LogSevereEventHandler.cpp
+ * @file LogConsumerConnection.cpp
  *
  */
 
-#include <cpp_utils/event/LogSevereEventHandler.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+
+#include "event/logging/LogConsumerConnection.hpp"
 
 namespace eprosima {
 namespace utils {
 namespace event {
 
-LogSevereEventHandler::LogSevereEventHandler(
-        std::function<void(utils::Log::Entry)> callback,
-        utils::Log::Kind threshold /* = utils::Log::Kind::Warning */)
-    : LogEventHandler(callback)
-    , threshold_(threshold)
+LogConsumerConnection::LogConsumerConnection(
+        LesseePtr<LogConsumerConnectionCallbackType>&& callback)
+    : callback_(std::move(callback))
 {
-    // If threshold is lower than default log level (ERROR) set the filter lower
-    if (threshold > utils::Log::Kind::Error)
-    {
-        utils::Log::SetVerbosity(threshold);
-    }
+    // Do nothing
 }
 
-void LogSevereEventHandler::Consume(
+void LogConsumerConnection::Consume(
         const utils::Log::Entry& entry)
 {
-    if (entry.kind <= threshold_)
+    // Check whether the callback still exists
+    auto callback_persistent = callback_.lock();
+
+    if (callback_persistent)
     {
-        LogEventHandler::Consume(entry);
+        // In case it still exists, call it
+        callback_persistent->operator ()(
+                entry);
     }
 }
 

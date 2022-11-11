@@ -32,8 +32,10 @@ LogEventHandler::LogEventHandler()
     , connection_callback_(
         new LogConsumerConnectionCallbackType(
             [this]
-            (const utils::Log::Entry& entry)
-            { this->consume_(entry); }))
+                (const utils::Log::Entry& entry)
+            {
+                this->consume_(entry);
+            }))
 {
     // Create LogConsumer and register it
     Log::RegisterConsumer(std::make_unique<LogConsumerConnection>(connection_callback_.lease()));

@@ -83,13 +83,13 @@ TEST(LogCheckerTest, minimum_logs)
         eprosima::utils::testing::LogChecker log_checker(
             eprosima::utils::Log::Kind::Error,
             test::DEFAULT_TEST_VALUE,
-            test::DEFAULT_TEST_VALUE * 2);
+            test::DEFAULT_TEST_VALUE* 2);
 
         // no logs
         ASSERT_FALSE(log_checker.check_valid());
 
         // add N logs
-        for (unsigned int i=0; i<test::DEFAULT_TEST_VALUE; ++i)
+        for (unsigned int i = 0; i < test::DEFAULT_TEST_VALUE; ++i)
         {
             logError(LOGCHECKER_TEST, "Test propose log.");
 
@@ -146,7 +146,7 @@ TEST(LogCheckerTest, maximum_logs)
         ASSERT_TRUE(log_checker.check_valid());
 
         // add N logs
-        for (unsigned int i=0; i<test::DEFAULT_TEST_VALUE; ++i)
+        for (unsigned int i = 0; i < test::DEFAULT_TEST_VALUE; ++i)
         {
             logError(LOGCHECKER_TEST, "Test propose log.");
 
@@ -179,7 +179,7 @@ TEST(LogCheckerTest, exact_logs)
         test::DEFAULT_TEST_VALUE);
 
     // add N logs
-    for (unsigned int i=0; i<test::DEFAULT_TEST_VALUE; ++i)
+    for (unsigned int i = 0; i < test::DEFAULT_TEST_VALUE; ++i)
     {
         ASSERT_FALSE(log_checker.check_valid());
         logError(LOGCHECKER_TEST, "Test propose log.");

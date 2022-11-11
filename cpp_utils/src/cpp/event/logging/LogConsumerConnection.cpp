@@ -42,7 +42,8 @@ void LogConsumerConnection::Consume(
     if (callback_persistent)
     {
         // In case it still exists, call it
-        callback_persistent->operator()(entry);
+        callback_persistent->operator ()(
+                entry);
     }
 }
 

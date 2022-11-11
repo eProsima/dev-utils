@@ -28,7 +28,9 @@ LogChecker::LogChecker(
         uint32_t expected_severe_logs /* = 0 */,
         uint32_t max_severe_logs /* = 0 */)
     : log_consumer_(
-        [](utils::Log::Entry entry){},  // dummy function
+        [](utils::Log::Entry entry)
+        {
+        },                              // dummy function
         threshold)
     , expected_severe_logs_(expected_severe_logs)
     , max_severe_logs_(std::max(max_severe_logs, expected_severe_logs)) // Use max to avoid forcing set both args

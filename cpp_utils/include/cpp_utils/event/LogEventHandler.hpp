@@ -32,7 +32,7 @@ namespace utils {
 namespace event {
 
 //! Data Type to be shared between a LogEventHandler and a LogConsumerConnection.
-using LogConsumerConnectionCallbackType = std::function<void(const utils::Log::Entry&)>;
+using LogConsumerConnectionCallbackType = std::function<void (const utils::Log::Entry&)>;
 
 /**
  * It implements the functionality to raise callback every time a Log msg is consumed.

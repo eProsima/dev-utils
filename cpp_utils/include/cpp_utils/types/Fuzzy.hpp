@@ -221,5 +221,3 @@ CPP_UTILS_DllAPI std::ostream& operator <<(
 
 // Include implementation template file
 #include <cpp_utils/types/impl/Fuzzy.ipp>
-
-

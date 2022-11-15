@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <cstring>
+
 namespace eprosima {
 namespace utils {
 
@@ -153,7 +155,15 @@ std::string generic_to_string(
     return ss.str();
 }
 
+template <typename T>
+void* copy_to_void_ptr(
+        const T* source,
+        size_t size /* = sizeof(T) */)
+{
+    void* new_ptr = std::malloc(size);
+    std::memcpy(new_ptr, source, size);
+    return new_ptr;
+}
+
 } /* namespace utils */
 } /* namespace eprosima */
-
-

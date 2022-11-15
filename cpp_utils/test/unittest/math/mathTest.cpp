@@ -17,7 +17,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <cpp_utils/math/math.hpp>
+#include <cpp_utils/math/math_extension.hpp>
 
 using namespace eprosima::utils;
 

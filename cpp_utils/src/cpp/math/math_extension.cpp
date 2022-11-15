@@ -13,16 +13,16 @@
 // limitations under the License.
 
 /**
- * @file math.cpp
+ * @file math_extension.cpp
  *
  */
 
-namespace eprosima {
-namespace utils {
-
 #include <assert.h>
 
-#include <cpp_utils/math/math.hpp>
+#include <cpp_utils/math/math_extension.hpp>
+
+namespace eprosima {
+namespace utils {
 
 bool is_even(
         unsigned int number) noexcept

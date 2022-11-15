@@ -19,5 +19,7 @@ runs:
           setuptools \
           gcovr==5.0 \
           pyyaml \
-          jsonschema
+          jsonschema \
+          flake8 \
+          flake8-quotes
       shell: bash

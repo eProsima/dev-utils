@@ -404,11 +404,13 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         shell: pwsh
+        # jq seems to have a bug, thus using -b is the option to fix it https://github.com/stedolan/jq/issues/1870
         run: |
           $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_dependencies.yml/runs';
           Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
-          $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
+          $job_id = jq -c -b '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
           echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
+
 
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2

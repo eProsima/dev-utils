@@ -17,36 +17,39 @@
  *
  */
 
+#include <cstdlib>
+
 #include <cpp_utils/math/random/RandomManager.hpp>
 
 namespace eprosima {
 namespace utils {
 
 RandomManager::RandomManager(const RandomNumberType original_seed /* = 1 */ )
+    : std_random_generator_(original_seed)
 {
-    std::srand(original_seed);
+    // Do nothing
 }
 
 template <>
 CPP_UTILS_DllAPI RandomNumberType RandomManager::rand<true> () noexcept
 {
-    return pure_random_generator_();
+    return pure_rand();
 }
 
 template <>
 CPP_UTILS_DllAPI RandomNumberType RandomManager::rand<false> () noexcept
 {
-    return std::rand();
+    return sequence_rand();
 }
 
 RandomNumberType RandomManager::pure_rand () noexcept
 {
-    return rand<true>();
+    return pure_random_generator_();
 }
 
-void RandomManager::srand (const RandomNumberType seed /* = 1 */ ) noexcept
+RandomNumberType RandomManager::sequence_rand () noexcept
 {
-    std::srand(seed);
+    return std_random_generator_();
 }
 
 RandomNumberType RandomManager::rand (const RandomNumberType seed) noexcept

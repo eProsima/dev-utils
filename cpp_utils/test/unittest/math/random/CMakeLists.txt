@@ -20,10 +20,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        get_random_number
+        get_random_sequence_number
         get_pure_random_number
         get_seed_random_number
-        set_seed
+        set_initial_seed
     )
 
 set(TEST_EXTRA_LIBRARIES

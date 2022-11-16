@@ -39,16 +39,17 @@ constexpr const unsigned int TEST_ITERATIONS = 100;
  *
  * NOTE: this test could also be done by seeding rand to 1.
  */
-TEST(randomTest, get_random_number)
+TEST(randomTest, get_random_sequence_number)
 {
     // calculates the N first numbers from rand()
+    RandomManager initial_manager;
     std::array<RandomNumberType, test::TEST_ITERATIONS> rand_numbers;
     for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
     {
-        rand_numbers[i] = rand();
+        rand_numbers[i] = initial_manager.rand();
     }
 
-    // create N Random Manager and generate N values that are equal the rand() N ones
+    // create N Random Manager and generate N values that are equal the N first ones
     for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
     {
         RandomManager manager;
@@ -160,45 +161,37 @@ TEST(randomTest, get_seed_random_number)
 }
 
 /**
- * Set seed of a Random Manager and check that values generated are the same as setting srand.
- *
- * CASES:
- * - set it from RandomManager::srand
- * - set it from RandomManager::RandomManager
+ * Test that setting a seed in a RandomManager, the sequence numbers generated are the same for same seed.
+ * Test also that are different for different seeds.
  */
-TEST(randomTest, set_seed)
+TEST(randomTest, set_initial_seed)
 {
+    // array to store random sequences and check that are not repeated with different seeds (initialized to 0).
+    std::array<RandomNumberType, test::TEST_ITERATIONS> random_numbers;
     for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
     {
-        // Set rand seed in srand
-        std::srand(i);
+        random_numbers[i] = 0;
+    }
 
-        // calculates the N first numbers from rand()
-        std::array<RandomNumberType, test::TEST_ITERATIONS> rand_numbers;
+    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    {
+        // Create a random generator with seed and check that N first sequence values are not the same as other seed
+        // Also replace the old values to check in next iteration
+        RandomManager manager(i);
         for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
         {
-            rand_numbers[j] = rand();
+            auto new_sequence_number = manager.rand();
+            ASSERT_NE(new_sequence_number, random_numbers[j]) <<
+                "In manager " << i << " in value " << j;
+            random_numbers[j] = new_sequence_number;
         }
 
-        // set it from RandomManager::srand
+        // Create a different random generator and check that with same seed the sequence are the same
+        RandomManager new_manager(i);
+        for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
         {
-            RandomManager manager;
-            manager.srand(i);
-            for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
-            {
-                ASSERT_EQ(manager.rand(), rand_numbers[j]) <<
-                    "srand set Manager Iteration " << i << " in number " << j;
-            }
-        }
-
-        // set it from RandomManager::RandomManager
-        {
-            RandomManager manager(i);
-            for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
-            {
-                ASSERT_EQ(manager.rand(), rand_numbers[j]) <<
-                    "ctor set Manager Iteration " << i << " in number " << j;
-            }
+            auto new_sequence_number = new_manager.sequence_rand();
+            ASSERT_EQ(new_sequence_number, random_numbers[j]);
         }
     }
 }

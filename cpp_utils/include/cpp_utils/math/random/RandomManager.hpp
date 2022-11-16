@@ -60,10 +60,10 @@ public:
      *
      * @param original_seed initial seed for sequence number generator.
      */
-    RandomManager(const RandomNumberType original_seed = 1);
+    CPP_UTILS_DllAPI RandomManager(const RandomNumberType original_seed = 1);
 
     //! Default destructor
-    ~RandomManager() = default;
+    CPP_UTILS_DllAPI ~RandomManager() = default;
 
     /**
      * @brief Generate pure random number.

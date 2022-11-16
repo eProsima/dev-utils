@@ -105,11 +105,11 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/coverage_colcon.meta
+          cat src/dev-utils/.github/workflows/configurations/coverage_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
+            --metas src/dev-utils/.github/workflows/configurations/coverage_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
@@ -203,7 +203,7 @@ jobs:
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/asan_colcon.meta
+            --metas src/dev-utils/.github/workflows/configurations/asan_colcon.meta
 
       - name: Run tests
         run: |
@@ -270,7 +270,7 @@ jobs:
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/tsan_colcon.meta
+            --metas src/dev-utils/.github/workflows/configurations/tsan_colcon.meta
 
       - name: Run tests
         run: |
@@ -490,11 +490,11 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/coverage_colcon.meta
+          cat src/dev-utils/.github/workflows/configurations/coverage_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
+            --metas src/dev-utils/.github/workflows/configurations/coverage_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
@@ -542,11 +542,11 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/clang_colcon.meta
+          cat src/dev-utils/.github/workflows/configurations/clang_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/clang_colcon.meta
+            --metas src/dev-utils/.github/workflows/configurations/clang_colcon.meta
 
       - name: Run clang-tidy
         run: |
@@ -677,5 +677,5 @@ jobs:
       - name: Check flake8 linter
         run: |
           cd src/dev-utils
-          python3 -m flake8 --config ./.github/workflows/setup.cfg ${MODIFIED_FILES}
+          python3 -m flake8 --config ./.github/workflows/configurations/setup.cfg ${MODIFIED_FILES}
         if: always()

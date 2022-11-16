@@ -69,6 +69,9 @@ namespace utils {
     /* To string method */                                                                                            \
     inline const std::string& to_string(const enumeration_name& e)                                                           \
     { return names_ ## enumeration_name[static_cast<int>(e)]; }                                                     \
+                                                                            \
+    inline std::vector<std::string> string_vector_ ## enumeration_name()           \
+    { return std::vector<std::string> (names_ ## enumeration_name.begin(), names_ ## enumeration_name.end()); }       \
                                                                                                                       \
     /* From string */                                                                                                 \
     inline enumeration_name from_string_ ## enumeration_name(const std::string& s)                                             \
@@ -89,5 +92,3 @@ namespace utils {
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

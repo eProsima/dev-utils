@@ -27,12 +27,20 @@ namespace eprosima {
 namespace utils {
 
 /**
- * TODO
+ * Custom Log Consumer with Standard (logical) behaviour.
+ *
+ * Registering this consumer in Fast DDS Log prints every log entry that has a more important kind that the threshold
+ * given. In case messages are not of Error kind, they are filtered by category to match a regex.
+ * Info messages are printed in std::cout while others are sent to std::cerr .
+ *
+ * @attention This consumer filters the entries that receives, but some other entries could be filtered beforehand
+ * by Fast DDS Log. To avoid these, set Log verbosity to Info and do not use Category Filter.
  */
 class CustomStdLogConsumer : public utils::LogConsumer
 {
 public:
 
+    //! Create new CustomStdLogConsumer with regex filter generated from a string and with maximum verbosity kind.
     CPP_UTILS_DllAPI CustomStdLogConsumer(
             const std::string& log_filter,
             const eprosima::fastdds::dds::Log::Kind& log_verbosity);
@@ -43,9 +51,11 @@ public:
     /**
      * @brief Implements \c LogConsumer \c Consume method.
      *
-     * Each entry is filtered by a regex done by \c filter_ and must be equal or higher the
-     * verbosity level \c verbosity_ .
-     * This method will print the \c entry in std::cout with info verbosity and in std:cerr otherwise.
+     * Each entry must be equal or higher the verbosity level \c verbosity_ .
+     * Each entry category must match with regex stored in \c filter_ , except
+     * those entries that are Error will be always printed if \c verbosity_ is not Error.
+     *
+     * This method will print the \c entry in \c std::cout with info verbosity and in \c std:cerr otherwise.
      *
      * @param entry entry to consume
      */
@@ -54,14 +64,24 @@ public:
 
 protected:
 
+    //! Whether the entry must be accepted depending on kind and category
     CPP_UTILS_DllAPI virtual bool accept_entry_(
             const Log::Entry& entry);
 
+    /**
+     * @brief Get which stream must be used depending on the entry
+     *
+     * @param entry to decide the output stream
+     *
+     * @return \c std::out if entry is Info, \c std::cerr otherwise.
+     */
     CPP_UTILS_DllAPI virtual std::ostream& get_stream_(
             const Log::Entry& entry);
 
+    //! Regex filter for entry category
     std::regex filter_;
 
+    //! Maximum Log Kind that will be printed.
     eprosima::fastdds::dds::Log::Kind verbosity_;
 };
 

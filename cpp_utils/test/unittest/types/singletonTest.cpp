@@ -20,6 +20,13 @@
 #include <cpp_utils/types/Singleton.hpp>
 #include <cpp_utils/wait/BooleanWaitHandler.hpp>
 
+/******************************
+ * WARNING:
+ * Theses tests are meant to run independently and in different processes.
+ * As they use singletons it is required that singleton are constructed and destroyed within each test
+ * to test it correctly.
+ */
+
 namespace test {
 
 using TestInternalType = int;
@@ -187,11 +194,6 @@ TEST(singletonTest, different_index_class)
     // Check that last modification has been done correctly
     ASSERT_EQ(test::SingletonType::get_instance()->get(), 42);
     ASSERT_EQ(test::OtherSingletonType::get_instance()->get(), 84);
-}
-
-TEST(singletonTest, correct_destruction_order)
-{
-    // TODO
 }
 
 int main(

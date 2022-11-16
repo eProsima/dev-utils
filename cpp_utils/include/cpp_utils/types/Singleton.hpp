@@ -30,6 +30,11 @@ template <typename T, int Index = 0>
 class Singleton
 {
 public:
+
+    /**
+     * @brief
+     *
+     */
     static T* get_instance() noexcept;
 
     static std::shared_ptr<T> get_shared_instance() noexcept;

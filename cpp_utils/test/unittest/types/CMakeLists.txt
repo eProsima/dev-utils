@@ -61,6 +61,41 @@ set(TEST_SOURCES
 set(TEST_LIST
         trivial_get_instance
         different_index_class
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )
+
+
+############################
+# SINGLETON ORDER TEST
+############################
+
+set(TEST_NAME singletonOrderTest)
+
+set(TEST_SOURCES
+        singletonOrderTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/BooleanWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+    )
+
+set(TEST_LIST
+        correct_construction_order
         correct_destruction_order
     )
 

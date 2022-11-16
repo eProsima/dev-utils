@@ -12,17 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add test subdirectories
-add_subdirectory(event)
-add_subdirectory(exception)
-add_subdirectory(types)
-add_subdirectory(macros)
-add_subdirectory(math)
-add_subdirectory(math/random)
-add_subdirectory(memory)
-add_subdirectory(return_code)
-add_subdirectory(testing)
-add_subdirectory(thread_pool)
-add_subdirectory(time)
-add_subdirectory(utils)
-add_subdirectory(wait)
+set(TEST_NAME randomTest)
+
+set(TEST_SOURCES
+        randomTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/random/RandomManager.cpp
+    )
+
+set(TEST_LIST
+        get_random_number
+        get_pure_random_number
+        get_seed_random_number
+        set_seed
+    )
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )

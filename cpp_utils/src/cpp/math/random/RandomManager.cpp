@@ -22,24 +22,34 @@
 namespace eprosima {
 namespace utils {
 
-RandomManager::RandomManager(const unsigned int original_seed)
+RandomManager::RandomManager(const RandomNumberType original_seed /* = 1 */ )
 {
-    std_random_generator_.seed(original_seed);
+    std::srand(original_seed);
 }
 
 template <>
-CPP_UTILS_DllAPI unsigned int RandomManager::rand<true> () noexcept
+CPP_UTILS_DllAPI RandomNumberType RandomManager::rand<true> () noexcept
 {
     return pure_random_generator_();
 }
 
 template <>
-CPP_UTILS_DllAPI unsigned int RandomManager::rand<false> () noexcept
+CPP_UTILS_DllAPI RandomNumberType RandomManager::rand<false> () noexcept
 {
-    return std_random_generator_();
+    return std::rand();
 }
 
-unsigned int RandomManager::rand (const unsigned int seed) noexcept
+RandomNumberType RandomManager::pure_rand () noexcept
+{
+    return rand<true>();
+}
+
+void RandomManager::srand (const RandomNumberType seed /* = 1 */ ) noexcept
+{
+    std::srand(seed);
+}
+
+RandomNumberType RandomManager::rand (const RandomNumberType seed) noexcept
 {
     seed_random_generator_.seed(seed);
     return seed_random_generator_();

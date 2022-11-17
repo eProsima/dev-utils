@@ -55,6 +55,7 @@ TEMPLATE_TEXT = """
 #include <array>
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 %start_namespace%
 
@@ -72,6 +73,13 @@ inline const std::string& to_string(
         const %enum_name%& e)
 {
     return NAMES_%enum_name%[static_cast<int>(e)];
+}
+
+inline std::vector<std::string> string_vector_%enum_name%e()
+{
+    return std::vector<std::string> (
+        NAMES_%enum_name%.begin(),
+        NAMES_%enum_name%.end());
 }
 
 inline %enum_name% from_string_%enum_name%(

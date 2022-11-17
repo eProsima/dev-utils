@@ -35,9 +35,9 @@ namespace utils {
 /**
  * @brief This macro creates a Custom Enumeration with auxiliary functions and variables.
  *
- * An enumeration built with ENUEMERATION_BUILDER has:
+ * An enumeration built with ENUMERATION_BUILDER has:
  * - enum class with name \c enumeration_name and N values, one for each extra argument, and with that exact name.
- * - array called \c nammes_<enumeration_name> with the names of each element of the enumeration
+ * - array called \c NAMES_<enumeration_name> with the names of each element of the enumeration
  * as strings of the enum value.
  * - \c to_string method to get the string associated with an enumeration value.
  * - \c from_string_<enumeration_name> method that gives enumeration value from string name.

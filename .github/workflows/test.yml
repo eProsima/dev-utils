@@ -407,7 +407,7 @@ jobs:
         run: |
           $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_dependencies.yml/runs';
           ((iwr $RUNS_URI).Content | ConvertFrom-Json).workflow_runs | ? status -eq 'completed' |
-           select -first 1 id | % { "fastdds_job_id=$_" } | Out-File $env:GITHUB_ENV -Append
+           select -first 1 id | % { "fastdds_job_id=" + $_.id } | Out-File $env:GITHUB_ENV -Append
 
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2

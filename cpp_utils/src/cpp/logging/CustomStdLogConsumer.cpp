@@ -55,7 +55,7 @@ bool CustomStdLogConsumer::accept_entry_(
         return false;
     }
     else if (entry.kind == eprosima::fastdds::dds::Log::Kind::Error &&
-             entry.kind < verbosity_)
+            entry.kind < verbosity_)
     {
         // In case it is an error message and verbosity is not error, filter does not care
         return true;

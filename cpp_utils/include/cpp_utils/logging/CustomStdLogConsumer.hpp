@@ -29,7 +29,7 @@ namespace utils {
 /**
  * Custom Log Consumer with Standard (logical) behaviour.
  *
- * Registering this consumer in Fast DDS Log prints every log entry that has a more important kind that the threshold
+ * Registering this consumer in Fast DDS Log prints every log entry that has a higher kind than the threshold
  * given. In case messages are not of Error kind, they are filtered by category to match a regex.
  * Info messages are printed in std::cout while others are sent to std::cerr .
  *

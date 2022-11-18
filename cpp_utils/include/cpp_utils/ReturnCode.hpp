@@ -37,6 +37,8 @@ public:
     //! Inherit Parent class constructors
     using eprosima::fastrtps::types::ReturnCode_t::ReturnCode_t;
 
+    ReturnCode(const eprosima::fastrtps::types::ReturnCode_t& other);
+
     //! Specify the operator so OK code could be translated to True.
     CPP_UTILS_DllAPI bool operator ()() const noexcept;
 
@@ -62,5 +64,3 @@ CPP_UTILS_DllAPI std::ostream& operator <<(
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

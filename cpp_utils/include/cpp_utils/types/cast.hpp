@@ -24,7 +24,8 @@ namespace eprosima {
 namespace utils {
 
 template <typename T>
-CPP_UTILS_DllAPI void* cast_to_void_ptr(const T* c);
+CPP_UTILS_DllAPI void* cast_to_void_ptr(
+        const T* c);
 
 } /* namespace utils */
 } /* namespace eprosima */

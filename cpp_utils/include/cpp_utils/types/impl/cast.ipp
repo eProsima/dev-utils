@@ -22,7 +22,8 @@ namespace eprosima {
 namespace utils {
 
 template <typename T>
-void* cast_to_void_ptr(const T* c)
+void* cast_to_void_ptr(
+        const T* c)
 {
     return static_cast<void*>(const_cast<T*>(c));
 }

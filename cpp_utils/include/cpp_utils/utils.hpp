@@ -172,10 +172,13 @@ template <typename T>
 CPP_UTILS_DllAPI std::string generic_to_string(
         const T& element);
 
+template <typename T>
+CPP_UTILS_DllAPI void* copy_to_void_ptr(
+        const T* source,
+        size_t size = sizeof(T));
+
 } /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file
 #include <cpp_utils/impl/utils.ipp>
-
-

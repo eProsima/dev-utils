@@ -41,6 +41,13 @@ const std::map<ReturnCode, std::string> ReturnCode::to_string_conversion_ =
     {ReturnCode::RETCODE_NOT_ALLOWED_BY_SECURITY, "NotAllowedBySecurity"},
 };
 
+ReturnCode::ReturnCode(
+        const eprosima::fastrtps::types::ReturnCode_t& other)
+    : eprosima::fastrtps::types::ReturnCode_t(other())
+{
+    // Do nothing
+}
+
 bool ReturnCode::operator ()() const noexcept
 {
     return RETCODE_OK == *this;

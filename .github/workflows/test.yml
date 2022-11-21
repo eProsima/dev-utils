@@ -105,11 +105,11 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/coverage_colcon.meta
+          cat src/dev-utils/.github/workflows/configurations/coverage_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
+            --metas src/dev-utils/.github/workflows/configurations/coverage_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
@@ -203,7 +203,7 @@ jobs:
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/asan_colcon.meta
+            --metas src/dev-utils/.github/workflows/configurations/asan_colcon.meta
 
       - name: Run tests
         run: |
@@ -270,7 +270,7 @@ jobs:
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/tsan_colcon.meta
+            --metas src/dev-utils/.github/workflows/configurations/tsan_colcon.meta
 
       - name: Run tests
         run: |
@@ -490,11 +490,11 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/coverage_colcon.meta
+          cat src/dev-utils/.github/workflows/configurations/coverage_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/coverage_colcon.meta \
+            --metas src/dev-utils/.github/workflows/configurations/coverage_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
@@ -542,11 +542,11 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/dev-utils/.github/workflows/clang_colcon.meta
+          cat src/dev-utils/.github/workflows/configurations/clang_colcon.meta
           source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/dev-utils/.github/workflows/clang_colcon.meta
+            --metas src/dev-utils/.github/workflows/configurations/clang_colcon.meta
 
       - name: Run clang-tidy
         run: |
@@ -637,3 +637,45 @@ jobs:
         with:
           name: uncrustify_results
           path: uncrustify_results.xml
+
+###########################################################
+# PYTHON LINTER
+  python-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Fetch all branches and tags
+        run: |
+          cd src/dev-utils
+          git fetch --prune --unshallow
+
+      - name: Install apt packages
+        uses: ./src/dev-utils/.github/actions/install-apt-packages
+
+      - name: Install Python packages
+        uses: ./src/dev-utils/.github/actions/install-python-packages
+
+      - name: Get difference
+        run: |
+          cd src/dev-utils
+          echo "MODIFIED_FILES=$(git diff --name-only origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -e '\.py' | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Check difference
+        run: |
+          cd src/dev-utils
+          if [[ -z "${MODIFIED_FILES}" ]]
+          then
+            touch empty.py
+            echo "MODIFIED_FILES=empty.py" >> $GITHUB_ENV
+          fi
+          echo ${MODIFIED_FILES}
+
+      - name: Check flake8 linter
+        run: |
+          cd src/dev-utils
+          python3 -m flake8 --config ./.github/workflows/configurations/setup.cfg ${MODIFIED_FILES}
+        if: always()

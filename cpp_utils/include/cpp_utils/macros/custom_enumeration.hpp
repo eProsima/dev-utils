@@ -20,8 +20,10 @@
 
 #pragma once
 
-#include <string>
 #include <array>
+#include <ostream>
+#include <string>
+#include <vector>
 
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <cpp_utils/macros/macros.hpp>

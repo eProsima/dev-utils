@@ -52,7 +52,7 @@ public:
 
     //! Concatenate stream values to this object.
     template<class Val>
-    Formatter& operator <<(
+    CPP_UTILS_DllAPI Formatter& operator <<(
             const Val& val);
 
     /////

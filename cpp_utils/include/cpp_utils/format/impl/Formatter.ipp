@@ -13,32 +13,25 @@
 // limitations under the License.
 
 /**
- * @file Formatter.cpp
+ * @file Formatter.ipp
  *
+ * This file contains class Formatter implementation of template methods.
  */
 
-#include <cpp_utils/Formatter.hpp>
+#pragma once
 
 namespace eprosima {
 namespace utils {
+namespace format {
 
-Formatter::operator std::string () const noexcept
+template<class Val>
+CPP_UTILS_DllAPI Formatter& Formatter::operator <<(
+        const Val& val)
 {
-    return to_string();
+    ss_ << val;
+    return *this;
 }
 
-std::string Formatter::to_string() const noexcept
-{
-    return ss_.str().c_str();
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const Formatter& f)
-{
-    os << f.to_string();
-    return os;
-}
-
+} /* namespace format */
 } /* namespace utils */
 } /* namespace eprosima */

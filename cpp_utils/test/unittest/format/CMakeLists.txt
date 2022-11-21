@@ -13,33 +13,29 @@
 # limitations under the License.
 
 ###################################
-# Slot Thread Pool execution Test
+# Formatter Tests
 ###################################
 
-set(TEST_NAME
-    slot_thread_pool_test)
+set(TEST_NAME formatter_tests)
 
 set(TEST_SOURCES
-        slot_thread_pool_test.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/SlotThreadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/task/TaskId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
+        formatter_tests.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
     )
 
 set(TEST_LIST
-        pool_one_thread_one_slot
-        pool_one_thread_n_slots
-        pool_n_threads_one_slot
+        object_use
+        cast_string
+        to_string
+        serialization_operator_string
+        use_in_exception
     )
 
 set(TEST_EXTRA_LIBRARIES
-        ${MODULE_DEPENDENCIES}
+    )
+
+set(TEST_NEEDED_SOURCES
     )
 
 add_unittest_executable(
@@ -47,4 +43,38 @@ add_unittest_executable(
         "${TEST_SOURCES}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )
+
+
+###################################
+# format utils Tests
+###################################
+
+set(TEST_NAME format_utils_tests)
+
+set(TEST_SOURCES
+        format_utils_tests.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/format_utils.cpp
+    )
+
+set(TEST_LIST
+        convert_to_lowercase
+        container_to_stream
+        generic_to_string
+    )
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
     )

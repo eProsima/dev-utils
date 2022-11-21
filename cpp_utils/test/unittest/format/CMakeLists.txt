@@ -60,9 +60,8 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        to_lowercase
-        container_to_stream_vector
-        container_to_stream_set
+        convert_to_lowercase
+        container_to_stream
         generic_to_string
     )
 

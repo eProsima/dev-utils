@@ -23,7 +23,7 @@
 using namespace eprosima::utils::format;
 
 /**
- * @brief Test function \c to_lowercase .
+ * @brief Test function \c convert_to_lowercase .
  *
  * CASES:
  * - Uppercase
@@ -31,57 +31,131 @@ using namespace eprosima::utils::format;
  * - With non-letter characters
  * - Empty
  */
-TEST(format_utils_tests, to_lowercase)
+TEST(format_utils_tests, convert_to_lowercase)
 {
     // Uppercase
     {
         std::string str = "FOO";
-        to_lowercase(str);
+        convert_to_lowercase(str);
         ASSERT_EQ(str, "foo");
     }
 
     // Invariant
     {
         std::string str = "foo";
-        to_lowercase(str);
+        convert_to_lowercase(str);
         ASSERT_EQ(str, "foo");
     }
 
     // With non-letter characters
     {
         std::string str = "!_-.,FoO";
-        to_lowercase(str);
+        convert_to_lowercase(str);
         ASSERT_EQ(str, "!_-.,foo");
     }
 
     // Empty
     {
         std::string str = "";
-        to_lowercase(str);
+        convert_to_lowercase(str);
         ASSERT_EQ(str, "");
     }
 }
 
 /**
- * @brief Test function \c container_to_stream_vector .
+ * @brief Test function \c container_to_stream .
  *
  * CASES:
- * - int
+ * - vector
+ *   - int
+ *   - std::string
+ * - set (could be different order)
+ *   - int
+ *   - std::string
+ * - different separator
  */
-TEST(format_utils_tests, container_to_stream_vector)
+TEST(format_utils_tests, container_to_stream)
 {
-    // int
+    // vector
     {
-        std::vector<int> v({1, 30, 500, -7000});
-    }
-}
+        // int
+        {
+            std::vector<int> container({1, 30, 500, -7000});
+            std::stringstream ss;
+            eprosima::utils::format::container_to_stream(ss, container);
+            ASSERT_EQ(ss.str(), "1;30;500;-7000");
+        }
 
-/**
- * @brief Test function \c container_to_stream_set .
- */
-TEST(format_utils_tests, container_to_stream_set)
-{
-    // TODO
+        // std::string
+        {
+            std::vector<std::string> container({"my", "1", "_THEN_;"});
+            std::stringstream ss;
+            eprosima::utils::format::container_to_stream(ss, container);
+            ASSERT_EQ(ss.str(), "my;1;_THEN_;");
+        }
+    }
+
+    // set
+    {
+        // int
+        {
+            std::set<int> container({30, 1, 500, -7000});
+            std::stringstream ss;
+            eprosima::utils::format::container_to_stream(ss, container);
+            std::string result = ss.str();
+
+            // Check that every number exists and has a ; before or after
+            for (const auto& x : container)
+            {
+                std::string this_value_str = eprosima::utils::format::generic_to_string(x);
+                auto res = result.find(this_value_str);
+                ASSERT_NE(res, std::string::npos);
+
+                if (res != 0)
+                {
+                    ASSERT_EQ(result[res - 1], ';');
+                }
+
+                if (res + this_value_str.size() < result.size())
+                {
+                    ASSERT_EQ(result[res + this_value_str.size()], ';');
+                }
+            }
+        }
+
+        // string
+        {
+            std::vector<std::string> container({"my", "1", "_THEN_;"});
+            std::stringstream ss;
+            eprosima::utils::format::container_to_stream(ss, container);
+            std::string result = ss.str();
+
+            // Check that every number exists and has a ; before or after
+            for (const auto& x : container)
+            {
+                auto res = result.find(x);
+                ASSERT_NE(res, std::string::npos);
+
+                if (res != 0)
+                {
+                    ASSERT_EQ(result[res - 1], ';');
+                }
+
+                if (res + x.size() < result.size())
+                {
+                    ASSERT_EQ(result[res + x.size()], ';');
+                }
+            }
+        }
+    }
+
+    // different separator
+    {
+        std::vector<char> container({'_', '=', '_'});
+        std::stringstream ss;
+        eprosima::utils::format::container_to_stream(ss, container, "(*)");
+        ASSERT_EQ(ss.str(), "_(*)=(*)_");
+    }
 }
 
 /**
@@ -103,17 +177,17 @@ TEST(format_utils_tests, generic_to_string)
 
     // string
     {
-        std::string x = "42";
+        std::string x = "42_";
         std::string result = generic_to_string(x);
-        ASSERT_EQ(result, "42");
+        ASSERT_EQ(result, "42_");
     }
 
     // formatter
     {
         Formatter x;
-        x << "42";
+        x << "my42";
         std::string result = generic_to_string(x);
-        ASSERT_EQ(result, "42");
+        ASSERT_EQ(result, "my42");
     }
 }
 

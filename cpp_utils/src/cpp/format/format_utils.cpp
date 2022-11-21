@@ -26,7 +26,7 @@ namespace eprosima {
 namespace utils {
 namespace format {
 
-void to_lowercase(
+void convert_to_lowercase(
         std::string& st) noexcept
 {
     std::transform(st.begin(), st.end(), st.begin(),

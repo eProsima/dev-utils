@@ -41,7 +41,7 @@ namespace format {
  *
  * @param [in,out] st : string to modify
  */
-CPP_UTILS_DllAPI void to_lowercase(
+CPP_UTILS_DllAPI void convert_to_lowercase(
         std::string& st) noexcept;
 
 /////
@@ -50,40 +50,24 @@ CPP_UTILS_DllAPI void to_lowercase(
 /**
  * @brief Concatenate serialization of elements in a vector separated by \c separator .
  *
- * @tparam T type of each element. This object must have an << operator
- * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
+ * @tparam C type of container, as container<T>. T This object must have an << operator
  *
  * @param os stream to store the concatenation result
- * @param list vector of elements
+ * @param container vector of elements
  * @param separator char or string separator between elements
  *
  * @return stream object with the concatenation of \c os and \c element
  */
-template <typename T>
-CPP_UTILS_DllAPI std::ostream& container_to_stream(
+template <typename C>
+std::ostream& container_to_stream(
         std::ostream& os,
-        const std::vector<T>& list,
+        const C& container,
         const std::string& separator = ";");
 
-/**
- * @brief Concatenate serialization of elements in a set separated by \c separator .
- *
- * The order of the elements in the final stream is not guaranteed.
- *
- * @tparam T type of each element. This object must have an << operator
- * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
- *
- * @param os stream to store the concatenation result
- * @param set set of elements
- * @param separator char or string separator between elements
- *
- * @return stream object with the concatenation of \c os and \c element
- */
+//! Return a string serialization of \c element by using \c T::operator<< .
 template <typename T>
-CPP_UTILS_DllAPI std::ostream& container_to_stream(
-        std::ostream& os,
-        const std::set<T>& set,
-        const std::string& separator = ";");
+std::string generic_to_string(
+        const T& element) noexcept;
 
 } /* namespace format */
 } /* namespace utils */

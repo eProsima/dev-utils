@@ -99,7 +99,7 @@ TEST(recursiveMacrosTest, apply_macro_for_each)
         ASSERT_EQ(z, 4);
     }
 
-#define TO_LOWERCASE(x) eprosima::utils::format::to_lowercase(x);
+#define TO_LOWERCASE(x) eprosima::utils::format::convert_to_lowercase(x);
 
     // string concatenation
     {

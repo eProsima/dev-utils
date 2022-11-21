@@ -24,39 +24,18 @@ namespace eprosima {
 namespace utils {
 namespace format {
 
-template <typename T>
+template <typename C>
 std::ostream& container_to_stream(
         std::ostream& os,
-        const std::vector<T>& list,
+        const C& container,
         const std::string& separator /* = ";"*/)
 {
-    if (!list.size() == 0)
+    if (!container.size() == 0)
     {
-        typename std::vector<T>::const_iterator it = list.begin();
+        auto it = container.begin();
         os << *it;
         ++it;
-        for (; it != list.end(); ++it)
-        {
-            os << separator;
-            os << *it;
-        }
-    }
-
-    return os;
-}
-
-template <typename T>
-std::ostream& container_to_stream(
-        std::ostream& os,
-        const std::set<T>& set,
-        const std::string& separator /* = ";" */)
-{
-    if (!set.size() == 0)
-    {
-        typename std::set<T>::const_iterator it = set.begin();
-        os << *it;
-        ++it;
-        for (; it != set.end(); ++it)
+        for (; it != container.end(); ++it)
         {
             os << separator;
             os << *it;

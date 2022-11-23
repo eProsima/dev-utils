@@ -90,8 +90,7 @@ all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
         push_pop_one_thread_int
-        push_pop_one_thread_string_move # not working
-        push_pop_one_thread_string_copy
+        push_pop_one_thread_string_move
         push_one_thread_pop_many_int
     )
 

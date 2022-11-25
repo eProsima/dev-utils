@@ -20,6 +20,6 @@ runs:
           gcovr==5.0 \
           pyyaml \
           jsonschema \
-          flake8 \
+          flake8==5.0.4 \
           flake8-quotes
       shell: bash

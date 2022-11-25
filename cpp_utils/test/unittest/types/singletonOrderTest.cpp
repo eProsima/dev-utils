@@ -143,7 +143,7 @@ TEST(singletonOrderTest, correct_construction_order)
     // call get_isntance of the one supposed to be constructed afterwards
     Singleton<test::TestTypeOrder_LastIn>::get_instance();
 
-    // Let singleton destroy by themselves and fail if they should
+    // Let singleton destroy by themselves
 }
 
 TEST(singletonOrderTest, correct_destruction_order)
@@ -154,7 +154,7 @@ TEST(singletonOrderTest, correct_destruction_order)
     // call get_isntance of the one supposed to be constructed afterwards
     Singleton<test::TestTypeOrder_LastIn_FirstOut>::get_instance();
 
-    // Let singleton destroy by themselves and fail if they should
+    // Let singleton destroy by themselves and fail if they should be destroyed in different order
 }
 
 int main(

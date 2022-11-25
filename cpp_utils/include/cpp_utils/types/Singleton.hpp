@@ -36,9 +36,9 @@ namespace utils {
  * that the construction of the object is simple and could not fail.
  *
  * There could be more than one Singleton instance per class.
- * But because the static variables of this class, it could only be one Singleton per class.
- * For this propose there is an \c Index that allow to create different Singleton instances of the same class
- * just by using a different index per each.
+ * But because the static variables of this class, there could only be one Singleton per class.
+ * For this purpose there is an \c Index that allows to create different Singleton instances of the same class
+ * just by using a different index for each of them.
  *
  * @tparam T type of the value that will be converted to Singleton.
  * @tparam Index identifier of a specific Singleton element.
@@ -50,10 +50,14 @@ namespace utils {
  *   // From now on, we can access an instance of Database shared with the whole process
  *   ProcessSharedDatabase::get_instance()->do_something_in_database(args);
  *
- * @attention this class is thread-safe but does not protect the internal instance.
+ * @attention internal class in Singleton should have a protected ctor. Otherwise the static variable could be
+ * copied and, or moved. User is responsible of creating a safe class.
+ *
+ * @attention this class is thread-safe but does not guarantee that internal class is thread safe neither protect
+ * its methods and variables.
  *
  * @attention it is advised to not use directly Singleton<T> from code, but define previously a "class" that will
- * be the singleton by \c using and giving a random \c Index so every user know the name to access it.
+ * be the singleton by \c using and choosing a "random" \c Index so every user knows the name to access it.
  */
 template <typename T, int Index = 0>
 class Singleton
@@ -76,7 +80,7 @@ public:
 private:
 
     /**
-     * @brief Default constructor specifies that none can create an instance of this class.
+     * @brief Protected default constructor specifies that none can create an instance of this class.
      *
      * @note this constructor must exist (cannot be deleted), otherwise this class could not be used.
      * However, this ctor will never be called anywhere.

@@ -55,6 +55,12 @@ public:
 protected:
     TestInternalType internal_value_ = 0;
     mutable std::mutex mutex_;
+
+    // Protected ctor so it can only be created from Singleton
+    TestType() = default;
+
+    template <typename T, int Index>
+    friend class eprosima::utils::Singleton;
 };
 
 using SingletonType = eprosima::utils::Singleton<TestType>;
@@ -65,8 +71,8 @@ using OtherSingletonType = eprosima::utils::Singleton<TestType, 42>;
 using namespace eprosima::utils;
 
 /**
- * Access to \c SingletonType class from different scopes and threads that does
- * not have common variable, so get_instance actually give acces to same object.
+ * Access to \c SingletonType class from different scopes and threads that do
+ * not have common variable, so get_instance actually gives access to same object.
  *
  * TESTS:
  * - Test that modifying the instance from a thread does change it in other thread.

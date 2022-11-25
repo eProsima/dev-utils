@@ -31,7 +31,7 @@ T* Singleton<T, Index>::get_instance() noexcept
 template <typename T, int Index>
 std::shared_ptr<T> Singleton<T, Index>::get_shared_instance() noexcept
 {
-    static std::shared_ptr<T> instance_(std::make_shared<T>());
+    static std::shared_ptr<T> instance_(new T());
     return instance_;
 }
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file math_extension.cpp
+ * @file RandomManager.cpp
  *
  */
 

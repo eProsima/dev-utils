@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ constexpr const unsigned int TEST_ITERATIONS = 100;
 /**
  * Test the generation of std random numbers from a default seed.
  *
- * This will use the \c std::rand method to know the N first values that are expected.
+ * This will use the 2 Random Managers to know the N first values that are expected are the same.
  *
  * STEPS:
- * - calculates the N first numbers from rand()
- * - create N Random Manager and generate N values that are equal the rand() N ones
+ * - calculates the N first numbers from initial_manager
+ * - create N Random Manager and generate N values that are equal the initial_manager N ones
  *
  * NOTE: this test could also be done by seeding rand to 1.
  */
@@ -80,6 +80,7 @@ TEST(randomTest, get_pure_random_number)
     }
 
     // create Random Manager and generate N values with method rand<true> that should not be in N first generated
+    std::array<RandomNumberType, test::TEST_ITERATIONS> rand_manager_numbers;
     {
         RandomManager manager;
         for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
@@ -91,10 +92,12 @@ TEST(randomTest, get_pure_random_number)
             ASSERT_EQ(
                 std::find(std::begin(rand_numbers), std::end(rand_numbers), new_value),
                 std::end(rand_numbers));
+            rand_manager_numbers[i] = new_value;
         }
     }
 
-    // create Random Manager and generate N values with method pure_rand that should not be in N first generated
+    // create Random Manager and generate N values with method pure_rand that should not be in N first generated,
+    // neither in the Random Manager generated ones
     {
         RandomManager manager;
         for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
@@ -106,6 +109,11 @@ TEST(randomTest, get_pure_random_number)
             ASSERT_EQ(
                 std::find(std::begin(rand_numbers), std::end(rand_numbers), new_value),
                 std::end(rand_numbers));
+
+            // Check that new value is not in Random Manager generated array
+            ASSERT_EQ(
+                std::find(std::begin(rand_manager_numbers), std::end(rand_manager_numbers), new_value),
+                std::end(rand_manager_numbers));
         }
     }
 }

@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,3 +39,7 @@ add_unittest_executable(
         "${TEST_EXTRA_LIBRARIES}"
         "${TEST_NEEDED_SOURCES}"
     )
+
+# These tests check random behaviours, thys some of them could eventually fail
+# Set flaky tests as xfail
+add_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)

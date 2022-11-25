@@ -33,14 +33,14 @@ using RandomNumberType = unsigned int;
 /**
  * @brief Object to manage the generation of random numbers.
  *
- * This classes used different random generators from <random> library to obtain a complete random generator
+ * This class use different random generators from <random> library to obtain a complete random generator
  * with multiple features:
  * 1. Can generate an always equal random sequence.
  * 2. Generate pure random numbers (no pseudorandom).
  * 3. Generate pseudorandom numbers from a specific seed.
- * These 3 features are completely independent and calls between them does not affect each other.
+ * These 3 features are completely independent and calls between them do not affect each other.
  *
- * Motivation: Why to use this class instead of a std::rand
+ * Motivation: Why use this class instead of a std::rand?
  * The use of only rand and srand is not recommended by std (https://en.cppreference.com/w/cpp/numeric/random/rand).
  * Also the use of rand does not allow to create pure random numbers (it must use srand with a explicit stochastic
  * value as time(NULL) (that also can be repeated if executed in same second)) neither to keep state of random

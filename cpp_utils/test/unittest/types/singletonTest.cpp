@@ -40,7 +40,8 @@ class TestType
 {
 public:
 
-    void set(const TestInternalType new_value) noexcept
+    void set(
+            const TestInternalType new_value) noexcept
     {
         std::lock_guard<std::mutex> guard(mutex_);
         internal_value_ = new_value;
@@ -53,6 +54,7 @@ public:
     }
 
 protected:
+
     TestInternalType internal_value_ = 0;
     mutable std::mutex mutex_;
 
@@ -92,7 +94,7 @@ TEST(singletonTest, trivial_get_instance)
     // Start first thread that will set value
     std::thread thread_set (
         [&waiter, ptr_to_instance]
-        ()
+            ()
         {
             // Get shared instance
             auto singleton_instance = test::SingletonType::get_instance();
@@ -107,12 +109,12 @@ TEST(singletonTest, trivial_get_instance)
             singleton_instance->set(42);
             waiter.open();
         }
-    );
+        );
 
     // Start second thread that will get value
     std::thread thread_get (
         [&waiter, ptr_to_instance]
-        ()
+            ()
         {
             // Wait for thread_set has finished
             waiter.wait();
@@ -127,7 +129,7 @@ TEST(singletonTest, trivial_get_instance)
             ASSERT_EQ(singleton_instance->get(), 42);
             singleton_instance->set(84);
         }
-    );
+        );
 
     // Wait for threads to finish
     thread_set.join();
@@ -156,7 +158,7 @@ TEST(singletonTest, different_index_class)
     // Start first thread that will set value
     std::thread thread_set (
         [&waiter, ptr_to_instance]
-        ()
+            ()
         {
             // Get shared instance
             auto singleton_instance = test::SingletonType::get_instance();
@@ -171,12 +173,12 @@ TEST(singletonTest, different_index_class)
             singleton_instance->set(42);
             waiter.open();
         }
-    );
+        );
 
     // Start second thread that will get value
     std::thread thread_get (
         [&waiter, ptr_to_instance]
-        ()
+            ()
         {
             // Wait for thread_set has finished
             waiter.wait();
@@ -191,7 +193,7 @@ TEST(singletonTest, different_index_class)
             ASSERT_EQ(singleton_instance->get(), 0);
             singleton_instance->set(84);
         }
-    );
+        );
 
     // Wait for threads to finish
     thread_set.join();

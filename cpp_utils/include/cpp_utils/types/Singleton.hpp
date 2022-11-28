@@ -86,7 +86,7 @@ private:
      * However, this ctor will never be called anywhere.
      */
     Singleton() = default;
- };
+};
 
 } /* namespace utils */
 } /* namespace eprosima */

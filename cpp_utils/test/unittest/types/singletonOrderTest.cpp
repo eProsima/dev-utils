@@ -58,6 +58,7 @@ struct TestTypeOrder_LastIn
     {
         ASSERT_EQ(value_to_check, 100);
     }
+
 };
 
 /**
@@ -76,6 +77,7 @@ struct TestTypeOrder_FirstIn
     {
         ASSERT_EQ(value_to_check, 0);
     }
+
 };
 
 
@@ -105,6 +107,7 @@ struct TestTypeOrder_FirstIn_LastOut
     {
         ASSERT_EQ(value_to_check, 200);
     }
+
 };
 
 /**

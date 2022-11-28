@@ -20,6 +20,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
+        trivial_pure
+        trivial_sequence
+        trivial_sequence_with_seed
+        trivial_seeded
         get_random_sequence_number
         get_pure_random_number
         get_seed_random_number

@@ -24,10 +24,31 @@
 namespace eprosima {
 namespace utils {
 
-RandomManager::RandomManager(const RandomNumberType original_seed /* = 1 */ )
+RandomManager::RandomManager(const RandomSeedType& original_seed /* = 1 */ )
     : std_random_generator_(original_seed)
 {
     // Do nothing
+}
+
+RandomNumberType RandomManager::pure_rand () noexcept
+{
+    return pure_random_generator_();
+}
+
+RandomNumberType RandomManager::sequence_rand () noexcept
+{
+    return std_random_generator_();
+}
+
+void RandomManager::seed (const RandomSeedType& seed) noexcept
+{
+    std_random_generator_.seed(seed);
+}
+
+RandomNumberType RandomManager::seeded_rand (const RandomSeedType& seed) noexcept
+{
+    seed_random_generator_.seed(seed);
+    return seed_random_generator_();
 }
 
 template <>
@@ -42,20 +63,9 @@ CPP_UTILS_DllAPI RandomNumberType RandomManager::rand<false> () noexcept
     return sequence_rand();
 }
 
-RandomNumberType RandomManager::pure_rand () noexcept
+RandomNumberType RandomManager::rand (const RandomSeedType& seed) noexcept
 {
-    return pure_random_generator_();
-}
-
-RandomNumberType RandomManager::sequence_rand () noexcept
-{
-    return std_random_generator_();
-}
-
-RandomNumberType RandomManager::rand (const RandomNumberType seed) noexcept
-{
-    seed_random_generator_.seed(seed);
-    return seed_random_generator_();
+    return seeded_rand(seed);
 }
 
 } /* namespace utils */

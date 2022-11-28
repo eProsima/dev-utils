@@ -29,6 +29,138 @@ constexpr const unsigned int TEST_ITERATIONS = 100;
 
 } /* namespace test */
 
+/*
+ * These tests are divided in 2:
+ * Trivial: check the correct working of the API with very few examples and could not fail for randomness
+ *   These exist for coverage propose.
+ * Non Trivial: check that random generation works. However these could fail due to randomness.
+ */
+
+/**
+ * Test Pure random generation.
+ *
+ * CASES:
+ * - pure_rand
+ * - rand<true>
+ *
+ * @attention this test could eventually fail. However, failing in just calculating 2 pairs of random numbers and
+ * retrieving same value in a human live time range should be considered as this class method is not completely correct.
+ */
+TEST(randomTest, trivial_pure)
+{
+    // pure_rand
+    {
+        RandomManager manager;
+        auto val_1 = manager.pure_rand();
+        auto val_2 = manager.pure_rand();
+        ASSERT_NE(val_1, val_2);
+    }
+
+    // rand<true>
+    {
+        RandomManager manager;
+        auto val_1 = manager.rand<true>();
+        auto val_2 = manager.rand<true>();
+        ASSERT_NE(val_1, val_2);
+    }
+}
+
+/**
+ * Test Sequence random generation.
+ *
+ * CASES:
+ * - sequence_rand
+ * - rand<false>
+ * - rand
+ */
+TEST(randomTest, trivial_sequence)
+{
+    for (unsigned int i=0; i<test::TEST_ITERATIONS; i++)
+    {
+        RandomManager manager_1(i);
+        RandomManager manager_2(i);
+
+        // sequence_rand
+        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        {
+            auto val_1 = manager_1.sequence_rand();
+            auto val_2 = manager_2.sequence_rand();
+            ASSERT_EQ(val_1, val_2);
+        }
+
+        // rand<false>
+        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        {
+            auto val_1 = manager_1.rand<false>();
+            auto val_2 = manager_2.rand<false>();
+            ASSERT_EQ(val_1, val_2);
+        }
+
+        // rand
+        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        {
+            auto val_1 = manager_1.rand();
+            auto val_2 = manager_2.rand();
+            ASSERT_EQ(val_1, val_2);
+        }
+    }
+}
+
+/**
+ * Test changing the seed of managers already created.
+ */
+TEST(randomTest, trivial_sequence_with_seed)
+{
+    RandomManager manager_1(1);
+    RandomManager manager_2(99);
+    for (unsigned int i=0; i<test::TEST_ITERATIONS; i++)
+    {
+        manager_1.seed(i);
+        manager_2.seed(i);
+        // sequence_rand
+        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        {
+            auto val_1 = manager_1.sequence_rand();
+            auto val_2 = manager_2.sequence_rand();
+            ASSERT_EQ(val_1, val_2);
+        }
+    }
+}
+
+/**
+ * Test seeded random generation.
+ *
+ * CASES:
+ * - seeded_rand
+ * - rand
+ */
+TEST(randomTest, trivial_seeded)
+{
+    RandomManager manager_1;
+    RandomManager manager_2(33);
+
+    for (unsigned int i=0; i<test::TEST_ITERATIONS; i++)
+    {
+        // seeded_rand
+        {
+            auto val_1 = manager_1.seeded_rand(i);
+            auto val_2 = manager_1.seeded_rand(i);
+            auto val_3 = manager_2.seeded_rand(i);
+            ASSERT_EQ(val_1, val_2);
+            ASSERT_EQ(val_1, val_3);
+        }
+
+        // rand<true>
+        {
+            auto val_1 = manager_1.rand(i);
+            auto val_2 = manager_1.rand(i);
+            auto val_3 = manager_2.rand(i);
+            ASSERT_EQ(val_1, val_2);
+            ASSERT_EQ(val_1, val_3);
+        }
+    }
+}
+
 /**
  * Test the generation of std random numbers from a default seed.
  *
@@ -137,7 +269,7 @@ TEST(randomTest, get_seed_random_number)
         auto new_seed_value = manager.rand(i);
 
         // Check it always gives same value
-        ASSERT_EQ(manager.rand(i), new_seed_value);
+        ASSERT_EQ(manager.seeded_rand(i), new_seed_value);
 
         // Store value
         seed_numbers[i] = new_seed_value;
@@ -172,6 +304,7 @@ TEST(randomTest, get_seed_random_number)
 /**
  * Test that setting a seed in a RandomManager, the sequence numbers generated are the same for same seed.
  * Test also that are different for different seeds.
+ * Test that in an already used manager, setting the seed produces the same sequence.
  */
 TEST(randomTest, set_initial_seed)
 {
@@ -182,11 +315,15 @@ TEST(randomTest, set_initial_seed)
         random_numbers[i] = 0;
     }
 
+    // Test that setting a seed in a RandomManager, the sequence numbers generated are the same for same seed.
+    // Test also that are different for different seeds.
+    RandomManager manager;
+
     for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
     {
         // Create a random generator with seed and check that N first sequence values are not the same as other seed
         // Also replace the old values to check in next iteration
-        RandomManager manager(i);
+        manager.seed(i);
         for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
         {
             auto new_sequence_number = manager.rand();

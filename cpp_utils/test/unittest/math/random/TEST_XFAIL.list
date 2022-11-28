@@ -1,1 +1,3 @@
 randomTest.get_pure_random_number
+randomTest.get_seed_random_number
+randomTest.set_initial_seed

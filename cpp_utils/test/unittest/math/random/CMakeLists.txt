@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+##################
+# RANDOM MANAGER TESTS
+
 set(TEST_NAME randomTest)
 
 set(TEST_SOURCES
@@ -28,6 +31,42 @@ set(TEST_LIST
         get_pure_random_number
         get_seed_random_number
         set_initial_seed
+    )
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )
+
+##################
+# THREAD SAFE RANDOM MANAGER TESTS
+
+set(TEST_NAME tsaferandomTest)
+
+set(TEST_SOURCES
+        tsaferandomTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/random/TSafeRandomManager.cpp
+    )
+
+set(TEST_LIST
+        trivial_pure
+        trivial_sequence
+        trivial_sequence_with_seed
+        trivial_seeded
+        get_random_sequence_number
+        get_pure_random_number
+        get_seed_random_number
+        set_initial_seed
+        sequential_access
     )
 
 set(TEST_EXTRA_LIBRARIES

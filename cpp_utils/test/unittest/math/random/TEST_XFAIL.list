@@ -1,3 +1,6 @@
 randomTest.get_pure_random_number
 randomTest.get_seed_random_number
 randomTest.set_initial_seed
+tsaferandomTest.get_pure_random_number
+tsaferandomTest.get_seed_random_number
+tsaferandomTest.set_initial_seed

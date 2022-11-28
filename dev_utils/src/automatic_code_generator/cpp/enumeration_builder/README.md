@@ -15,5 +15,5 @@ This script is useful because the use of this macro could have problems dependin
 This is a standalone script. In order to execute it:
 
 ```sh
-python3 enumeration_builder.py --header-output include/output.hpp --enum CustomEnum --values "value1;value2" --namespaces "eprosima;utils"
+python3 enumeration_builder.py --output include/output.hpp --enum CustomEnum --values "value1;value2" --namespaces "eprosima;utils"
 ```

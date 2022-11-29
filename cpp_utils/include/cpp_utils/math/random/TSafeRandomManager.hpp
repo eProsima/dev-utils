@@ -134,9 +134,6 @@ protected:
 
     //! Random generator from a specific seed.
     Atomicable<std::mt19937> seed_random_generator_;
-
-    //! Guard the use of \c seed_random_generator_ class.
-    std::mutex seed_random_generator_mutex_;
 };
 
 //! Global singleton to use a ThreadSafeRandomManager in the whole process.

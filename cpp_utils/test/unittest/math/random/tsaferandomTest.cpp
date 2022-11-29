@@ -151,7 +151,7 @@ TEST(tsaferandomTest, trivial_seeded)
             ASSERT_EQ(val_1, val_3);
         }
 
-        // rand<true>
+        // rand
         {
             auto val_1 = manager_1.rand(i);
             auto val_2 = manager_1.rand(i);

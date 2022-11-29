@@ -166,6 +166,12 @@ def parse_options():
     return parser.parse_args()
 
 
+def get_file_name_from_path(
+        path_str: str):
+    """Get name of the file from a file path."""
+    return path_str.split('/')[-1].split('\\')[-1].strip()
+
+
 def get_command_executed():
     """Convert string arguments into a list of strings."""
     # Get flags and their args (it has a default first empty string to apply join to first case)
@@ -175,17 +181,10 @@ def get_command_executed():
             flag_and_args.append(arg)
         else:
             # If it is a file path short it
-            arg = ('.../' + arg.split('/')[-1] if '/' in arg else arg)
-            arg = ('...\\' + arg.split('\\')[-1] if '\\' in arg else arg)
+            arg = get_file_name_from_path(arg)
             flag_and_args[-1] += f' {arg}'
     # Return string with format
     return f'{os.path.basename(__file__)}' + '\n *   '.join(flag_and_args)
-
-
-def get_file_name_from_path(
-        path_str: str):
-    """Get name of the file from a file path."""
-    return path_str.split('/')[-1].split('\\')[-1].strip()
 
 
 def parse_values(

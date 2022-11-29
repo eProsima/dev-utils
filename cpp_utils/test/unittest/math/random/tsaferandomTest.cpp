@@ -344,7 +344,7 @@ TEST(tsaferandomTest, set_initial_seed)
 }
 
 /**
- * Test that multiple threading calls to Manager functions does not produces TSAN issues.
+ * Test that multiple threading calls to Manager functions do not produce TSAN issues.
  * It also tests the singleton variable.
  *
  * CASES:

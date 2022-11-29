@@ -62,14 +62,15 @@ public:
      *
      * @param original_seed initial seed for sequence number generator.
      */
-    CPP_UTILS_DllAPI RandomManager(const RandomSeedType& original_seed = 1);
+    CPP_UTILS_DllAPI RandomManager(
+            const RandomSeedType& original_seed = 1);
 
     //! Default destructor
     CPP_UTILS_DllAPI ~RandomManager() = default;
 
     /***********************
-     * NATIVE METHODS
-     ***********************/
+    * NATIVE METHODS
+    ***********************/
     /**
      * @brief Generate pure random number.
      *
@@ -90,7 +91,8 @@ public:
     CPP_UTILS_DllAPI RandomNumberType sequence_rand () noexcept;
 
     //! Set seed for the sequence random series.
-    CPP_UTILS_DllAPI void seed (const RandomSeedType& seed) noexcept;
+    CPP_UTILS_DllAPI void seed (
+            const RandomSeedType& seed) noexcept;
 
     /**
      * @brief Get a random number related with a seed.
@@ -103,12 +105,13 @@ public:
      *
      * @return random number seeded by \c seed .
      */
-    CPP_UTILS_DllAPI RandomNumberType seeded_rand (const RandomSeedType& seed) noexcept;
+    CPP_UTILS_DllAPI RandomNumberType seeded_rand (
+            const RandomSeedType& seed) noexcept;
 
 
     /***********************
-     * DERIVED METHODS
-     ***********************/
+    * DERIVED METHODS
+    ***********************/
     // This methods only extend the API using the common word rand, but they only call native methods.
 
     //! With Pure=true returns \c pure_rand . Otherwise returns \c sequence_rand .
@@ -116,7 +119,8 @@ public:
     RandomNumberType rand () noexcept;
 
     //! Return \c seeded_rand .
-    CPP_UTILS_DllAPI RandomNumberType rand (const RandomSeedType& seed) noexcept;
+    CPP_UTILS_DllAPI RandomNumberType rand (
+            const RandomSeedType& seed) noexcept;
 
 protected:
 

@@ -25,7 +25,8 @@
 namespace eprosima {
 namespace utils {
 
-TSafeRandomManager::TSafeRandomManager(const RandomSeedType& original_seed /* = 1 */ )
+TSafeRandomManager::TSafeRandomManager(
+        const RandomSeedType& original_seed /* = 1 */ )
     : std_random_generator_(original_seed)
 {
     // Do nothing
@@ -42,13 +43,15 @@ RandomNumberType TSafeRandomManager::sequence_rand () noexcept
     return std_random_generator_();
 }
 
-void TSafeRandomManager::seed (const RandomSeedType& seed) noexcept
+void TSafeRandomManager::seed (
+        const RandomSeedType& seed) noexcept
 {
     std::lock_guard<Atomicable<std::mt19937>> guard(std_random_generator_);
     std_random_generator_.seed(seed);
 }
 
-RandomNumberType TSafeRandomManager::seeded_rand (const RandomSeedType& seed) noexcept
+RandomNumberType TSafeRandomManager::seeded_rand (
+        const RandomSeedType& seed) noexcept
 {
     std::lock_guard<Atomicable<std::mt19937>> guard(seed_random_generator_);
     seed_random_generator_.seed(seed);
@@ -67,7 +70,8 @@ CPP_UTILS_DllAPI RandomNumberType TSafeRandomManager::rand<false> () noexcept
     return sequence_rand();
 }
 
-RandomNumberType TSafeRandomManager::rand (const RandomSeedType& seed) noexcept
+RandomNumberType TSafeRandomManager::rand (
+        const RandomSeedType& seed) noexcept
 {
     return seeded_rand(seed);
 }

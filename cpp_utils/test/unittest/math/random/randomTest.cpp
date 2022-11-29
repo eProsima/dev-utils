@@ -75,13 +75,13 @@ TEST(randomTest, trivial_pure)
  */
 TEST(randomTest, trivial_sequence)
 {
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; i++)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; i++)
     {
         RandomManager manager_1(i);
         RandomManager manager_2(i);
 
         // sequence_rand
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; j++)
         {
             auto val_1 = manager_1.sequence_rand();
             auto val_2 = manager_2.sequence_rand();
@@ -89,7 +89,7 @@ TEST(randomTest, trivial_sequence)
         }
 
         // rand<false>
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; j++)
         {
             auto val_1 = manager_1.rand<false>();
             auto val_2 = manager_2.rand<false>();
@@ -97,7 +97,7 @@ TEST(randomTest, trivial_sequence)
         }
 
         // rand
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; j++)
         {
             auto val_1 = manager_1.rand();
             auto val_2 = manager_2.rand();
@@ -113,12 +113,12 @@ TEST(randomTest, trivial_sequence_with_seed)
 {
     RandomManager manager_1(1);
     RandomManager manager_2(99);
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; i++)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; i++)
     {
         manager_1.seed(i);
         manager_2.seed(i);
         // sequence_rand
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; j++)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; j++)
         {
             auto val_1 = manager_1.sequence_rand();
             auto val_2 = manager_2.sequence_rand();
@@ -139,7 +139,7 @@ TEST(randomTest, trivial_seeded)
     RandomManager manager_1;
     RandomManager manager_2(33);
 
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; i++)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; i++)
     {
         // seeded_rand
         {
@@ -177,16 +177,16 @@ TEST(randomTest, get_random_sequence_number)
     // calculates the N first numbers from rand()
     RandomManager initial_manager;
     std::array<RandomNumberType, test::TEST_ITERATIONS> rand_numbers;
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         rand_numbers[i] = initial_manager.rand();
     }
 
     // create N Random Manager and generate N values that are equal the N first ones
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         RandomManager manager;
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; ++j)
         {
             ASSERT_EQ(manager.rand(), rand_numbers[j]) << "Manager " << i << " in iteration " << j;
         }
@@ -206,7 +206,7 @@ TEST(randomTest, get_pure_random_number)
 {
     // calculates the N first numbers from rand()
     std::array<RandomNumberType, test::TEST_ITERATIONS> rand_numbers;
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         rand_numbers[i] = rand();
     }
@@ -215,7 +215,7 @@ TEST(randomTest, get_pure_random_number)
     std::array<RandomNumberType, test::TEST_ITERATIONS> rand_manager_numbers;
     {
         RandomManager manager;
-        for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+        for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
         {
             // Generate new value
             auto new_value = manager.rand<true>();
@@ -232,7 +232,7 @@ TEST(randomTest, get_pure_random_number)
     // neither in the Random Manager generated ones
     {
         RandomManager manager;
-        for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+        for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
         {
             // Generate new value
             auto new_value = manager.pure_rand();
@@ -263,7 +263,7 @@ TEST(randomTest, get_seed_random_number)
     RandomManager manager;
 
     // Call rand(seed) N times, twice per seed to check value is the same, and store each unique value.
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         // Get new seeded value
         auto new_seed_value = manager.rand(i);
@@ -276,7 +276,7 @@ TEST(randomTest, get_seed_random_number)
     }
 
     // Call rand(seed) N times, and check that only occurrence of value in previous array is in the same seed.
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         // Get new seeded value
         auto new_seed_value = manager.rand(i);
@@ -285,7 +285,7 @@ TEST(randomTest, get_seed_random_number)
         ASSERT_EQ(new_seed_value, seed_numbers[i]);
 
         // Check that any other value is different
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; ++j)
         {
             if (i != j)
             {
@@ -310,7 +310,7 @@ TEST(randomTest, set_initial_seed)
 {
     // array to store random sequences and check that are not repeated with different seeds (initialized to 0).
     std::array<RandomNumberType, test::TEST_ITERATIONS> random_numbers;
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         random_numbers[i] = 0;
     }
@@ -319,12 +319,12 @@ TEST(randomTest, set_initial_seed)
     // Test also that are different for different seeds.
     RandomManager manager;
 
-    for (unsigned int i=0; i<test::TEST_ITERATIONS; ++i)
+    for (unsigned int i = 0; i < test::TEST_ITERATIONS; ++i)
     {
         // Create a random generator with seed and check that N first sequence values are not the same as other seed
         // Also replace the old values to check in next iteration
         manager.seed(i);
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; ++j)
         {
             auto new_sequence_number = manager.rand();
             ASSERT_NE(new_sequence_number, random_numbers[j]) <<
@@ -334,7 +334,7 @@ TEST(randomTest, set_initial_seed)
 
         // Create a different random generator and check that with same seed the sequence are the same
         RandomManager new_manager(i);
-        for (unsigned int j=0; j<test::TEST_ITERATIONS; ++j)
+        for (unsigned int j = 0; j < test::TEST_ITERATIONS; ++j)
         {
             auto new_sequence_number = new_manager.sequence_rand();
             ASSERT_EQ(new_sequence_number, random_numbers[j]);

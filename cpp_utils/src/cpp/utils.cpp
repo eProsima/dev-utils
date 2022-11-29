@@ -40,7 +40,7 @@
 #include <unistd.h>
 #endif // if defined(_WIN32)
 
-#include <cpp_utils/math/math.hpp>
+#include <cpp_utils/math/math_extension.hpp>
 #include <cpp_utils/utils.hpp>
 #include <cpp_utils/Log.hpp>
 

@@ -42,6 +42,7 @@ namespace utils {
 template <class Type, class Mutex = std::mutex>
 class Atomicable : public Type, public Mutex
 {
+    using Type::Type;
     // Nothing to add
 };
 
@@ -58,5 +59,3 @@ using SharedAtomicable = Atomicable<Type, std::shared_timed_mutex>;
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

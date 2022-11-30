@@ -35,9 +35,9 @@ namespace utils {
 /**
  * @brief This macro creates a Custom Enumeration with auxiliary functions and variables.
  *
- * An enumeration built with ENUEMERATION_BUILDER has:
+ * An enumeration built with ENUMERATION_BUILDER has:
  * - enum class with name \c enumeration_name and N values, one for each extra argument, and with that exact name.
- * - array called \c nammes_<enumeration_name> with the names of each element of the enumeration
+ * - array called \c NAMES_<enumeration_name> with the names of each element of the enumeration
  * as strings of the enum value.
  * - \c to_string method to get the string associated with an enumeration value.
  * - \c from_string_<enumeration_name> method that gives enumeration value from string name.
@@ -55,42 +55,41 @@ namespace utils {
  * my_value = from_string_CustomEnum("el2");  // Set my_value as el2 = 1
  * to_string(my_value);  // = "el2"
  */
-#define ENUMERATION_BUILDER(enumeration_name, ...)                                                                    \
-                                                                                                                      \
-    /* Forbid empty enumerations */                                                                                   \
-    static_assert( COUNT_ARGUMENTS(__VA_ARGS__), "Empty Enumerations are not allowed.");                             \
-                                                                                                                      \
-    /* Declare enumeration */                                                                                         \
-    enum class enumeration_name {__VA_ARGS__ \
-    };                                                                        \
-                                                                                                                      \
-    /* Initialize name arrays */                                                                                      \
-    const std::array<std::string, COUNT_ARGUMENTS(__VA_ARGS__)> names_ ## enumeration_name =                            \
-    { APPLY_MACRO_FOR_EACH(STRINGIFY_WITH_COMMA, __VA_ARGS__) };                                                  \
-                                                                                                                      \
-    /* To string method */                                                                                            \
-    inline const std::string& to_string(const enumeration_name& e)                                                           \
-    { return names_ ## enumeration_name[static_cast<int>(e)]; }                                                     \
-                                                                            \
-    inline std::vector<std::string> string_vector_ ## enumeration_name()           \
-    { return std::vector<std::string> (names_ ## enumeration_name.begin(), names_ ## enumeration_name.end()); }       \
-                                                                                                                      \
-    /* From string */                                                                                                 \
-    inline enumeration_name from_string_ ## enumeration_name(const std::string& s)                                             \
-    {                                                                                                                 \
-        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                            \
-        if (names_ ## enumeration_name[i] == s)return static_cast<enumeration_name>(i);                            \
-        throw eprosima::utils::InitializationException(                                                    \
-                  STR_ENTRY << "Not correct name " << s << " for Enum " << STRINGIFY(enumeration_name) << ".");             \
-    }                                                                                                                 \
-                                                                                                                      \
-    /* Serialization operation */                                                                                     \
-    inline std::ostream& operator <<(std::ostream& os, const enumeration_name& e) \
-    { os << to_string(e); return os; }         \
-                                                                                                  \
-    /* Number of elements in enumeration */                                                                           \
+#define ENUMERATION_BUILDER(enumeration_name, ...)                                                                  \
+                                                                                                                    \
+    /* Forbid empty enumerations */                                                                                 \
+    static_assert( COUNT_ARGUMENTS(__VA_ARGS__), "Empty Enumerations are not allowed.");                            \
+                                                                                                                    \
+    /* Declare enumeration */                                                                                       \
+    enum class enumeration_name {__VA_ARGS__                                                                        \
+    };                                                                                                              \
+                                                                                                                    \
+    /* Initialize name arrays */                                                                                    \
+    const std::array<std::string, COUNT_ARGUMENTS(__VA_ARGS__)> NAMES_ ## enumeration_name =                        \
+    { APPLY_MACRO_FOR_EACH(STRINGIFY_WITH_COMMA, __VA_ARGS__) };                                                    \
+                                                                                                                    \
+    /* To string method */                                                                                          \
+    inline const std::string& to_string(const enumeration_name& e)                                                  \
+    { return NAMES_ ## enumeration_name[static_cast<int>(e)]; }                                                     \
+                                                                                                                    \
+    inline std::vector<std::string> string_vector_ ## enumeration_name()                                            \
+    { return std::vector<std::string> (NAMES_ ## enumeration_name.begin(), NAMES_ ## enumeration_name.end()); }     \
+                                                                                                                    \
+    /* From string */                                                                                               \
+    inline enumeration_name from_string_ ## enumeration_name(const std::string& s)                                  \
+    {                                                                                                               \
+        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                      \
+        if (NAMES_ ## enumeration_name[i] == s)return static_cast<enumeration_name>(i);                             \
+        throw eprosima::utils::InitializationException(                                                             \
+                  STR_ENTRY << "Not correct name " << s << " for Enum " << STRINGIFY(enumeration_name) << ".");     \
+    }                                                                                                               \
+                                                                                                                    \
+    /* Serialization operation */                                                                                   \
+    inline std::ostream& operator <<(std::ostream& os, const enumeration_name& e)                                   \
+    { os << to_string(e); return os; }                                                                              \
+                                                                                                                    \
+    /* Number of elements in enumeration */                                                                         \
     constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__)
-
 
 } /* namespace utils */
 } /* namespace eprosima */

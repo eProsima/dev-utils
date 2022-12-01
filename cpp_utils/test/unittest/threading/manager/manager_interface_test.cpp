@@ -18,7 +18,7 @@
 #include <cpp_utils/wait/IntWaitHandler.hpp>
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/time/Timer.hpp>
-#include <cpp_utils/math/math.hpp>
+#include <cpp_utils/math/math_extension.hpp>
 #include <cpp_utils/threading/manager/IManager.hpp>
 #include <cpp_utils/threading/manager/SyncManager.hpp>
 #include <cpp_utils/threading/manager/AsyncManager.hpp>

@@ -18,7 +18,7 @@
 #include <cpp_utils/wait/IntWaitHandler.hpp>
 #include <cpp_utils/types/Atomicable.hpp>
 #include <cpp_utils/Log.hpp>
-#include <cpp_utils/math/math.hpp>
+#include <cpp_utils/math/math_extension.hpp>
 #include <cpp_utils/threading/manager/StdThreadPool.hpp>
 #include <cpp_utils/threading/connector/SlotConnector.hpp>
 

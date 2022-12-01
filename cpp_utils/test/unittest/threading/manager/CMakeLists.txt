@@ -23,7 +23,7 @@ set(TEST_SOURCES
         manager_interface_test.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/math/math.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math_extension.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/threading/task/OwnedTask.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/threading/manager/SyncManager.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/threading/manager/AsyncManager.cpp
@@ -61,7 +61,7 @@ set(TEST_SOURCES
         std_thread_pool_test.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/math/math.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math_extension.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/threading/task/OwnedTask.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/threading/manager/StdThreadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp

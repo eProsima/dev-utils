@@ -18,7 +18,7 @@
 #include <cmath>
 
 #include <cpp_utils/Log.hpp>
-#include <cpp_utils/math/math.hpp>
+#include <cpp_utils/math/math_extension.hpp>
 #include <cpp_utils/threading/manager/StdThreadPool.hpp>
 #include <cpp_utils/threading/task/OwnedTask.hpp>
 #include <cpp_utils/time/Timer.hpp>
@@ -112,6 +112,11 @@ void test_thread_pool_with_parameters(
     ASSERT_GE(time_elapsed, lower_time_expected);
     ASSERT_LE(time_elapsed, higher_time_expected);
     ASSERT_EQ(waiter.get_value(), target_value);
+
+    // NOTE: due to TSAN, thread pool must be stopped before destroying the WaitHanlder because, even
+    // when it is not possible to execute task because test forces to wait until it has been done, TSAN
+    // can detect that could happen (it does a greedy search and does not care about logic that avoid it).
+    thread_pool.stop();
 
     // Thread Pool is destroyed automatically and without errors
 }

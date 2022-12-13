@@ -690,3 +690,5 @@ jobs:
 
       - name: Try out actions from a repo
         uses: eProsima/eProsima-CI/helloworld@tmp/paris-test
+        with:
+          custom_message: "from another repo vamoooooooooooos!"

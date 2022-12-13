@@ -692,3 +692,4 @@ jobs:
         uses: eProsima/eProsima-CI/helloworld@tmp/paris-test
         with:
           custom_message: "from another repo vamoooooooooooos!"
+          custom_file: "src/dev-utils/.github/workflows/configurations/coverage_colcon.meta"

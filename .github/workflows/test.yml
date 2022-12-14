@@ -679,3 +679,17 @@ jobs:
           cd src/dev-utils
           python3 -m flake8 --config ./.github/workflows/configurations/setup.cfg ${MODIFIED_FILES}
         if: always()
+
+  ci-action-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync eProsima/dev-utils repository
+        uses: actions/checkout@v2
+        with:
+          path: src/dev-utils
+
+      - name: Try out actions from a repo
+        uses: eProsima/eProsima-CI/helloworld@tmp/paris-test
+        with:
+          custom_message: "from another repo vamoooooooooooos!"
+          custom_file: "src/dev-utils/.github/workflows/configurations/coverage_colcon.meta"

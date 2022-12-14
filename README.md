@@ -14,6 +14,7 @@ The packages that conform this repository are:
 
 * **CMake utils**: `cmake_utils` CMake utilities to build packages.
 * **C++ utils**: `cpp_utils` C++ classes and functions for common use.
+* **Dev utils**: `dev_utils` Tools and applications to help in code development.
 
 ## Documentation
 

@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,6 @@
 # limitations under the License.
 
 # Add test subdirectories
-add_subdirectory(event)
-add_subdirectory(exception)
-add_subdirectory(types)
-add_subdirectory(macros)
-add_subdirectory(math)
-add_subdirectory(math/random)
-add_subdirectory(memory)
-add_subdirectory(return_code)
-add_subdirectory(testing)
-add_subdirectory(threading)
-add_subdirectory(thread_pool)
-add_subdirectory(time)
-add_subdirectory(utils)
-add_subdirectory(wait)
+add_subdirectory(connector)
+add_subdirectory(manager)
+add_subdirectory(task)

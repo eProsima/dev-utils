@@ -89,35 +89,11 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
     // This lvalue is moved as rvalue, so after moving it will be empty
     handler.produce(std::move(lvalue));
     // TODO uncomment it once DBQueue supports moving values
-    // ASSERT_EQ(lvalue.size(), 0);
+    ASSERT_EQ(lvalue.size(), 0u);
 
     // Getting first value
     std::string pop_value = handler.consume();
     EXPECT_EQ(source_value, pop_value);
-}
-
-/**
- * Check that pushing and popping values works as expected from the same thread
- * Using std::string as object to use inside collection.
- *
- * CASES:
- * - Push and pop one value by reference
- */
-TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_copy)
-{
-    DBQueueWaitHandler<std::string> handler;
-
-    std::string lvalue("test_data");
-
-    handler.produce(lvalue);
-
-    // Getting first value
-    std::string pop_value = handler.consume();
-    EXPECT_EQ(lvalue, pop_value);
-
-    // They should be different objects, check that modifying one does not modify the other
-    pop_value[0] = 'a';
-    EXPECT_NE(lvalue, pop_value);
 }
 
 /**

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file math.hpp
+ * @file math_extension.hpp
  *
  * This file contains math generic functions
  */

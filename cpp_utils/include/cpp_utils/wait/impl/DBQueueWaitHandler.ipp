@@ -15,9 +15,9 @@
  * @file DBQueueWaitHandler.ipp
  */
 
-#include <cpp_utils/exception/InconsistencyException.hpp>
-
 #pragma once
+
+#include <cpp_utils//exception/InconsistencyException.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -29,14 +29,6 @@ void DBQueueWaitHandler<T>::add_value_(
 {
     logDebug(UTILS_WAIT_DBQUEUE, "Moving element to DBQueue.");
     queue_.Push(std::move(value));
-}
-
-template <typename T>
-void DBQueueWaitHandler<T>::add_value_(
-        const T& value)
-{
-    logDebug(UTILS_WAIT_DBQUEUE, "Copying element to DBQueue.");
-    queue_.Push(value);
 }
 
 template <typename T>
@@ -58,8 +50,8 @@ T DBQueueWaitHandler<T>::get_next_value_()
         throw utils::InconsistencyException("Empty DBQueue, impossible to get value.");
     }
 
-    // TODO: Do it without copy
-    auto value = queue_.Front();
+    // TODO: Do it with front and pop without copy
+    auto value = std::move(queue_.Front());
     queue_.Pop();
 
     return value;
@@ -68,5 +60,3 @@ T DBQueueWaitHandler<T>::get_next_value_()
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

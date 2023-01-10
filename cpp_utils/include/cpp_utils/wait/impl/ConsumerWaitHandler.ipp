@@ -52,7 +52,8 @@ template <typename T>
 void ConsumerWaitHandler<T>::produce(
         const T& value)
 {
-    add_value_(value);
+    T dummy_copied_value__(value);
+    add_value_(std::move(dummy_copied_value__));
     this->operator ++();
 }
 
@@ -81,5 +82,3 @@ T ConsumerWaitHandler<T>::consume(
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

@@ -191,7 +191,7 @@ CPP_UTILS_DllAPI unsigned int replace_all(
  * @brief Remove undesired substrings from string.
  *
  * Characters as \r or not UTF-8 could be removed or replaced by a string.
- * By default, it will replace "\n" and \r by an empty string (= remove it).
+ * By default, it will replace "\n" and "\r" by an empty string (that means remove it).
  *
  * @param st [in, out] string to make changes
  * @param replace_by [in] string to replace the undesired chars

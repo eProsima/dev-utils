@@ -17,25 +17,30 @@
  */
 
 #include <cpp_utils/exception/Exception.hpp>
+#include <cpp_utils/macros/macros.hpp>
 
 namespace eprosima {
 namespace utils {
 
 Exception::Exception(
         const char* message) noexcept
-    : message_(message)
+    : Exception(std::string(message))
 {
 }
 
 Exception::Exception(
         const std::string& message)
-    : message_(message)
+    : message_(
+        std::string("[")
+        + std::string(TYPE_NAME(this))
+        + std::string("]: ")
+        + message)
 {
 }
 
 Exception::Exception(
         const utils::Formatter& formatter)
-    : message_(formatter.to_string())
+    : Exception(formatter.to_string())
 {
 }
 

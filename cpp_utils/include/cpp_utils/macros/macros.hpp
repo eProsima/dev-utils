@@ -66,8 +66,8 @@ namespace utils {
  */
 #define TYPE_NAME(x) typeid(x).name()
 
-#define MAX(x,y) x < y ? y : x
-#define MIN(x,y) x > y ? y : x
+#define MAX(x, y) x < y ? y : x
+#define MIN(x, y) x > y ? y : x
 
 } /* namespace utils */
 } /* namespace eprosima */

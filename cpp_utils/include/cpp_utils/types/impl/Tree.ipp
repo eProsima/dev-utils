@@ -30,47 +30,54 @@ Node<Info>::Node()
 }
 
 template <typename Info>
-Node<Info>::Node(const Info& info)
+Node<Info>::Node(
+        const Info& info)
     : info(info)
 {
     // Do nothing
 }
 
 template <typename Info>
-Node<Info>::Node(Info&& info)
+Node<Info>::Node(
+        Info&& info)
     : info(std::move(info))
 {
     // Do nothing
 }
 
 template <typename Info>
-template<typename ...Args>
-Node<Info>::Node(Args... args)
-    : info(args...)
+template<typename ... Args>
+Node<Info>::Node(
+        Args... args)
+    : info(args ...)
 {
     // Do nothing
 }
 
 template <typename Info>
-void TreeNode<Info>::add_branch(const Info& info)
+void TreeNode<Info>::add_branch(
+        const Info& info)
 {
     branches_.push_back(TreeNode(info));
 }
 
 template <typename Info>
-void TreeNode<Info>::add_branch(Info&& info)
+void TreeNode<Info>::add_branch(
+        Info&& info)
 {
     branches_.push_back(TreeNode(std::move(info)));
 }
 
 template <typename Info>
-void TreeNode<Info>::add_branch(const TreeNode& node)
+void TreeNode<Info>::add_branch(
+        const TreeNode& node)
 {
     branches_.push_back(node);
 }
 
 template <typename Info>
-void TreeNode<Info>::add_branch(TreeNode&& node)
+void TreeNode<Info>::add_branch(
+        TreeNode&& node)
 {
     branches_.push_back(std::move(node));
 }

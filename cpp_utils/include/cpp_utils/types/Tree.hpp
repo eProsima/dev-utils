@@ -32,12 +32,16 @@ template <typename Info>
 struct Node
 {
 public:
-    Node();
-    Node(const Info& info);
-    Node(Info&& info);
 
-    template<typename ...Args>
-    Node(Args... args);
+    Node();
+    Node(
+            const Info& info);
+    Node(
+            Info&& info);
+
+    template<typename ... Args>
+    Node(
+            Args... args);
 
     Info info;
 };
@@ -52,10 +56,14 @@ public:
 
     using Node<Info>::Node;
 
-    void add_branch(const Info& info);
-    void add_branch(Info&& info);
-    void add_branch(const TreeNode& node);
-    void add_branch(TreeNode&& node);
+    void add_branch(
+            const Info& info);
+    void add_branch(
+            Info&& info);
+    void add_branch(
+            const TreeNode& node);
+    void add_branch(
+            TreeNode&& node);
 
     bool leaf() const noexcept;
 

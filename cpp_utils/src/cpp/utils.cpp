@@ -116,5 +116,48 @@ bool is_file_accessible(
     return access(file_path, static_cast<FileAccessModeType>(access_mode)) != -1;
 }
 
+bool replace_first(
+        std::string& st,
+        std::string const& to_replace,
+        std::string const& replace_by)
+{
+    std::size_t pos = st.find(to_replace);
+    if (pos == std::string::npos)
+    {
+        return false;
+    }
+    else
+    {
+        st.replace(pos, to_replace.length(), replace_by);
+        return true;
+    }
+}
+
+unsigned int replace_all(
+        std::string& st,
+        std::string const& to_replace,
+        std::string const& replace_by)
+{
+    unsigned int replacements = 0;
+    while (replace_first(st, to_replace, replace_by))
+    {
+        replacements++;
+    }
+    return replacements;
+}
+
+unsigned int strip_str(
+        std::string& to_strip,
+        const std::string& replace_by /* = "" */,
+        const std::set<std::string>& undesired_strings /* = {"\r"} */)
+{
+    unsigned int replacements = 0;
+    for (const auto& undesired : undesired_strings)
+    {
+        replacements += replace_all(to_strip, undesired, replace_by);
+    }
+    return replacements;
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

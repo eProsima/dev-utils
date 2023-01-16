@@ -177,6 +177,34 @@ CPP_UTILS_DllAPI void* copy_to_void_ptr(
         const T* source,
         size_t size = sizeof(T));
 
+CPP_UTILS_DllAPI bool replace_first(
+    std::string& st,
+    std::string const& to_replace,
+    std::string const& replace_by);
+
+CPP_UTILS_DllAPI unsigned int replace_all(
+    std::string& st,
+    std::string const& to_replace,
+    std::string const& replace_by);
+
+/**
+ * @brief Remove undesired substrings from string.
+ *
+ * Characters as \r or not UTF-8 could be removed or replaced by a string.
+ * By default, it will replace "\n" and \r by an empty string (= remove it).
+ *
+ * @param st [in, out] string to make changes
+ * @param replace_by [in] string to replace the undesired chars
+ * @param undesired_strings [in] set of undesired strings (if want to strip by char, just add chars separated)
+ *
+ * @return number of strings removed.
+ */
+CPP_UTILS_DllAPI unsigned int strip_str(
+        std::string& to_strip,
+        const std::string& replace_by = "",
+        const std::set<std::string>& undesired_strings = {"\n","\r"});
+
+
 } /* namespace utils */
 } /* namespace eprosima */
 

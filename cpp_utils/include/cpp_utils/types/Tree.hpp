@@ -26,7 +26,7 @@ namespace eprosima {
 namespace utils {
 
 /**
- * TODO
+ * Generic data struct of with an internal value of type \c Info .
  */
 template <typename Info>
 struct Node
@@ -43,7 +43,7 @@ public:
 };
 
 /**
- * TODO
+ * Class that represents each of the Nodes that form a Tree, including the source and the leaves.
  */
 template <typename Info>
 class TreeNode : public Node<Info>

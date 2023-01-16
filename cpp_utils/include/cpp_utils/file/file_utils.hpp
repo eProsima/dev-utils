@@ -36,7 +36,7 @@ namespace utils {
  */
 CPP_UTILS_DllAPI std::string file_to_string(
         const char* file_name,
-        bool strip_chars=true);
+        bool strip_chars = true);
 
 /**
  * @brief Read a file and convert it to a string per line in file.
@@ -49,8 +49,8 @@ CPP_UTILS_DllAPI std::string file_to_string(
  */
 CPP_UTILS_DllAPI std::vector<std::string> file_to_strings(
         const char* file_name,
-        bool strip_chars=true,
-        bool strip_empty_lines=false);
+        bool strip_chars = true,
+        bool strip_empty_lines = false);
 
 } /* namespace utils */
 } /* namespace eprosima */

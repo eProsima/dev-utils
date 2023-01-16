@@ -30,7 +30,7 @@ std::string file_to_string(
         const char* file_name,
         bool strip_chars /* = true */)
 {
-	auto strings = file_to_strings(file_name, strip_chars, false);
+    auto strings = file_to_strings(file_name, strip_chars, false);
     std::string result;
 
     for (const auto& st : strings)
@@ -50,13 +50,13 @@ std::vector<std::string> file_to_strings(
     std::vector<std::string> result;
 
     // Open file
-	std::ifstream file(file_name);
+    std::ifstream file(file_name);
 
-	if (!file.is_open())
+    if (!file.is_open())
     {
-		throw PreconditionNotMet(
-            STR_ENTRY << "File <" << file_name << "> could not be read.");
-	}
+        throw PreconditionNotMet(
+                  STR_ENTRY << "File <" << file_name << "> could not be read.");
+    }
 
     while (getline(file, new_line))
     {

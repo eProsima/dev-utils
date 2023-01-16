@@ -178,14 +178,14 @@ CPP_UTILS_DllAPI void* copy_to_void_ptr(
         size_t size = sizeof(T));
 
 CPP_UTILS_DllAPI bool replace_first(
-    std::string& st,
-    std::string const& to_replace,
-    std::string const& replace_by);
+        std::string& st,
+        std::string const& to_replace,
+        std::string const& replace_by);
 
 CPP_UTILS_DllAPI unsigned int replace_all(
-    std::string& st,
-    std::string const& to_replace,
-    std::string const& replace_by);
+        std::string& st,
+        std::string const& to_replace,
+        std::string const& replace_by);
 
 /**
  * @brief Remove undesired substrings from string.
@@ -202,7 +202,7 @@ CPP_UTILS_DllAPI unsigned int replace_all(
 CPP_UTILS_DllAPI unsigned int strip_str(
         std::string& to_strip,
         const std::string& replace_by = "",
-        const std::set<std::string>& undesired_strings = {"\n","\r"});
+        const std::set<std::string>& undesired_strings = {"\n", "\r"});
 
 
 } /* namespace utils */

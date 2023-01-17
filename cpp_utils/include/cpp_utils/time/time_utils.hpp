@@ -19,6 +19,8 @@
 #pragma once
 
 #include <chrono>
+#include <string>
+
 #include <cpp_utils/library/library_dll.h>
 
 namespace eprosima {
@@ -42,6 +44,10 @@ CPP_UTILS_DllAPI Timestamp now() noexcept;
 //! Returns the maximum time available for \c Timestamp
 CPP_UTILS_DllAPI Timestamp the_end_of_times() noexcept;
 
+CPP_UTILS_DllAPI std::string to_string(
+        const Timestamp& timestamp,
+        const std::string& format = "%Z_%Y-%m-%d_%H-%M-%S");
+
 CPP_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
         const Duration_ms& duration) noexcept;
 
@@ -50,5 +56,3 @@ CPP_UTILS_DllAPI void sleep_for(
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

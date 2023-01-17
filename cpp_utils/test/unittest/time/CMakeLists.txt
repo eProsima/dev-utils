@@ -18,6 +18,8 @@ set(TEST_SOURCES
         TimerTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
     )
 
 set(TEST_LIST
@@ -49,6 +51,8 @@ add_unittest_executable(
             ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
             ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
             ${PROJECT_SOURCE_DIR}/src/cpp/time/PausableTimer.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
         )
 
     set(TEST_LIST

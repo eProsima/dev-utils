@@ -24,23 +24,19 @@ namespace utils {
 
 Exception::Exception(
         const char* message) noexcept
-    : Exception(std::string(message))
+    : message_(std::string(message))
 {
 }
 
 Exception::Exception(
         const std::string& message)
-    : message_(
-        std::string("[")
-        + std::string(TYPE_NAME(this))
-        + std::string("]: ")
-        + message)
+    : message_(message)
 {
 }
 
 Exception::Exception(
         const utils::Formatter& formatter)
-    : Exception(formatter.to_string())
+    : message_(formatter.to_string())
 {
 }
 

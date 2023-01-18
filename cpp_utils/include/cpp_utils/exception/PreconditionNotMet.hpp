@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,37 +13,28 @@
 // limitations under the License.
 
 /**
- * @file Exception.cpp
+ * @file PreconditionNotMet.hpp
  */
 
+#pragma once
+
 #include <cpp_utils/exception/Exception.hpp>
-#include <cpp_utils/macros/macros.hpp>
 
 namespace eprosima {
 namespace utils {
 
-Exception::Exception(
-        const char* message) noexcept
-    : message_(std::string(message))
+/**
+ * @brief Exception thrown when a precondition is not met before calling a function or running a routine.
+ *
+ * For example:
+ * - Reading a file that does not exist or has no read permissions.
+ * - One argument does not fulfill the preconditions (a ptr with value nullptr).
+ */
+class PreconditionNotMet : public Exception
 {
-}
-
-Exception::Exception(
-        const std::string& message)
-    : message_(message)
-{
-}
-
-Exception::Exception(
-        const utils::Formatter& formatter)
-    : message_(formatter.to_string())
-{
-}
-
-const char* Exception::what() const noexcept
-{
-    return message_.c_str();
-}
+    // Use parent class constructors
+    using Exception::Exception;
+};
 
 } // namespace utils
 } // namespace eprosima

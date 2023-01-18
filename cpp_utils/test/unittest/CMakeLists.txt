@@ -15,6 +15,7 @@
 # Add test subdirectories
 add_subdirectory(event)
 add_subdirectory(exception)
+add_subdirectory(file)
 add_subdirectory(types)
 add_subdirectory(macros)
 add_subdirectory(math)

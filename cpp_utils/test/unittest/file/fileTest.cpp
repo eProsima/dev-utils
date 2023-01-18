@@ -27,10 +27,9 @@ using namespace eprosima::utils;
 /*
  * This tests are tested with file resources/file.test that is generated as:
  * echo -ne "First Line\n2line\n\nafter empty line\nline with strange char\r\n6th line 6\n"
-*/
+ */
 
-namespace test
-{
+namespace test {
 
 constexpr const char* FILE_NAME_TEST = "resources/file.test";
 
@@ -55,7 +54,7 @@ TEST(fileTest, read_file_by_lines)
 {
     auto result = file_to_strings(test::FILE_NAME_TEST);
 
-    for (std::size_t i=0; i<result.size(); i++)
+    for (std::size_t i = 0; i < result.size(); i++)
     {
         std::string expected_line(result[i].c_str());
         // Strip string by default
@@ -72,7 +71,7 @@ TEST(fileTest, read_file_by_lines_no_strip_chars)
 {
     auto result = file_to_strings(test::FILE_NAME_TEST, false);
 
-    for (std::size_t i=0; i<result.size(); i++)
+    for (std::size_t i = 0; i < result.size(); i++)
     {
         std::string expected_line(result[i].c_str());
         // Do not strip string
@@ -88,8 +87,8 @@ TEST(fileTest, read_file_by_lines_strip_empty_lines)
 {
     auto result = file_to_strings(test::FILE_NAME_TEST, true, true);
 
-    std::size_t j=0;  // Index for result element
-    for (std::size_t i=0; i<result.size(); i++)
+    std::size_t j = 0;  // Index for result element
+    for (std::size_t i = 0; i < result.size(); i++)
     {
         std::string expected_line(result[i].c_str());
         // Strip string by default

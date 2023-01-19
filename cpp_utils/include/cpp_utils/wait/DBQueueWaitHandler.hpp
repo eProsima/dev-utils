@@ -54,10 +54,6 @@ protected:
     void add_value_(
             T&& value) override;
 
-    //! Override of ConsumerWaitHandler method to copy a new value into the queue
-    void add_value_(
-            const T& value) override;
-
     /**
      * @brief Override of \c ConsumerWaitHandler method to remove a value from the queue
      *
@@ -83,5 +79,3 @@ protected:
 
 // Include implementation template file
 #include <cpp_utils/wait/impl/DBQueueWaitHandler.ipp>
-
-

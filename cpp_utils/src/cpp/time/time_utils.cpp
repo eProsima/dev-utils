@@ -26,9 +26,9 @@
 #include <cpp_utils/exception/PreconditionNotMet.hpp>
 
 // These functions has different names in windows
-#if _EPROSIMA_IN_WINDOWS
+#if _EPROSIMA_WINDOWS_PLATFORM
 #define timegm _mkgmtime
-#endif // if _EPROSIMA_IN_WINDOWS
+#endif // if _EPROSIMA_WINDOWS_PLATFORM
 
 namespace eprosima {
 namespace utils {

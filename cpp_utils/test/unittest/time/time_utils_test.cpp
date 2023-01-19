@@ -18,6 +18,7 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
 
@@ -55,12 +56,12 @@ TEST(time_utils_test, timestamp_to_string)
 
     // old time
     {
-        Timestamp old_time = date_to_timestamp(1969u, 7u, 20u, 6u, 39u, 42u);
+        Timestamp old_time = date_to_timestamp(1970u, 7u, 20u, 6u, 39u, 42u);
         std::string old_time_str = timestamp_to_string(old_time);
 
         std::ostringstream expected_string_os;
         expected_string_os
-            << 1969
+            << 1970
             << "-" << "07"
             << "-" << 20
             << "_" << "06"
@@ -141,32 +142,42 @@ TEST(time_utils_test, timestamp_to_string_local)
 TEST(time_utils_test, timestamp_to_string_format)
 {
     // The 20th of July 1969 at 6h 39min 42s the man put a foot in the moon.
-    auto date = date_to_timestamp(1969u, 7u, 20u, 6u, 39u, 42u);
+    // However, we use here 1970 because windows time format does not allow years before 1970
+    auto date = date_to_timestamp(1970u, 7u, 20u, 6u, 39u, 42u);
 
     // time zone
     {
+        // String for Time Zone is different in Windows or Linux
+#if _EPROSIMA_WINDOWS_PLATFORM
+        std::string expected_str = "Coordinated Universal Time";
+#else
         std::string expected_str = "GMT";
+#endif  // _EPROSIMA_WINDOWS_PLATFORM
+
         std::string date_str = timestamp_to_string(date, "%Z");
         ASSERT_EQ(date_str, expected_str);
     }
 
     // time zone offset from UTC
     {
-        std::string expected_str = "+0000";
+        // String for Time Zone offset is different in Windows or Linux
+        // Thus the first char (+/-) is removed because it is arbitrary (or looks like it) in Windows.
+        std::string expected_str = "0000";
         std::string date_str = timestamp_to_string(date, "%z");
+        date_str = date_str.substr(1);
         ASSERT_EQ(date_str, expected_str);
     }
 
     // year
     {
-        std::string expected_str = "1969";
+        std::string expected_str = "1970";
         std::string date_str = timestamp_to_string(date, "%Y");
         ASSERT_EQ(date_str, expected_str);
     }
 
     // 2 digits year
     {
-        std::string expected_str = "69";
+        std::string expected_str = "70";
         std::string date_str = timestamp_to_string(date, "%y");
         ASSERT_EQ(date_str, expected_str);
     }
@@ -201,7 +212,7 @@ TEST(time_utils_test, timestamp_to_string_format)
 
     // week day
     {
-        std::string expected_str = "0";
+        std::string expected_str = "1";
         std::string date_str = timestamp_to_string(date, "%w");
         ASSERT_EQ(date_str, expected_str);
     }
@@ -243,15 +254,15 @@ TEST(time_utils_test, timestamp_to_string_format)
 
     // year & seconds (with strange format)
     {
-        std::string expected_str = "_1969_-_42_";
+        std::string expected_str = "_1970_-_42_";
         std::string date_str = timestamp_to_string(date, "_%Y_-_%S_");
         ASSERT_EQ(date_str, expected_str);
     }
 
     // seconds & TZone & week day (with strange format)
     {
-        std::string expected_str = "42::GMT::0";
-        std::string date_str = timestamp_to_string(date, "%S::%Z::%w");
+        std::string expected_str = "42::1";
+        std::string date_str = timestamp_to_string(date, "%S::%w");
         ASSERT_EQ(date_str, expected_str);
     }
 
@@ -262,9 +273,9 @@ TEST(time_utils_test, timestamp_to_string_format)
         std::string this_time_zone_dev_str = timestamp_to_string(date_now, "%z", true);
 
         std::ostringstream expected_ostr;
-        expected_ostr << " " << this_time_zone_str << "(" << this_time_zone_dev_str << ") ";
+        expected_ostr << " " << this_time_zone_str << "( " << this_time_zone_dev_str << " ) ";
 
-        std::string date_str = timestamp_to_string(date_now, " %Z(%z) ", true);
+        std::string date_str = timestamp_to_string(date_now, " %Z( %z ) ", true);
         ASSERT_EQ(date_str, expected_ostr.str());
     }
 }

@@ -31,19 +31,19 @@
 #include <cpp_utils/utils.hpp>
 
 // These libraries are used to execute wildcard using system functions, and depend on the OS
-#if _EPROSIMA_IN_WINDOWS
+#if _EPROSIMA_WINDOWS_PLATFORM
 #include "Shlwapi.h"
 #else
 #include <fnmatch.h>
-#endif // if _EPROSIMA_IN_WINDOWS
+#endif // if _EPROSIMA_WINDOWS_PLATFORM
 
 // Includes to use access method. It checks if a file exists and it is readable
-#if _EPROSIMA_IN_WINDOWS
+#if _EPROSIMA_WINDOWS_PLATFORM
 #include <io.h>         // Use _access windows method
 #define access _access  // Allow using same method for UNIX and windows
 #else
 #include <unistd.h>
-#endif // if _EPROSIMA_IN_WINDOWS
+#endif // if _EPROSIMA_WINDOWS_PLATFORM
 
 namespace eprosima {
 namespace utils {

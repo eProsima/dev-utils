@@ -21,8 +21,14 @@
 #include <thread>
 #include <sstream>
 
+#include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/exception/PreconditionNotMet.hpp>
+
+// These functions has different names in windows
+#if _EPROSIMA_IN_WINDOWS
+#define timegm _mkgmtime
+#endif // if _EPROSIMA_IN_WINDOWS
 
 namespace eprosima {
 namespace utils {

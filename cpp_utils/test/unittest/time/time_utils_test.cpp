@@ -96,7 +96,7 @@ TEST(time_utils_test, timestamp_to_string)
 TEST(time_utils_test, timestamp_to_string_local)
 {
     Timestamp now_time = now();
-    std::string now_time_str = timestamp_to_string(now_time, "%Z_%Y-%m-%d_%H-%M-%S", true);
+    std::string now_time_str = timestamp_to_string(now_time, "%Y-%m-%d_%H-%M-%S", true);
 
     time_t time = std::chrono::system_clock::to_time_t(now_time);
     std::tm local_tm = *localtime(&time);
@@ -104,8 +104,7 @@ TEST(time_utils_test, timestamp_to_string_local)
 
     std::ostringstream expected_string_os;
     expected_string_os
-        << local_tm.tm_zone
-        << "_" << number_trailing_zeros_format(local_tm.tm_year + 1900, 4)
+        << number_trailing_zeros_format(local_tm.tm_year + 1900, 4)
         << "-" << number_trailing_zeros_format(local_tm.tm_mon + 1, 2)
         << "-" << number_trailing_zeros_format(local_tm.tm_mday, 2)
         << "_" << number_trailing_zeros_format(local_tm.tm_hour, 2)

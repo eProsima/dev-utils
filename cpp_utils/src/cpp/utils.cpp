@@ -24,25 +24,26 @@
 #include <iomanip>
 #include <sstream>
 
+#include <cpp_utils/exception/PreconditionNotMet.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/macros/macros.hpp>
+#include <cpp_utils/math/math_extension.hpp>
+#include <cpp_utils/utils.hpp>
+
 // These libraries are used to execute wildcard using system functions, and depend on the OS
-#if defined(_WIN32)
+#if _EPROSIMA_IN_WINDOWS
 #include "Shlwapi.h"
 #else
 #include <fnmatch.h>
-#endif // if defined(_WIN32)
+#endif // if _EPROSIMA_IN_WINDOWS
 
 // Includes to use access method. It checks if a file exists and it is readable
-#if defined(_WIN32)
+#if _EPROSIMA_IN_WINDOWS
 #include <io.h>         // Use _access windows method
 #define access _access  // Allow using same method for UNIX and windows
 #else
 #include <unistd.h>
-#endif // if defined(_WIN32)
-
-#include <cpp_utils/exception/PreconditionNotMet.hpp>
-#include <cpp_utils/math/math_extension.hpp>
-#include <cpp_utils/utils.hpp>
-#include <cpp_utils/Log.hpp>
+#endif // if _EPROSIMA_IN_WINDOWS
 
 namespace eprosima {
 namespace utils {

@@ -165,13 +165,13 @@ std::string number_trailing_zeros_format(
         unsigned int n_chars,
         bool allow_more_chars /* = true */)
 {
-    if (! allow_more_chars)
+    if (!allow_more_chars)
     {
         if (value_to_print / fast_exponential(10, n_chars) > 0)
         {
             throw PreconditionNotMet(STR_ENTRY
-                << "Number <" << value_to_print << ">"
-                << " has more than <" << n_chars << "> chars");
+                          << "Number <" << value_to_print << ">"
+                          << " has more than <" << n_chars << "> chars");
         }
     }
 

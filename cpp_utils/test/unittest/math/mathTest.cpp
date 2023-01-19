@@ -101,7 +101,7 @@ bool compare_fast_exponential(
         unsigned int exponent)
 {
     unsigned int result = 1;
-    for (unsigned int i=0; i<exponent; i++)
+    for (unsigned int i = 0; i < exponent; i++)
     {
         result *= base;
     }

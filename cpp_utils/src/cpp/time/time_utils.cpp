@@ -68,11 +68,11 @@ std::string timestamp_to_string(
         const std::string& format /* = "%Z_%Y-%m-%d_%H-%M-%S" */,
         bool local_time /* = false */)
 {
-	std::ostringstream ss;
+    std::ostringstream ss;
     const std::chrono::high_resolution_clock::time_point::duration duration = timestamp.time_since_epoch();
-	const time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+    const time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
 
-    std::tm *tm = nullptr;
+    std::tm* tm = nullptr;
     if (local_time)
     {
         tm = std::localtime(&duration_seconds);
@@ -82,14 +82,16 @@ std::string timestamp_to_string(
         tm = std::gmtime(&duration_seconds);
     }
 
-	if (tm) {
-		ss << std::put_time(tm, format.c_str());
-	}
-	else {
-	    // gmtime/localtime() returned null
-		throw PreconditionNotMet(STR_ENTRY << "Format <" << format << "> to convert Timestamp to string is incorrect.");
-	}
-	return ss.str();
+    if (tm)
+    {
+        ss << std::put_time(tm, format.c_str());
+    }
+    else
+    {
+        // gmtime/localtime() returned null
+        throw PreconditionNotMet(STR_ENTRY << "Format <" << format << "> to convert Timestamp to string is incorrect.");
+    }
+    return ss.str();
 }
 
 std::chrono::milliseconds duration_to_ms(

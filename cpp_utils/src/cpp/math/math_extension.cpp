@@ -133,7 +133,7 @@ unsigned int fast_exponential(
     }
     else if (exponent % 2 == 0)
     {
-        return fast_exponential(base*base, exponent / 2);
+        return fast_exponential(base * base, exponent / 2);
     }
     else
     {

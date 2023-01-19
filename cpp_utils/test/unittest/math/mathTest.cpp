@@ -96,6 +96,22 @@ bool compare_arithmetic_progression_sum(
         real_result);
 }
 
+bool compare_fast_exponential(
+        unsigned int base,
+        unsigned int exponent)
+{
+    unsigned int result = 1;
+    for (unsigned int i=0; i<exponent; i++)
+    {
+        result *= base;
+    }
+
+    return (
+        fast_exponential(base, exponent)
+        ==
+        result);
+}
+
 } /* namespace test */
 } /* namespace utils */
 } /* namespace eprosima */
@@ -173,6 +189,22 @@ TEST(mathTest, arithmetic_progression_sum)
                 ASSERT_TRUE(test::compare_arithmetic_progression_sum(lowest, interval, steps))
                     << lowest << " , " << interval << " , " << steps;
             }
+        }
+    }
+}
+
+/**
+ * Test \c fast_exponential method
+ */
+TEST(mathTest, fast_exponential)
+{
+    // calculate module in many cases
+    for (unsigned int base = 0; base < test::NUMBERS_TO_TEST; ++base)
+    {
+        for (unsigned int exponent = 0; exponent < test::NUMBERS_TO_TEST; ++exponent)
+        {
+            ASSERT_TRUE(test::compare_fast_exponential(base, exponent))
+                << base << " ** " << exponent;
         }
     }
 }

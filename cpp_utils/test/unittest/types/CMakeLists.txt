@@ -57,6 +57,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math_extension.cpp
     )
 
 set(TEST_LIST
@@ -95,6 +96,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math_extension.cpp
     )
 
 set(TEST_LIST

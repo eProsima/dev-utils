@@ -44,9 +44,29 @@ CPP_UTILS_DllAPI Timestamp now() noexcept;
 //! Returns the maximum time available for \c Timestamp
 CPP_UTILS_DllAPI Timestamp the_end_of_times() noexcept;
 
-CPP_UTILS_DllAPI std::string to_string(
+CPP_UTILS_DllAPI Timestamp date_to_timestamp(
+        unsigned int year,
+        unsigned int month,
+        unsigned int day,
+        unsigned int hour = 0,
+        unsigned int minute = 0,
+        unsigned int second = 0);
+
+/**
+ * @brief Convert a \c Timestamp to a string following a specific format.
+ *
+ * @param timestamp value of the timestamp to parse.
+ * @param format string formatting the date.
+ * @param local_time whether to use the local time zone or UTC.
+ *
+ * @return string with the timestamp in the format given
+ *
+ * @note check how to use the string format here: https://en.cppreference.com/w/cpp/io/manip/put_time
+ */
+CPP_UTILS_DllAPI std::string timestamp_to_string(
         const Timestamp& timestamp,
-        const std::string& format = "%Z_%Y-%m-%d_%H-%M-%S");
+        const std::string& format = "%Y-%m-%d_%H-%M-%S",
+        bool local_time = false);
 
 CPP_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
         const Duration_ms& duration) noexcept;

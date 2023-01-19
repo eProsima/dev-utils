@@ -119,5 +119,27 @@ unsigned int arithmetic_progression_sum(
     return (((2 * lowest + ((steps - 1) * interval)) * steps) / 2);
 }
 
+unsigned int fast_exponential(
+        unsigned int base,
+        unsigned int exponent) noexcept
+{
+    if (exponent == 0)
+    {
+        return 1;
+    }
+    else if (exponent == 1)
+    {
+        return base;
+    }
+    else if (exponent % 2 == 0)
+    {
+        return fast_exponential(base * base, exponent / 2);
+    }
+    else
+    {
+        return base * fast_exponential(base, exponent - 1);
+    }
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

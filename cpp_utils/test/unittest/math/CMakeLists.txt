@@ -25,6 +25,7 @@ set(TEST_LIST
         fast_module
         fast_division
         arithmetic_progression_sum
+        fast_exponential
     )
 
 set(TEST_EXTRA_LIBRARIES

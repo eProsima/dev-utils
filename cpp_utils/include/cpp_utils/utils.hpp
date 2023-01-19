@@ -204,6 +204,11 @@ CPP_UTILS_DllAPI unsigned int strip_str(
         const std::string& replace_by = "",
         const std::set<std::string>& undesired_strings = {"\n", "\r"});
 
+CPP_UTILS_DllAPI std::string number_trailing_zeros_format(
+        int value_to_print,
+        unsigned int n_chars,
+        bool allow_more_chars = true);
+
 
 } /* namespace utils */
 } /* namespace eprosima */

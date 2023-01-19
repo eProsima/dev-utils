@@ -118,5 +118,21 @@ CPP_UTILS_DllAPI unsigned int arithmetic_progression_sum(
         unsigned int interval,
         unsigned int steps) noexcept;
 
+/**
+ * @brief Calculate power of integers in a fast way
+ *
+ * calculate a^b or a**b between 2 integers
+ *
+ * @param base base of the exponential (a)
+ * @param exponent exponent (b)
+ *
+ * @return a multiplied b times.
+ *
+ * @attention Overflow is not handled.
+ */
+CPP_UTILS_DllAPI unsigned int fast_exponential(
+        unsigned int base,
+        unsigned int exponent) noexcept;
+
 } /* namespace utils */
 } /* namespace eprosima */

@@ -21,28 +21,29 @@
 #include <assert.h>
 #include <set>
 #include <stdlib.h>
+#include <iomanip>
+#include <sstream>
 
-// TODO remove
-#include <iostream>
+#include <cpp_utils/exception/PreconditionNotMet.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/macros/macros.hpp>
+#include <cpp_utils/math/math_extension.hpp>
+#include <cpp_utils/utils.hpp>
 
 // These libraries are used to execute wildcard using system functions, and depend on the OS
-#if defined(_WIN32)
+#if _EPROSIMA_WINDOWS_PLATFORM
 #include "Shlwapi.h"
 #else
 #include <fnmatch.h>
-#endif // if defined(_WIN32)
+#endif // if _EPROSIMA_WINDOWS_PLATFORM
 
 // Includes to use access method. It checks if a file exists and it is readable
-#if defined(_WIN32)
+#if _EPROSIMA_WINDOWS_PLATFORM
 #include <io.h>         // Use _access windows method
 #define access _access  // Allow using same method for UNIX and windows
 #else
 #include <unistd.h>
-#endif // if defined(_WIN32)
-
-#include <cpp_utils/math/math_extension.hpp>
-#include <cpp_utils/utils.hpp>
-#include <cpp_utils/Log.hpp>
+#endif // if _EPROSIMA_WINDOWS_PLATFORM
 
 namespace eprosima {
 namespace utils {
@@ -157,6 +158,26 @@ unsigned int strip_str(
         replacements += replace_all(to_strip, undesired, replace_by);
     }
     return replacements;
+}
+
+std::string number_trailing_zeros_format(
+        int value_to_print,
+        unsigned int n_chars,
+        bool allow_more_chars /* = true */)
+{
+    if (!allow_more_chars)
+    {
+        if (value_to_print / fast_exponential(10, n_chars) > 0)
+        {
+            throw PreconditionNotMet(STR_ENTRY
+                          << "Number <" << value_to_print << ">"
+                          << " has more than <" << n_chars << "> chars");
+        }
+    }
+
+    std::ostringstream os;
+    os << std::setw(n_chars) << std::setfill('0') << value_to_print;
+    return os.str();
 }
 
 } /* namespace utils */

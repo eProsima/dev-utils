@@ -12,12 +12,53 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+############################
+# TIME UTILS TEST
+############################
+
+set(TEST_NAME time_utils_test)
+
+set(TEST_SOURCES
+        time_utils_test.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math_extension.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+    )
+
+set(TEST_LIST
+        timestamp_to_string
+        timestamp_to_string_local
+        timestamp_to_string_format
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
+
+############################
+# TIMER TEST
+############################
+
 set(TEST_NAME TimerTest)
 
 set(TEST_SOURCES
         TimerTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
     )
 
 set(TEST_LIST
@@ -31,10 +72,6 @@ set(TEST_EXTRA_LIBRARIES
         fastrtps
     )
 
-############################
-# PAUSABLE TIMER TEST
-############################
-
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
@@ -42,29 +79,35 @@ add_unittest_executable(
         "${TEST_EXTRA_LIBRARIES}"
     )
 
-    set(TEST_NAME PausableTimerTest)
+############################
+# PAUSABLE TIMER TEST
+############################
 
-    set(TEST_SOURCES
-            PausableTimerTest.cpp
-            ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
-            ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
-            ${PROJECT_SOURCE_DIR}/src/cpp/time/PausableTimer.cpp
-        )
+set(TEST_NAME PausableTimerTest)
 
-    set(TEST_LIST
-            create
-            repeat_play_pause
-            play_and_pause
-        )
+set(TEST_SOURCES
+        PausableTimerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/PausableTimer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+    )
 
-    set(TEST_EXTRA_LIBRARIES
-            fastcdr
-            fastrtps
-        )
+set(TEST_LIST
+        create
+        repeat_play_pause
+        play_and_pause
+    )
 
-    add_unittest_executable(
-            "${TEST_NAME}"
-            "${TEST_SOURCES}"
-            "${TEST_LIST}"
-            "${TEST_EXTRA_LIBRARIES}"
-        )
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )

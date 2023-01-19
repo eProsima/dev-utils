@@ -69,5 +69,14 @@ namespace utils {
 #define MAX(x, y) x < y ? y : x
 #define MIN(x, y) x > y ? y : x
 
+/**
+ * @brief Standarize a common way to check if the OS is windows.
+ */
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || \
+    defined(WIN64) || defined(_WIN64) || defined(__WIN64) || \
+    defined(_MSC_VER)
+#define _EPROSIMA_WINDOWS_PLATFORM 1
+#endif // if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(WIN64) || defined(_WIN64) || defined(__WIN64) || defined(_MSC_VER)
+
 } /* namespace utils */
 } /* namespace eprosima */

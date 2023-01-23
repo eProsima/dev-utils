@@ -28,7 +28,7 @@ template <typename T>
 class UnboundedPool;
 
 template <typename T>
-static IPool<T>* create_pool(
+IPool<T>* create_pool(
         PoolConfiguration configuration)
 {
     // Create pool depending on the configuration

@@ -52,11 +52,11 @@ UnboundedPool<T>::~UnboundedPool()
         logDevError(LIMITLESS_POOL, "More Elements reserved than released.");
     }
 
+    logDebug(LIMITLESS_POOL, "Destroying Pool [" << this << "] with " << reserved_ << " elements.");
+
     // Delete the values
-    for (unsigned int i = 0; i < elements_.size(); ++i)
+    for (auto& element : elements_)
     {
-        auto& element = elements_.back();
-        elements_.pop_back();
         this->delete_element_(element);
     }
 }
@@ -65,6 +65,7 @@ template <typename T>
 bool UnboundedPool<T>::loan(
         T*& element)
 {
+    logDebug(LIMITLESS_POOL, "Loaning element from Pool [" << this << "].");
     if (elements_.size() == 0)
     {
         // It requires to allocate new values
@@ -83,6 +84,7 @@ template <typename T>
 bool UnboundedPool<T>::return_loan(
         T* element)
 {
+    logDebug(LIMITLESS_POOL, "Returning loan to Pool [" << this << "].");
     // This only could happen if more elements are released than reserved.
     // TODO: this should be a performance test, not in production. It does not affect behaviour.
     if (reserved_ == elements_.size())
@@ -100,23 +102,29 @@ bool UnboundedPool<T>::return_loan(
 template <typename T>
 void UnboundedPool<T>::augment_free_values_()
 {
-    for (unsigned int i = 0; i < this->configuration_.batch_size; ++i)
+    augment_free_values_(this->configuration_.batch_size);
+}
+
+template <typename T>
+void UnboundedPool<T>::augment_free_values_(
+        unsigned int new_values_count)
+{
+    for (unsigned int i = 0; i < new_values_count; ++i)
     {
-        this->elements_.push_back(this->new_element_());
+        auto new_element = this->new_element_();
+        this->elements_.push_back(new_element);
     }
-    reserved_ += this->configuration_.batch_size;
-    logDebug(LIMITLESS_POOL, "Pool " << TYPE_NAME(T) << " augmented to " << reserved_ << " elements.");
+    reserved_ += new_values_count;
+    logDebug(
+        LIMITLESS_POOL,
+        "Pool " << TYPE_NAME(T) << " [" << this << "] augmented in "
+                << new_values_count << " to " << reserved_ << " elements.");
 }
 
 template <typename T>
 void UnboundedPool<T>::initialize_vector_()
 {
-    for (unsigned int i = 0; i < this->configuration_.initial_size; ++i)
-    {
-        elements_.push_back(this->new_element_());
-    }
-    reserved_ = this->configuration_.initial_size;
-    logDebug(LIMITLESS_POOL, "Pool " << TYPE_NAME(T) << " initialized with " << reserved_ << " elements.");
+    augment_free_values_(this->configuration_.initial_size);
 }
 
 } /* namespace utils */

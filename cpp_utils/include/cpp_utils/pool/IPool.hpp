@@ -119,7 +119,7 @@ protected:
  * @return IPool<T>* new Pool object.
  */
 template <typename T>
-static IPool<T>* create_pool(
+IPool<T>* create_pool(
         PoolConfiguration configuration);
 
 } /* namespace utils */
@@ -127,5 +127,3 @@ static IPool<T>* create_pool(
 
 // Include implementation template file
 #include <cpp_utils/pool/impl/IPool.ipp>
-
-

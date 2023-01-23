@@ -106,7 +106,8 @@ void UnboundedPool<T>::augment_free_values_()
 }
 
 template <typename T>
-void UnboundedPool<T>::augment_free_values_(unsigned int new_values_count)
+void UnboundedPool<T>::augment_free_values_(
+        unsigned int new_values_count)
 {
     for (unsigned int i = 0; i < new_values_count; ++i)
     {
@@ -117,7 +118,7 @@ void UnboundedPool<T>::augment_free_values_(unsigned int new_values_count)
     logDebug(
         LIMITLESS_POOL,
         "Pool " << TYPE_NAME(T) << " [" << this << "] augmented in "
-        << new_values_count << " to " << reserved_ << " elements.");
+                << new_values_count << " to " << reserved_ << " elements.");
 }
 
 template <typename T>

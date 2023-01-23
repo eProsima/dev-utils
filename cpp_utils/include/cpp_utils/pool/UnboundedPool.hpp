@@ -99,7 +99,8 @@ protected:
      */
     void augment_free_values_();
 
-    void augment_free_values_(unsigned int new_values_count);
+    void augment_free_values_(
+            unsigned int new_values_count);
 
     /**
      * @brief vector where elements are stored.

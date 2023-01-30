@@ -65,10 +65,6 @@ class Singleton
 public:
 
     //! Get a reference to the instance of this Singleton
-    template <typename ... Args>
-    static bool initialize(Args... args);
-
-    //! Get a reference to the instance of this Singleton
     static T* get_instance() noexcept;
 
     /**
@@ -82,9 +78,6 @@ public:
     static std::shared_ptr<T> get_shared_instance() noexcept;
 
 private:
-
-    template <typename ... Args>
-    static std::shared_ptr<T> initialize_(Args... args);
 
     /**
      * @brief Protected default constructor specifies that none can create an instance of this class.

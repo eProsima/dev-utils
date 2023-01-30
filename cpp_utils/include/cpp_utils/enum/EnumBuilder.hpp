@@ -24,7 +24,7 @@
 #include <vector>
 #include <string>
 
-#include <cpp_utils/types/Singleton.hpp>
+#include <cpp_utils/types/IniciableSingleton.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -64,7 +64,7 @@ protected:
 };
 
 #define eProsima_ENUMERATION_BUILDER(builder_name, enum_name, values_map) \
-    using builder_name =  eprosima::utils::Singleton<eprosima::utils::EnumBuilder< enum_name >> ; \
+    typedef eprosima::utils::IniciableSingleton<eprosima::utils::EnumBuilder< enum_name >, 0> builder_name ; \
     auto __STATUS_INITIALIZATION_ ## builder_name = \
         builder_name::initialize<const std::map< enum_name , std::set<std::string>>&>( values_map )
 

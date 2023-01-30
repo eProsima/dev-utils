@@ -70,6 +70,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastrtps
     )
 
 set(TEST_NEEDED_SOURCES

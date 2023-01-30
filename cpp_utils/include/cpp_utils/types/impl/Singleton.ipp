@@ -23,30 +23,15 @@ namespace eprosima {
 namespace utils {
 
 template <typename T, int Index>
-template <typename ... Args>
-bool Singleton<T, Index>::initialize(Args... args)
-{
-    initialize_(args ...);
-    return true;
-}
-
-template <typename T, int Index>
 T* Singleton<T, Index>::get_instance() noexcept
 {
-    return initialize_().get();
+    return get_shared_instance().get();
 }
 
 template <typename T, int Index>
 std::shared_ptr<T> Singleton<T, Index>::get_shared_instance() noexcept
 {
-    return initialize_();
-}
-
-template <typename T, int Index>
-template <typename ... Args>
-std::shared_ptr<T> Singleton<T, Index>::initialize_(Args... args)
-{
-    static std::shared_ptr<T> instance_(new T(args ...));
+    static std::shared_ptr<T> instance_(new T());
     return instance_;
 }
 

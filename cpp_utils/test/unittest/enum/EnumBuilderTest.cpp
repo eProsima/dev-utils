@@ -165,6 +165,9 @@ TEST(EnumBuilderTest, test_get_non_secure_simple)
  * - value 1 str
  * - reinitialize without force
  * - try invalid str
+ * - try reinitialize singleton class without force
+ * - try reinitialize singleton class with force
+ * - use singleton class
  */
 TEST(EnumBuilderTest, test_get_initialization)
 {
@@ -230,6 +233,34 @@ TEST(EnumBuilderTest, test_get_initialization)
         ASSERT_FALSE(
             builder.string_to_enumeration("value_2", enum_value));
     }
+
+    // try reinitialize singleton class without force
+    ASSERT_FALSE(
+        test::Type_simple_Builder::get_instance()->initialize_builder(
+            {
+                { test::Type_simple::value_1 , { "invalid_value" } }
+            },
+            false
+        ));
+
+    // try reinitialize singleton class with force
+    ASSERT_TRUE(
+        test::Type_simple_Builder::get_instance()->initialize_builder(
+            {
+                { test::Type_simple::value_1 , { "invalid_value" } }
+            },
+            true
+        ));
+
+    // use singleton class
+    {
+        ASSERT_TRUE(
+            builder.string_to_enumeration("invalid_value", enum_value));
+        ASSERT_EQ(enum_value, test::Type_simple::value_1);
+
+        ASSERT_FALSE(
+            builder.string_to_enumeration("value_1", enum_value));
+    }
 }
 
 /**
@@ -241,7 +272,7 @@ TEST(EnumBuilderTest, test_get_initialization)
  * - value other str
  * - value oui str
  */
-TEST(EnumBuilderTest, test_type_complex_secure)
+TEST(EnumBuilderTest, test_singleton_complex)
 {
     // invalid str
     {
@@ -298,13 +329,13 @@ TEST(EnumBuilderTest, test_type_complex_secure)
  * - value 1 str with new builder
  * - value 1 str with default builder
  */
-TEST(EnumBuilderTest, test_type_simple_other_builder)
+TEST(EnumBuilderTest, test_singleton_simple_other_builder)
 {
     // Auxiliary variable
     test::Type_simple enum_value;
 
     // create new singleton builder object
-    auto singleton_ref = Singleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
+    auto singleton_ref = IniciableSingleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
     singleton_ref->initialize_builder(
         {
             { test::Type_simple::value_1 , { "some_string" } }

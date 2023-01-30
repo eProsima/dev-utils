@@ -35,6 +35,7 @@ ENUMERATION_BUILDER(
 );
 
 eProsima_ENUMERATION_BUILDER(
+    Type_simple_Builder,
     Type_simple,
     {
         { Type_simple::value_1 COMMA { "value_1" } } COMMA
@@ -55,6 +56,7 @@ ENUMERATION_BUILDER(
 );
 
 eProsima_ENUMERATION_BUILDER(
+    Type_complex_Builder,
     Type_complex,
     {
         { Type_complex::value_1 COMMA { "value" } } COMMA
@@ -68,19 +70,27 @@ eProsima_ENUMERATION_BUILDER(
 using namespace eprosima::utils;
 
 /**
- * Test to create the values from Type_simple enumeration using secure (no exception) function.
+ * Test to create an Enumeration builder in site and use it to access values from simple enumeration.
  *
  * CASES:
  * - invalid str
  * - value 1 str
  * - value 2 str
  */
-TEST(EnumBuilderTest, test_type_simple_secure)
+TEST(EnumBuilderTest, test_get_secure_simple)
 {
+    // Create builder
+    EnumBuilder<test::Type_simple> builder(
+        {
+            { test::Type_simple::value_1 , { "value_1" } } ,
+            { test::Type_simple::value_2 , { "value_2" } }
+        }
+    );
+
     // invalid str
     {
         test::Type_simple enum_value;
-        bool ret_code = EnumBuilder<test::Type_simple>::string_to_enumeration("invalid_value", enum_value);
+        bool ret_code = builder.string_to_enumeration("invalid_value", enum_value);
 
         ASSERT_FALSE(ret_code);
     }
@@ -88,7 +98,7 @@ TEST(EnumBuilderTest, test_type_simple_secure)
     // value 1 str
     {
         test::Type_simple enum_value;
-        bool ret_code = EnumBuilder<test::Type_simple>::string_to_enumeration("value_1", enum_value);
+        bool ret_code = builder.string_to_enumeration("value_1", enum_value);
 
         ASSERT_TRUE(ret_code);
         ASSERT_EQ(enum_value, test::Type_simple::value_1);
@@ -97,10 +107,128 @@ TEST(EnumBuilderTest, test_type_simple_secure)
     // value 2 str
     {
         test::Type_simple enum_value;
-        bool ret_code = EnumBuilder<test::Type_simple>::string_to_enumeration("value_2", enum_value);
+        bool ret_code = builder.string_to_enumeration("value_2", enum_value);
 
         ASSERT_TRUE(ret_code);
         ASSERT_EQ(enum_value, test::Type_simple::value_2);
+    }
+}
+
+/**
+ * Test to create an Enumeration builder in site and use it to access values from simple enumeration.
+ *
+ * CASES:
+ * - invalid str
+ * - value 1 str
+ * - value 2 str
+ */
+TEST(EnumBuilderTest, test_get_non_secure_simple)
+{
+    // Create builder
+    EnumBuilder<test::Type_simple> builder(
+        {
+            { test::Type_simple::value_1 , { "value_1" } } ,
+            { test::Type_simple::value_2 , { "value_2" } }
+        }
+    );
+
+    // invalid str
+    {
+        ASSERT_THROW(
+            builder.string_to_enumeration("invalid_value"),
+            ValueNotAllowedException);
+    }
+
+    // value 1 str
+    {
+        ASSERT_EQ(
+            builder.string_to_enumeration("value_1"), test::Type_simple::value_1);
+    }
+
+    // value 2 str
+    {
+        ASSERT_EQ(
+            builder.string_to_enumeration("value_2"), test::Type_simple::value_2);
+    }
+}
+
+/**
+ * Test to create the values from Type_simple enumeration using secure (no exception) function.
+ *
+ * STEPS:
+ * - create empty builder
+ * - initialize builder
+ * - invalid str
+ * - value 1 str
+ * - reinitialize force
+ * - invalid str
+ * - value 1 str
+ * - reinitialize without force
+ * - try invalid str
+ */
+TEST(EnumBuilderTest, test_get_initialization)
+{
+    // create empty builder
+    EnumBuilder<test::Type_simple> builder;
+    test::Type_simple enum_value;
+
+    // initialize builder
+    ASSERT_TRUE(builder.initialize_builder(
+        {
+            { test::Type_simple::value_1 , { "value_1" } } ,
+            { test::Type_simple::value_2 , { "value_2" } }
+        }
+    ));
+
+    // invalid str
+    {
+        ASSERT_FALSE(
+            builder.string_to_enumeration("invalid_value", enum_value));
+    }
+
+    // value 1 str
+    {
+        ASSERT_TRUE(
+            builder.string_to_enumeration("value_1", enum_value));
+    }
+
+    // reinitialize force
+    ASSERT_TRUE(builder.initialize_builder(
+        {
+            { test::Type_simple::value_1 , { "invalid_value" } }
+        },
+        true
+    ));
+
+    // invalid str
+    {
+        ASSERT_FALSE(
+            builder.string_to_enumeration("value_1", enum_value));
+        ASSERT_FALSE(
+            builder.string_to_enumeration("value_2", enum_value));
+    }
+
+    // value 1 str
+    {
+        ASSERT_TRUE(
+            builder.string_to_enumeration("invalid_value", enum_value));
+        ASSERT_EQ(enum_value, test::Type_simple::value_1);
+    }
+
+    // reinitialize without force
+    builder.initialize_builder(
+        {
+            { test::Type_simple::value_1 , { "value_1" } } ,
+            { test::Type_simple::value_2 , { "value_2" } }
+        }
+    );
+
+    // value 1 str
+    {
+        ASSERT_FALSE(
+            builder.string_to_enumeration("value_1", enum_value));
+        ASSERT_FALSE(
+            builder.string_to_enumeration("value_2", enum_value));
     }
 }
 
@@ -118,7 +246,7 @@ TEST(EnumBuilderTest, test_type_complex_secure)
     // invalid str
     {
         test::Type_complex enum_value;
-        bool ret_code = EnumBuilder<test::Type_complex>::string_to_enumeration("oui", enum_value);
+        bool ret_code = test::Type_complex_Builder::get_instance()->string_to_enumeration("oui", enum_value);
 
         ASSERT_FALSE(ret_code);
     }
@@ -126,7 +254,7 @@ TEST(EnumBuilderTest, test_type_complex_secure)
     // value 1 str
     {
         test::Type_complex enum_value;
-        bool ret_code = EnumBuilder<test::Type_complex>::string_to_enumeration("value", enum_value);
+        bool ret_code = test::Type_complex_Builder::get_instance()->string_to_enumeration("value", enum_value);
 
         ASSERT_TRUE(ret_code);
         ASSERT_EQ(enum_value, test::Type_complex::value_1);
@@ -139,7 +267,7 @@ TEST(EnumBuilderTest, test_type_complex_secure)
 
         for (const auto& str : valid_strings)
         {
-            bool ret_code = EnumBuilder<test::Type_complex>::string_to_enumeration(str, enum_value);
+            bool ret_code = test::Type_complex_Builder::get_instance()->string_to_enumeration(str, enum_value);
 
             ASSERT_TRUE(ret_code);
             ASSERT_EQ(enum_value, test::Type_complex::value_other);
@@ -153,7 +281,7 @@ TEST(EnumBuilderTest, test_type_complex_secure)
 
         for (const auto& str : valid_strings)
         {
-            bool ret_code = EnumBuilder<test::Type_complex>::string_to_enumeration(str, enum_value);
+            bool ret_code = test::Type_complex_Builder::get_instance()->string_to_enumeration(str, enum_value);
 
             ASSERT_TRUE(ret_code);
             ASSERT_EQ(enum_value, test::Type_complex::ouiii);
@@ -162,58 +290,37 @@ TEST(EnumBuilderTest, test_type_complex_secure)
 }
 
 /**
- * Test to create the values from Type_simple enumeration using non secure function.
+ * Initialize a new singleton builder (with different index) in run time.
  *
- * CASES:
- * - invalid str
- * - value 1 str
- * - value 2 str
- */
-TEST(EnumBuilderTest, test_type_simple_non_secure)
-{
-    // invalid str
-    {
-        ASSERT_THROW(
-            EnumBuilder<test::Type_simple>::string_to_enumeration("invalid_value"),
-            ValueNotAllowedException);
-    }
-
-    // value 1 str
-    {
-        ASSERT_EQ(
-            EnumBuilder<test::Type_simple>::string_to_enumeration("value_1"), test::Type_simple::value_1);
-    }
-
-    // value 2 str
-    {
-        ASSERT_EQ(
-            EnumBuilder<test::Type_simple>::string_to_enumeration("value_2"), test::Type_simple::value_2);
-    }
-}
-
-/**
- * Initialize a new build (with different index) in run time.
+ * STEPS:
+ * - create new singleton builder object
+ * - invalid str with new builder
+ * - value 1 str with new builder
+ * - value 1 str with default builder
  */
 TEST(EnumBuilderTest, test_type_simple_other_builder)
 {
-    EnumBuilder<test::Type_simple, 66>::initialize_builder(
+    // Auxiliary variable
+    test::Type_simple enum_value;
+
+    // create new singleton builder object
+    auto singleton_ref = Singleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
+    singleton_ref->initialize_builder(
         {
             { test::Type_simple::value_1 , { "some_string" } }
         }
     );
 
-    // invalid str
+    // invalid str with new builder
     {
-        test::Type_simple enum_value;
-        bool ret_code = EnumBuilder<test::Type_simple, 66>::string_to_enumeration("value_1", enum_value);
+        bool ret_code = singleton_ref->string_to_enumeration("value_1", enum_value);
 
         ASSERT_FALSE(ret_code);
     }
 
-    // value 1 str
+    // value 1 str with new builder
     {
-        test::Type_simple enum_value;
-        bool ret_code = EnumBuilder<test::Type_simple, 66>::string_to_enumeration("some_string", enum_value);
+        bool ret_code = singleton_ref->string_to_enumeration("some_string", enum_value);
 
         ASSERT_TRUE(ret_code);
         ASSERT_EQ(enum_value, test::Type_simple::value_1);
@@ -221,8 +328,7 @@ TEST(EnumBuilderTest, test_type_simple_other_builder)
 
     // value 1 str with default builder
     {
-        test::Type_simple enum_value;
-        bool ret_code = EnumBuilder<test::Type_simple, 0>::string_to_enumeration("value_1", enum_value);
+        bool ret_code = test::Type_simple_Builder::get_instance()->string_to_enumeration("value_1", enum_value);
 
         ASSERT_TRUE(ret_code);
         ASSERT_EQ(enum_value, test::Type_simple::value_1);

@@ -25,32 +25,35 @@
 namespace eprosima {
 namespace utils {
 
-template<typename E, int Index>
-using SingletonParent = Singleton<std::map<E, std::set<std::string>>, Index>;
+template<typename E>
+EnumBuilder<E>::EnumBuilder(
+        const std::map<E, std::set<std::string>>& map_values)
+    : initialized(true)
+    , values_(map_values)
+{
+    // Do nothing
+}
 
-template<typename E, int Index>
-bool EnumBuilder<E, Index>::initialized = false;
-
-template<typename E, int Index>
-bool EnumBuilder<E, Index>::initialize_builder(
+template<typename E>
+bool EnumBuilder<E>::initialize_builder(
         const std::map<E, std::set<std::string>>& map_values,
         bool force /* = false */)
 {
     if (force || !initialized)
     {
         initialized = true;
-        *SingletonParent<E, Index>::get_instance() = map_values;
+        values_ = map_values;
         return true;
     }
     return false;
 }
 
-template<typename E, int Index>
-bool EnumBuilder<E, Index>::string_to_enumeration(
+template<typename E>
+bool EnumBuilder<E>::string_to_enumeration(
         const std::string& enum_str,
         E& enum_value) noexcept
 {
-    for (const auto& aliases : *SingletonParent<E, Index>::get_instance())
+    for (const auto& aliases : values_)
     {
         if (std::find_if(std::cbegin(aliases.second), std::cend(aliases.second),
                 [enum_str](std::string str)
@@ -66,8 +69,8 @@ bool EnumBuilder<E, Index>::string_to_enumeration(
     return false;
 }
 
-template<typename E, int Index>
-E EnumBuilder<E, Index>::string_to_enumeration(
+template<typename E>
+E EnumBuilder<E>::string_to_enumeration(
         const std::string& enum_str)
 {
     E value;

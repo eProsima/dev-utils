@@ -21,11 +21,11 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        test_type_simple_secure
-        test_type_complex_secure
-        test_type_simple_non_secure
-        test_type_simple_other_builder
-        test_type_simple_reinitialization
+        test_get_secure_simple
+        test_get_non_secure_simple
+        test_get_initialization
+        test_singleton_complex
+        test_singleton_simple_other_builder
     )
 
 set(TEST_EXTRA_LIBRARIES

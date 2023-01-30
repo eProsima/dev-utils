@@ -32,33 +32,41 @@ namespace utils {
 /**
  * TODO
  */
-template <typename E, int Index = 0>
-class EnumBuilder : public Singleton<std::map<E, std::set<std::string>>, Index>
+template <typename E>
+class EnumBuilder
 {
 public:
 
-    static bool initialize_builder(
+    EnumBuilder() = default;
+
+    EnumBuilder(
+        const std::map<E, std::set<std::string>>& map_values);
+
+    ~EnumBuilder() = default;
+
+    bool initialize_builder(
             const std::map<E, std::set<std::string>>& map_values,
             bool force = false);
 
-    static bool string_to_enumeration(
+    bool string_to_enumeration(
             const std::string& enum_str,
             E& enum_value) noexcept;
 
-    static E string_to_enumeration(
+    E string_to_enumeration(
             const std::string& enum_str);
 
 protected:
 
-    static bool initialized;
+    bool initialized {false};
 
-private:
+    std::map<E, std::set<std::string>> values_ {};
 
-    EnumBuilder() = default;
 };
 
-#define eProsima_ENUMERATION_BUILDER(enum_name, values_map) \
-    bool __INITIALIZE_STATUS_ ## enum_name = eprosima::utils::EnumBuilder< enum_name >::initialize_builder( values_map )
+#define eProsima_ENUMERATION_BUILDER(builder_name, enum_name, values_map) \
+    using builder_name =  eprosima::utils::Singleton<eprosima::utils::EnumBuilder< enum_name >> ; \
+    auto __STATUS_INITIALIZATION_ ## builder_name = \
+        builder_name::initialize<const std::map< enum_name , std::set<std::string>>&>( values_map )
 
 } /* namespace utils */
 } /* namespace eprosima */

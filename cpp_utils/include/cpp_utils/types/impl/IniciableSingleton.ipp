@@ -26,39 +26,22 @@ template <typename T, int Index>
 std::shared_ptr<T> IniciableSingleton<T, Index>::the_ptr_;
 
 template <typename T, int Index>
-std::mutex IniciableSingleton<T, Index>::mtx_;
-
-template <typename T, int Index>
 template <typename ... Args>
 bool IniciableSingleton<T, Index>::initialize(Args... args)
 {
-    initialize_(std::forward<Args>(args)...);
+    the_ptr_ = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
     return true;
 }
 
 template <typename T, int Index>
 T* IniciableSingleton<T, Index>::get_instance() noexcept
 {
-    return initialize_().get();
+    return the_ptr_.get();
 }
 
 template <typename T, int Index>
 std::shared_ptr<T> IniciableSingleton<T, Index>::get_shared_instance() noexcept
 {
-    return initialize_();
-}
-
-template <typename T, int Index>
-template <typename ... Args>
-std::shared_ptr<T> IniciableSingleton<T, Index>::initialize_(Args... args)
-{
-    std::lock_guard<std::mutex> _(mtx_);
-
-    if (!the_ptr_)
-    {
-        the_ptr_ = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
-    }
-
     return the_ptr_;
 }
 

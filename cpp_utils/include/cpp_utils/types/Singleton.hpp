@@ -47,7 +47,7 @@ namespace utils {
  *   class SomethingDatabase;  // A class that represents a database of things
  *   using ProcessSharedDatabase = Singleton<SomethingDatabase>;
  *
- *   // From now on, we can access an instance of Database shared with the whole process
+ *   // From now on, we can access an instance of Database shared within the whole process
  *   ProcessSharedDatabase::get_instance()->do_something_in_database(args);
  *
  * @attention internal class in Singleton should have a protected ctor. Otherwise the static variable could be

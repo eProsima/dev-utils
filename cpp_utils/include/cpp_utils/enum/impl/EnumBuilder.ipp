@@ -28,24 +28,16 @@ namespace utils {
 template<typename E>
 EnumBuilder<E>::EnumBuilder(
         const std::map<E, std::set<std::string>>& map_values)
-    : initialized(true)
-    , values_(map_values)
+    : values_(map_values)
 {
     // Do nothing
 }
 
 template<typename E>
-bool EnumBuilder<E>::initialize_builder(
-        const std::map<E, std::set<std::string>>& map_values,
-        bool force /* = false */)
+void EnumBuilder<E>::refactor_values(
+        const std::map<E, std::set<std::string>>& map_values)
 {
-    if (force || !initialized)
-    {
-        initialized = true;
-        values_ = map_values;
-        return true;
-    }
-    return false;
+    values_ = map_values;
 }
 
 template<typename E>

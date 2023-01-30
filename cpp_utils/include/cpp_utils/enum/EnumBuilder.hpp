@@ -30,39 +30,88 @@ namespace eprosima {
 namespace utils {
 
 /**
- * TODO
+ * @brief Class that converts a string to an enumeration value.
+ *
+ * This class has an internal map with values of an enumeration (not necessarily all) that points to set of strings
+ * with the strings that each value has associated.
+ * In order to retrieve an enumeration value from a string, the string is looked for in the sets until it is found.
+ *
+ * @note This class could be used as a Singleton associated with an enumeration.
+ * Use \c eProsima_ENUMERATION_BUILDER to initialize the values in compilation time and use them in all the process.
+ *
+ * @example
+ * enum class CustomEnumeration{ value_1, value_2 };
+ * eProsima_ENUMERATION_BUILDER(CustomEnumerationBuilder, CustomEnumeration,
+ *  { { CustomEnumeration::value_1 , "v1" } , { CustomEnumeration::value_2 , "v2" } );
+ *
+ * // Somewhere in the process
+ * auto res = CustomEnumerationBuilder::get_instance()->string_to_enumeration("v2"); // res = CustomEnumeration::value_2
  */
 template <typename E>
 class EnumBuilder
 {
 public:
 
-    EnumBuilder() = default;
-
+    /**
+     * @brief Construct a new Enum Builder object by giving a map of values.
+     *
+     * The key of the map are the different enumeration values.
+     * The strings in the set of each value of the map are the strings that are associated with that enum value.
+     *
+     * @param map_values Map of values.
+     */
     EnumBuilder(
         const std::map<E, std::set<std::string>>& map_values);
 
-    ~EnumBuilder() = default;
+    //! Change the internal map of values for a new one.
+    void refactor_values(
+            const std::map<E, std::set<std::string>>& map_values);
 
-    bool initialize_builder(
-            const std::map<E, std::set<std::string>>& map_values,
-            bool force = false);
-
+    /**
+     * @brief Give the enumeration value associated with the string given.
+     *
+     * @param [in] enum_str string associated with a value.
+     * @param [out] enum_value enumeration value associated.
+     * @return true if the string \c enum_str has an associated value.
+     * @return false otherwise.
+     */
     bool string_to_enumeration(
             const std::string& enum_str,
             E& enum_value) noexcept;
 
+    /**
+     * @brief Give the enumeration value associated with the string given.
+     *
+     * @param [in] enum_str string associated with a value.
+     * @param [out] enum_value enumeration value associated.
+     * @return the related enumeration value for the string given.
+     *
+     * @throw \c ValueNotAllowedException if there is no value related with this string.
+     */
     E string_to_enumeration(
             const std::string& enum_str);
 
 protected:
 
-    bool initialized {false};
-
+    /**
+     * Map with the values of enumeration and the strings associated.
+     * The key of the map are the different enumeration values.
+     * The strings in the set of each value of the map are the strings that are associated with that enum value.
+     */
     std::map<E, std::set<std::string>> values_ {};
 
 };
 
+/**
+ * Using the following macro along with the declaration of the Enumeration, the values of the enumeration
+ * will be associated in compilation time with the strings that create them.
+ *
+ * Using \c builder_name singleton enables the access to the Builder in the whole process.
+ *
+ * @param builder_name Name for the Singleton that refers to the Builder.
+ * @param enum_name name of the enumeration.
+ * @param values_map Map of values with key the enumeration values, and value a set of strings.
+ */
 #define eProsima_ENUMERATION_BUILDER(builder_name, enum_name, values_map) \
     typedef eprosima::utils::IniciableSingleton<eprosima::utils::EnumBuilder< enum_name >, 0> builder_name ; \
     auto __STATUS_INITIALIZATION_ ## builder_name = \

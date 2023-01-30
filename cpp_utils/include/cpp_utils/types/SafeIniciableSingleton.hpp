@@ -27,29 +27,31 @@ namespace eprosima {
 namespace utils {
 
 /**
- * @brief This auxiliary class allows to create a Singleton class that can be initialize statically (before main).
+ * @brief This auxiliary class allows to create a Singleton class that can be initialize in run time.
  *
- * In order to create a Singleton of a class T that must be initialized before use, this class helps to define and
- * implement the class T as a normal class and then use it as a Singleton by using the type IniciableSingleton<T>.
+ * In order to create a Singleton of a class T that could be initialized along the process,
+ * implement the class T as a normal class and then use it as a Singleton by using the type SafeIniciableSingleton<T>.
  *
- * @note for more information about the Singleton class, refer to \c Singleton .
+ * @note for more information about the Singleton class, refer to \c IniciableSingleton .
  *
  * @tparam T type of the value that will be converted to Singleton.
  * @tparam Index identifier of a specific Singleton element.
  *
  * @example
  *   class Object;  // A class that represents a generic object, but has no default constructor.
- *   using InitializedObject = IniciableSingleton<Object>;
- *   auto __rubbish_ = InitializedObject::initialize<Object ctor arguments>( { initialization arguments } );
+ *   using InitializedObject = SafeIniciableSingleton<Object>;
  *
- *   // From now on, we can access an instance of Database shared within the whole process
+ *   // From now on, we can access an instance of Database shared within the whole process (not initialized)
+ *   SafeIniciableSingleton::initialize<Object ctor args>(Initialization args);
  *   InitializedObject::get_instance()->do_something_with_object(args);
  *
- * @attention this class is NOT thread-safe. It must be initialized statically.
- * It does not guarantee access to the internal data neither.
+ * @attention this class can have an internal reference that points to \c nullptr .
+ * Initialize it before using it, and check whenever used if the internal reference is valid.
+ *
+ * @attention this class is thread-safe, but does not guarantee access to the internal data neither.
  */
 template <typename T, int Index = 0>
-class IniciableSingleton
+class SafeIniciableSingleton
 {
 public:
 
@@ -60,19 +62,13 @@ public:
      * @param args arguments for the \c T object ctor.
      * @return true always.
      *
-     * @note This method returns something because capturing the return is the only way (found by us) to
-     * differentiate between calling a function and declaring it in compilation time.
-     * As this class is supposed to be initialized in compilation time, this is mandatory.
-     *
-     * @warning This method should be called statically (in compilation time) because the get functions are
-     * not thread safe, and thus it could lead to a data race.
-     * If prefer to initialize in code, use \c SafeIniciableSingleton .
+     * Check class \c IniciableSingleton for more information.
      */
     template <typename ... Args>
     static bool initialize(Args... args);
 
     //! Get a reference to the instance of this Singleton
-    static T* get_instance() noexcept;
+    static T* get_instance(bool create = true) noexcept;
 
     /**
      * @brief Get a shared reference to the instance of this Singleton
@@ -82,9 +78,17 @@ public:
      *
      * @warning Do not create a double loop between shared references in Singletons, or it will force a memory leak.
      */
-    static std::shared_ptr<T> get_shared_instance() noexcept;
+    static std::shared_ptr<T> get_shared_instance(bool create = true) noexcept;
 
 protected:
+
+    /**
+     * @brief Initialization function that does not take the mutex.
+     *
+     * @warning This function is supposed to be called with \c mtx_ guarded.
+     */
+    template <typename ... Args>
+    static bool initialize_nts_(Args... args);
 
     /**
      * @brief The actual internal ptr of the singleton.
@@ -95,6 +99,9 @@ protected:
      */
     static std::shared_ptr<T> the_ptr_;
 
+    //! Guard the acces to \c the_ptr_ that can be initialized and read anywhere.
+    static std::mutex mtx_;
+
 private:
 
     /**
@@ -103,11 +110,11 @@ private:
      * @note this constructor must exist (cannot be deleted), otherwise this class could not be used.
      * However, this ctor will never be called anywhere.
      */
-    IniciableSingleton() = default;
+    SafeIniciableSingleton() = default;
 };
 
 } /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <cpp_utils/types/impl/IniciableSingleton.ipp>
+#include <cpp_utils/types/impl/SafeIniciableSingleton.ipp>

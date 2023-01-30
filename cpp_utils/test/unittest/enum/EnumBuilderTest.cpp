@@ -20,6 +20,7 @@
 #include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/macros/custom_enumeration.hpp>
 #include <cpp_utils/enum/EnumBuilder.hpp>
+#include <cpp_utils/types/Singleton.hpp>
 
 namespace test {
 
@@ -156,77 +157,49 @@ TEST(EnumBuilderTest, test_get_non_secure_simple)
  * Test to create the values from Type_simple enumeration using secure (no exception) function.
  *
  * STEPS:
- * - create empty builder
- * - initialize builder
+ * - create builder
  * - invalid str
  * - value 1 str
- * - reinitialize force
+ * - reinitialize
  * - invalid str
  * - value 1 str
- * - reinitialize without force
- * - try invalid str
- * - try reinitialize singleton class without force
- * - try reinitialize singleton class with force
+ *
+ * - use singleton class
+ * - reinitialize singleton class
  * - use singleton class
  */
 TEST(EnumBuilderTest, test_get_initialization)
 {
-    // create empty builder
-    EnumBuilder<test::Type_simple> builder;
+    // Auxiliary variable
     test::Type_simple enum_value;
 
-    // initialize builder
-    ASSERT_TRUE(builder.initialize_builder(
-        {
-            { test::Type_simple::value_1 , { "value_1" } } ,
-            { test::Type_simple::value_2 , { "value_2" } }
-        }
-    ));
-
-    // invalid str
-    {
-        ASSERT_FALSE(
-            builder.string_to_enumeration("invalid_value", enum_value));
-    }
-
-    // value 1 str
-    {
-        ASSERT_TRUE(
-            builder.string_to_enumeration("value_1", enum_value));
-    }
-
-    // reinitialize force
-    ASSERT_TRUE(builder.initialize_builder(
-        {
-            { test::Type_simple::value_1 , { "invalid_value" } }
-        },
-        true
-    ));
-
-    // invalid str
-    {
-        ASSERT_FALSE(
-            builder.string_to_enumeration("value_1", enum_value));
-        ASSERT_FALSE(
-            builder.string_to_enumeration("value_2", enum_value));
-    }
-
-    // value 1 str
-    {
-        ASSERT_TRUE(
-            builder.string_to_enumeration("invalid_value", enum_value));
-        ASSERT_EQ(enum_value, test::Type_simple::value_1);
-    }
-
-    // reinitialize without force
-    builder.initialize_builder(
+    // create empty builder
+    EnumBuilder<test::Type_simple> builder(
         {
             { test::Type_simple::value_1 , { "value_1" } } ,
             { test::Type_simple::value_2 , { "value_2" } }
         }
     );
 
+    // invalid str
+    {
+        ASSERT_FALSE(
+            builder.string_to_enumeration("invalid_value", enum_value));
+    }
+
     // value 1 str
+    {
+        ASSERT_TRUE(
+            builder.string_to_enumeration("value_1", enum_value));
+    }
+
+    // reinitialize
+    builder.refactor_values(
+        {
+            { test::Type_simple::value_1 , { "invalid_value" } }
+        });
+
+    // invalid str
     {
         ASSERT_FALSE(
             builder.string_to_enumeration("value_1", enum_value));
@@ -234,32 +207,40 @@ TEST(EnumBuilderTest, test_get_initialization)
             builder.string_to_enumeration("value_2", enum_value));
     }
 
-    // try reinitialize singleton class without force
-    ASSERT_FALSE(
-        test::Type_simple_Builder::get_instance()->initialize_builder(
-            {
-                { test::Type_simple::value_1 , { "invalid_value" } }
-            },
-            false
-        ));
-
-    // try reinitialize singleton class with force
-    ASSERT_TRUE(
-        test::Type_simple_Builder::get_instance()->initialize_builder(
-            {
-                { test::Type_simple::value_1 , { "invalid_value" } }
-            },
-            true
-        ));
-
-    // use singleton class
+    // value 1 str
     {
         ASSERT_TRUE(
             builder.string_to_enumeration("invalid_value", enum_value));
         ASSERT_EQ(enum_value, test::Type_simple::value_1);
+    }
+
+    auto singleton_ref = test::Type_simple_Builder::get_instance();
+    // use singleton class
+    {
+        ASSERT_TRUE(
+            singleton_ref->string_to_enumeration("value_1", enum_value));
+        ASSERT_EQ(enum_value, test::Type_simple::value_1);
 
         ASSERT_FALSE(
-            builder.string_to_enumeration("value_1", enum_value));
+            singleton_ref->string_to_enumeration("invalid_value", enum_value));
+    }
+
+    // reinitialize singleton class
+    {
+        singleton_ref->refactor_values(
+            {
+                { test::Type_simple::value_1 , { "invalid_value" } }
+            });
+    }
+
+    // use singleton class
+    {
+        ASSERT_TRUE(
+            singleton_ref->string_to_enumeration("invalid_value", enum_value));
+        ASSERT_EQ(enum_value, test::Type_simple::value_1);
+
+        ASSERT_FALSE(
+            singleton_ref->string_to_enumeration("value_1", enum_value));
     }
 }
 
@@ -335,12 +316,13 @@ TEST(EnumBuilderTest, test_singleton_simple_other_builder)
     test::Type_simple enum_value;
 
     // create new singleton builder object
-    auto singleton_ref = IniciableSingleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
-    singleton_ref->initialize_builder(
-        {
-            { test::Type_simple::value_1 , { "some_string" } }
-        }
+    IniciableSingleton<EnumBuilder<test::Type_simple>, 66>::initialize<
+        const std::map< test::Type_simple , std::set<std::string>>&>(
+            {
+                { test::Type_simple::value_1 , { "some_string" } }
+            }
     );
+    auto singleton_ref = IniciableSingleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
 
     // invalid str with new builder
     {

@@ -43,7 +43,7 @@ void EnumBuilder<E>::refactor_values(
 template<typename E>
 bool EnumBuilder<E>::string_to_enumeration(
         const std::string& enum_str,
-        E& enum_value) noexcept
+        E& enum_value) const noexcept
 {
     for (const auto& aliases : values_)
     {
@@ -63,7 +63,7 @@ bool EnumBuilder<E>::string_to_enumeration(
 
 template<typename E>
 E EnumBuilder<E>::string_to_enumeration(
-        const std::string& enum_str)
+        const std::string& enum_str) const
 {
     E value;
     if (string_to_enumeration(enum_str, value))

@@ -21,7 +21,7 @@
 #pragma once
 
 #include <map>
-#include <vector>
+#include <set>
 #include <string>
 
 #include <cpp_utils/types/IniciableSingleton.hpp>
@@ -77,7 +77,7 @@ public:
      */
     bool string_to_enumeration(
             const std::string& enum_str,
-            E& enum_value) noexcept;
+            E& enum_value) const noexcept;
 
     /**
      * @brief Give the enumeration value associated with the string given.
@@ -89,7 +89,7 @@ public:
      * @throw \c ValueNotAllowedException if there is no value related with this string.
      */
     E string_to_enumeration(
-            const std::string& enum_str);
+            const std::string& enum_str) const;
 
 protected:
 
@@ -114,7 +114,7 @@ protected:
  */
 #define eProsima_ENUMERATION_BUILDER(builder_name, enum_name, values_map) \
     typedef eprosima::utils::IniciableSingleton<eprosima::utils::EnumBuilder< enum_name >, 0> builder_name ; \
-    auto __STATUS_INITIALIZATION_ ## builder_name = \
+    const bool __STATUS_INITIALIZATION_ ## builder_name = \
         builder_name::initialize<const std::map< enum_name , std::set<std::string>>&>( values_map )
 
 } /* namespace utils */

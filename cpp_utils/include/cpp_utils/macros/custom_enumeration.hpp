@@ -89,7 +89,19 @@ namespace utils {
     { os << to_string(e); return os; }                                                                              \
                                                                                                                     \
     /* Number of elements in enumeration */                                                                         \
-    constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__)
+    constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__);                      \
+                                                                                                                    \
+    /* Function to return an array with all values allowed */                                                       \
+    inline std::array<enumeration_name, COUNT_ARGUMENTS(__VA_ARGS__)> all_values_ ## enumeration_name()             \
+    {                                                                                                               \
+        std::array<enumeration_name, COUNT_ARGUMENTS(__VA_ARGS__)> result;                                          \
+        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++) result[i] = enumeration_name(i);                     \
+        return result;                                                                                              \
+    }                                                                                                               \
+                                                                                                                    \
+    /* Array with all values allowed */                                                                             \
+    const std::array<enumeration_name, COUNT_ARGUMENTS(__VA_ARGS__)> VALUES_ ## enumeration_name =                  \
+        all_values_ ## enumeration_name()
 
 } /* namespace utils */
 } /* namespace eprosima */

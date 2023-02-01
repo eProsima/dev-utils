@@ -41,6 +41,10 @@ namespace utils {
 #define STRINGIFY_WITH_COMMA(x) #x,
 
 
+#define CONCATENATE(x, y) x ## y
+
+#define CONCATENATE_COMMA(x) x,
+
 /////////////////////////
 // TYPES
 /////////////////////////

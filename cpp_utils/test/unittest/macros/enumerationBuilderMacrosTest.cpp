@@ -144,6 +144,32 @@ TEST(enumerationBuilderMacrosTest, serializator)
     }
 }
 
+/**
+ * Compare all_values with expected result
+ *
+ * CASES:
+ * - const variable
+ * - function
+ */
+TEST(enumerationBuilderMacrosTest, all_values)
+{
+    // const variable
+    {
+        ASSERT_EQ(
+            test::VALUES_TestCustomEnum,
+            test::enum_values
+        );
+    }
+
+    // function
+    {
+        ASSERT_EQ(
+            test::VALUES_TestCustomEnum,
+            test::all_values_TestCustomEnum()
+        );
+    }
+}
+
 int main(
         int argc,
         char** argv)

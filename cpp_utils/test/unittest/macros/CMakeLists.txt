@@ -94,6 +94,7 @@ set(TEST_LIST
         to_string
         serializator
         n_values
+        all_values
     )
 
 set(TEST_EXTRA_LIBRARIES

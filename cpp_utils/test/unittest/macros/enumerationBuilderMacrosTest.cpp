@@ -158,7 +158,7 @@ TEST(enumerationBuilderMacrosTest, all_values)
         ASSERT_EQ(
             test::VALUES_TestCustomEnum,
             test::enum_values
-        );
+            );
     }
 
     // function
@@ -166,7 +166,7 @@ TEST(enumerationBuilderMacrosTest, all_values)
         ASSERT_EQ(
             test::VALUES_TestCustomEnum,
             test::all_values_TestCustomEnum()
-        );
+            );
     }
 }
 

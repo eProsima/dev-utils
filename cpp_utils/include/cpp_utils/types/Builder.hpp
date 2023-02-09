@@ -27,22 +27,15 @@ namespace eprosima {
 namespace utils {
 
 /**
- * @brief Class that converts a string to an enumeration value.
+ * @brief Class that wraps a map functionality to build or get objects.
  *
- * This class has an internal map with values of an enumeration (not necessarily all) that points to set of strings
- * with the strings that each value has associated.
- * In order to retrieve an enumeration value from a string, the string is looked for in the sets until it is found.
+ * It can be created from a map of key->value or from a map where every value is associated with multiple keys.
+ * Both ways it uses an internal map to find the key and return the value expected by argument o by value.
  *
- * @note This class could be used as a Singleton associated with an enumeration.
- * Use \c eProsima_ENUMERATION_BUILDER to initialize the values in compilation time and use them in all the process.
+ * @tparam Key Type of the key to look in the map.
+ * @tparam Value Type of the value that is stored in map.
  *
- * @example
- * enum class CustomEnumeration{ value_1, value_2 };
- * eProsima_ENUMERATION_BUILDER(CustomEnumerationBuilder, CustomEnumeration,
- *  { { CustomEnumeration::value_1 , "v1" } , { CustomEnumeration::value_2 , "v2" } );
- *
- * // Somewhere in the process
- * auto res = CustomEnumerationBuilder::get_instance()->string_to_enumeration("v2"); // res = CustomEnumeration::value_2
+ * This is mainly used for \c EnumBuilder where keys are strings and values are enumeration values.
  */
 template <typename Key, typename Value>
 class Builder
@@ -50,16 +43,20 @@ class Builder
 public:
 
     /**
-     * @brief Construct a new Enum Builder object by giving a map of values.
+     * @brief Construct a new Builder object by giving the map of values.
      *
-     * The key of the map are the different enumeration values.
-     * The strings in the set of each value of the map are the strings that are associated with that enum value.
-     *
-     * @param keys_to_values Map of values.
+     * @param keys_to_values Map of key -> values.
      */
     Builder(
         const std::map<Key, Value>& keys_to_values);
 
+    /**
+     * @brief Construct a new Builder object by giving each associated key to each value.
+     *
+     * Each of the values will be associated to the keys in its map, and could be get by any of them.
+     *
+     * @param values_to_keys Map of values and their respective keys.
+     */
     Builder(
         const std::map<Value, std::set<Key>>& values_to_keys);
 
@@ -67,15 +64,15 @@ public:
     void refactor_values(
             const std::map<Key, Value>& keys_to_values);
 
-    //! Change the internal map of values for a new one.
+    //! Change the internal map of values for a new one in the format value -> set(keys)
     void refactor_values(
             const std::map<Value, std::set<Key>>& values_to_keys);
 
     /**
-     * @brief Give the enumeration value associated with the string given.
+     * @brief Give the value associated with the key given.
      *
-     * @param [in] key string associated with a value.
-     * @param [out] return_value enumeration value associated.
+     * @param [in] key key to look in the internal map.
+     * @param [out] return_value value associated.
      * @return true if the string \c key has an associated value.
      * @return false otherwise.
      */
@@ -84,11 +81,11 @@ public:
             Value& return_value) const noexcept;
 
     /**
-     * @brief Give the enumeration value associated with the string given.
+     * @brief Give the value associated with the key given or throw exception if not present.
      *
-     * @param [in] key string associated with a value.
-     * @param [out] value enumeration value associated.
-     * @return the related enumeration value for the string given.
+     * @param [in] key key to look in the internal map
+     * .
+     * @return value associated.
      *
      * @throw \c ValueNotAllowedException if there is no value related with this string.
      */
@@ -97,13 +94,10 @@ public:
 
 protected:
 
+    //! Convert a map of values to set of keys to a map of key -> value.
     std::map<Key, Value> indexed_map_from_values_to_keys_(const std::map<Value, std::set<Key>>& values_to_keys);
 
-    /**
-     * Map with the values of enumeration and the strings associated.
-     * The key of the map are the different enumeration values.
-     * The strings in the set of each value of the map are the strings that are associated with that enum value.
-     */
+    //! Map with the keys and the values associated.
     std::map<Key, Value> values_ {};
 
 };

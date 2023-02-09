@@ -24,7 +24,7 @@
 #include <set>
 #include <string>
 
-#include <cpp_utils/types/IniciableSingleton.hpp>
+#include <cpp_utils/types/InitializableSingleton.hpp>
 #include <cpp_utils/types/Builder.hpp>
 
 namespace eprosima {
@@ -91,7 +91,7 @@ public:
  * @param values_map Map of values with key the enumeration values, and value a set of strings.
  */
 #define eProsima_ENUMERATION_BUILDER(builder_name, enum_name, values_map) \
-    typedef eprosima::utils::IniciableSingleton<eprosima::utils::EnumBuilder< enum_name >, 0> builder_name ; \
+    typedef eprosima::utils::InitializableSingleton<eprosima::utils::EnumBuilder< enum_name >, 0> builder_name ; \
     const bool __STATUS_INITIALIZATION_ ## builder_name = \
         builder_name::initialize<const std::map< enum_name , std::set<std::string>>&>( values_map )
 

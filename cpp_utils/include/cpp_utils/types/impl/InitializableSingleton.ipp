@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file IniciableSingleton.ipp
+ * @file InitializableSingleton.ipp
  *
  */
 
@@ -23,24 +23,24 @@ namespace eprosima {
 namespace utils {
 
 template <typename T, int Index>
-std::shared_ptr<T> IniciableSingleton<T, Index>::the_ptr_;
+std::shared_ptr<T> InitializableSingleton<T, Index>::the_ptr_;
 
 template <typename T, int Index>
 template <typename ... Args>
-bool IniciableSingleton<T, Index>::initialize(Args... args)
+bool InitializableSingleton<T, Index>::initialize(Args... args)
 {
     the_ptr_ = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
     return true;
 }
 
 template <typename T, int Index>
-T* IniciableSingleton<T, Index>::get_instance() noexcept
+T* InitializableSingleton<T, Index>::get_instance() noexcept
 {
     return the_ptr_.get();
 }
 
 template <typename T, int Index>
-std::shared_ptr<T> IniciableSingleton<T, Index>::get_shared_instance() noexcept
+std::shared_ptr<T> InitializableSingleton<T, Index>::get_shared_instance() noexcept
 {
     return the_ptr_;
 }

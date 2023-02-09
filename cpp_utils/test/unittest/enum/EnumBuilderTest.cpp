@@ -316,13 +316,13 @@ TEST(EnumBuilderTest, test_singleton_simple_other_builder)
     test::Type_simple enum_value;
 
     // create new singleton builder object
-    IniciableSingleton<EnumBuilder<test::Type_simple>, 66>::initialize<
+    InitializableSingleton<EnumBuilder<test::Type_simple>, 66>::initialize<
         const std::map< test::Type_simple , std::set<std::string>>&>(
             {
                 { test::Type_simple::value_1 , { "some_string" } }
             }
     );
-    auto singleton_ref = IniciableSingleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
+    auto singleton_ref = InitializableSingleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
 
     // invalid str with new builder
     {

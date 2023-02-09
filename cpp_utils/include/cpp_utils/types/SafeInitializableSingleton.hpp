@@ -30,19 +30,19 @@ namespace utils {
  * @brief This auxiliary class allows to create a Singleton class that can be initialize in run time.
  *
  * In order to create a Singleton of a class T that could be initialized along the process,
- * implement the class T as a normal class and then use it as a Singleton by using the type SafeIniciableSingleton<T>.
+ * implement the class T as a normal class and then use it as a Singleton by using the type SafeInitializableSingleton<T>.
  *
- * @note for more information about the Singleton class, refer to \c IniciableSingleton .
+ * @note for more information about the Singleton class, refer to \c InitializableSingleton .
  *
  * @tparam T type of the value that will be converted to Singleton.
  * @tparam Index identifier of a specific Singleton element.
  *
  * @example
  *   class Object;  // A class that represents a generic object, but has no default constructor.
- *   using InitializedObject = SafeIniciableSingleton<Object>;
+ *   using InitializedObject = SafeInitializableSingleton<Object>;
  *
  *   // From now on, we can access an instance of Database shared within the whole process (not initialized)
- *   SafeIniciableSingleton::initialize<Object ctor args>(Initialization args);
+ *   SafeInitializableSingleton::initialize<Object ctor args>(Initialization args);
  *   InitializedObject::get_instance()->do_something_with_object(args);
  *
  * @attention this class can have an internal reference that points to \c nullptr .
@@ -51,7 +51,7 @@ namespace utils {
  * @attention this class is thread-safe, but does not guarantee access to the internal data neither.
  */
 template <typename T, int Index = 0>
-class SafeIniciableSingleton
+class SafeInitializableSingleton
 {
 public:
 
@@ -62,7 +62,7 @@ public:
      * @param args arguments for the \c T object ctor.
      * @return true always.
      *
-     * Check class \c IniciableSingleton for more information.
+     * Check class \c InitializableSingleton for more information.
      */
     template <typename ... Args>
     static bool initialize(Args... args);
@@ -110,11 +110,11 @@ private:
      * @note this constructor must exist (cannot be deleted), otherwise this class could not be used.
      * However, this ctor will never be called anywhere.
      */
-    SafeIniciableSingleton() = default;
+    SafeInitializableSingleton() = default;
 };
 
 } /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <cpp_utils/types/impl/SafeIniciableSingleton.ipp>
+#include <cpp_utils/types/impl/SafeInitializableSingleton.ipp>

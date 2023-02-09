@@ -30,7 +30,7 @@ namespace utils {
  * @brief This auxiliary class allows to create a Singleton class that can be initialize statically (before main).
  *
  * In order to create a Singleton of a class T that must be initialized before use, this class helps to define and
- * implement the class T as a normal class and then use it as a Singleton by using the type IniciableSingleton<T>.
+ * implement the class T as a normal class and then use it as a Singleton by using the type InitializableSingleton<T>.
  *
  * @note for more information about the Singleton class, refer to \c Singleton .
  *
@@ -39,8 +39,8 @@ namespace utils {
  *
  * @example
  *   class Object;  // A class that represents a generic object, but has no default constructor.
- *   using InitializedObject = IniciableSingleton<Object>;
- *   auto __rubbish_ = InitializedObject::initialize<Object ctor arguments>( { initialization arguments } );
+ *   using InitializedObject = InitializableSingleton<Object>;
+ *   auto __rubbish_ = InitializedObject::initialize<Object constructor arguments>( { initialization arguments } );
  *
  *   // From now on, we can access an instance of Database shared within the whole process
  *   InitializedObject::get_instance()->do_something_with_object(args);
@@ -49,15 +49,15 @@ namespace utils {
  * It does not guarantee access to the internal data neither.
  */
 template <typename T, int Index = 0>
-class IniciableSingleton
+class InitializableSingleton
 {
 public:
 
     /**
      * @brief Initialize the internal ptr of the Singleton.
      *
-     * @tparam Args arguments for the \c T object ctor.
-     * @param args arguments for the \c T object ctor.
+     * @tparam Args arguments for the \c T object constructor.
+     * @param args arguments for the \c T object constructor.
      * @return true always.
      *
      * @note This method returns something because capturing the return is the only way (found by us) to
@@ -66,7 +66,7 @@ public:
      *
      * @warning This method should be called statically (in compilation time) because the get functions are
      * not thread safe, and thus it could lead to a data race.
-     * If prefer to initialize in code, use \c SafeIniciableSingleton .
+     * If prefer to initialize in code, use \c SafeInitializableSingleton .
      */
     template <typename ... Args>
     static bool initialize(Args... args);
@@ -103,11 +103,11 @@ private:
      * @note this constructor must exist (cannot be deleted), otherwise this class could not be used.
      * However, this ctor will never be called anywhere.
      */
-    IniciableSingleton() = default;
+    InitializableSingleton() = default;
 };
 
 } /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <cpp_utils/types/impl/IniciableSingleton.ipp>
+#include <cpp_utils/types/impl/InitializableSingleton.ipp>

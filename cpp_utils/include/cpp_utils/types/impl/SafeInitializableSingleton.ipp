@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file SafeIniciableSingleton.ipp
+ * @file SafeInitializableSingleton.ipp
  *
  */
 
@@ -23,27 +23,27 @@ namespace eprosima {
 namespace utils {
 
 template <typename T, int Index>
-std::shared_ptr<T> SafeIniciableSingleton<T, Index>::the_ptr_;
+std::shared_ptr<T> SafeInitializableSingleton<T, Index>::the_ptr_;
 
 template <typename T, int Index>
-std::mutex SafeIniciableSingleton<T, Index>::mtx_;
+std::mutex SafeInitializableSingleton<T, Index>::mtx_;
 
 template <typename T, int Index>
 template <typename ... Args>
-bool SafeIniciableSingleton<T, Index>::initialize(Args... args)
+bool SafeInitializableSingleton<T, Index>::initialize(Args... args)
 {
     std::lock_guard<std::mutex> _(mtx_);
     return initialize_nts_(std::forward<Args>(args) ...);
 }
 
 template <typename T, int Index>
-T* SafeIniciableSingleton<T, Index>::get_instance(bool create /* = true */) noexcept
+T* SafeInitializableSingleton<T, Index>::get_instance(bool create /* = true */) noexcept
 {
     return get_shared_instance(create).get();
 }
 
 template <typename T, int Index>
-std::shared_ptr<T> SafeIniciableSingleton<T, Index>::get_shared_instance(bool create /* = true */) noexcept
+std::shared_ptr<T> SafeInitializableSingleton<T, Index>::get_shared_instance(bool create /* = true */) noexcept
 {
     std::lock_guard<std::mutex> _(mtx_);
 
@@ -60,7 +60,7 @@ std::shared_ptr<T> SafeIniciableSingleton<T, Index>::get_shared_instance(bool cr
 
 template <typename T, int Index>
 template <typename ... Args>
-bool SafeIniciableSingleton<T, Index>::initialize_nts_(Args... args)
+bool SafeInitializableSingleton<T, Index>::initialize_nts_(Args... args)
 {
     if (!the_ptr_)
     {

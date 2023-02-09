@@ -13,19 +13,15 @@
 // limitations under the License.
 
 /**
- * @file EnumBuilder.hpp
+ * @file Builder.hpp
  *
- * This file contains class EnumBuilder definition.
+ * This file contains class Builder definition.
  */
 
 #pragma once
 
 #include <map>
 #include <set>
-#include <string>
-
-#include <cpp_utils/types/IniciableSingleton.hpp>
-#include <cpp_utils/types/Builder.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -48,55 +44,72 @@ namespace utils {
  * // Somewhere in the process
  * auto res = CustomEnumerationBuilder::get_instance()->string_to_enumeration("v2"); // res = CustomEnumeration::value_2
  */
-template <typename E>
-class EnumBuilder : public Builder<std::string, E>
+template <typename Key, typename Value>
+class Builder
 {
 public:
 
-    using Builder<std::string, E>::Builder;
+    /**
+     * @brief Construct a new Enum Builder object by giving a map of values.
+     *
+     * The key of the map are the different enumeration values.
+     * The strings in the set of each value of the map are the strings that are associated with that enum value.
+     *
+     * @param keys_to_values Map of values.
+     */
+    Builder(
+        const std::map<Key, Value>& keys_to_values);
+
+    Builder(
+        const std::map<Value, std::set<Key>>& values_to_keys);
+
+    //! Change the internal map of values for a new one.
+    void refactor_values(
+            const std::map<Key, Value>& keys_to_values);
+
+    //! Change the internal map of values for a new one.
+    void refactor_values(
+            const std::map<Value, std::set<Key>>& values_to_keys);
 
     /**
      * @brief Give the enumeration value associated with the string given.
      *
-     * @param [in] enum_str string associated with a value.
-     * @param [out] enum_value enumeration value associated.
-     * @return true if the string \c enum_str has an associated value.
+     * @param [in] key string associated with a value.
+     * @param [out] return_value enumeration value associated.
+     * @return true if the string \c key has an associated value.
      * @return false otherwise.
      */
-    bool string_to_enumeration(
-            const std::string& enum_str,
-            E& enum_value) const noexcept;
+    bool find(
+            const Key& key,
+            Value& return_value) const noexcept;
 
     /**
      * @brief Give the enumeration value associated with the string given.
      *
-     * @param [in] enum_str string associated with a value.
-     * @param [out] enum_value enumeration value associated.
+     * @param [in] key string associated with a value.
+     * @param [out] value enumeration value associated.
      * @return the related enumeration value for the string given.
      *
      * @throw \c ValueNotAllowedException if there is no value related with this string.
      */
-    E string_to_enumeration(
-            const std::string& enum_str) const;
-};
+    Value find(
+            const Key& key) const;
 
-/**
- * Using the following macro along with the declaration of the Enumeration, the values of the enumeration
- * will be associated in compilation time with the strings that create them.
- *
- * Using \c builder_name singleton enables the access to the Builder in the whole process.
- *
- * @param builder_name Name for the Singleton that refers to the Builder.
- * @param enum_name name of the enumeration.
- * @param values_map Map of values with key the enumeration values, and value a set of strings.
- */
-#define eProsima_ENUMERATION_BUILDER(builder_name, enum_name, values_map) \
-    typedef eprosima::utils::IniciableSingleton<eprosima::utils::EnumBuilder< enum_name >, 0> builder_name ; \
-    const bool __STATUS_INITIALIZATION_ ## builder_name = \
-        builder_name::initialize<const std::map< enum_name , std::set<std::string>>&>( values_map )
+protected:
+
+    std::map<Key, Value> indexed_map_from_values_to_keys_(const std::map<Value, std::set<Key>>& values_to_keys);
+
+    /**
+     * Map with the values of enumeration and the strings associated.
+     * The key of the map are the different enumeration values.
+     * The strings in the set of each value of the map are the strings that are associated with that enum value.
+     */
+    std::map<Key, Value> values_ {};
+
+};
 
 } /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <cpp_utils/enum/impl/EnumBuilder.ipp>
+#include <cpp_utils/types/impl/Builder.ipp>

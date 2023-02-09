@@ -26,57 +26,18 @@ namespace eprosima {
 namespace utils {
 
 template<typename E>
-EnumBuilder<E>::EnumBuilder(
-        const std::map<E, std::set<std::string>>& map_values)
-    : values_(map_values)
-{
-    // Do nothing
-}
-
-template<typename E>
-void EnumBuilder<E>::refactor_values(
-        const std::map<E, std::set<std::string>>& map_values)
-{
-    values_ = map_values;
-}
-
-template<typename E>
 bool EnumBuilder<E>::string_to_enumeration(
         const std::string& enum_str,
         E& enum_value) const noexcept
 {
-    for (const auto& aliases : values_)
-    {
-        if (std::find_if(std::cbegin(aliases.second), std::cend(aliases.second),
-                [enum_str](std::string str)
-                {
-                    return enum_str == str;
-                }) != std::cend(aliases.second))
-        {
-            // Alias match, since std::find returned iterator before end
-            enum_value = aliases.first;
-            return true;
-        }
-    }
-    return false;
+    return Builder<std::string, E>::find(enum_str, enum_value);
 }
 
 template<typename E>
 E EnumBuilder<E>::string_to_enumeration(
         const std::string& enum_str) const
 {
-    E value;
-    if (string_to_enumeration(enum_str, value))
-    {
-        return value;
-    }
-    else
-    {
-        throw ValueNotAllowedException(
-            STR_ENTRY <<
-                "Value " << enum_str << " is not valid for enumeration " << TYPE_NAME(this) << "."
-        );
-    }
+    return Builder<std::string, E>::find(enum_str);
 }
 
 } /* namespace utils */

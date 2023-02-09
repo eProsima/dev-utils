@@ -48,7 +48,7 @@ public:
      * @param keys_to_values Map of key -> values.
      */
     Builder(
-        const std::map<Key, Value>& keys_to_values);
+            const std::map<Key, Value>& keys_to_values);
 
     /**
      * @brief Construct a new Builder object by giving each associated key to each value.
@@ -58,7 +58,7 @@ public:
      * @param values_to_keys Map of values and their respective keys.
      */
     Builder(
-        const std::map<Value, std::set<Key>>& values_to_keys);
+            const std::map<Value, std::set<Key>>& values_to_keys);
 
     //! Change the internal map of values for a new one.
     void refactor_values(
@@ -95,7 +95,8 @@ public:
 protected:
 
     //! Convert a map of values to set of keys to a map of key -> value.
-    std::map<Key, Value> indexed_map_from_values_to_keys_(const std::map<Value, std::set<Key>>& values_to_keys);
+    std::map<Key, Value> indexed_map_from_values_to_keys_(
+            const std::map<Value, std::set<Key>>& values_to_keys);
 
     //! Map with the keys and the values associated.
     std::map<Key, Value> values_ {};

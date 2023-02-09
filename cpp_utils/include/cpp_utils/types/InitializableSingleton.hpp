@@ -69,7 +69,8 @@ public:
      * If prefer to initialize in code, use \c SafeInitializableSingleton .
      */
     template <typename ... Args>
-    static bool initialize(Args... args);
+    static bool initialize(
+            Args... args);
 
     //! Get a reference to the instance of this Singleton
     static T* get_instance() noexcept;

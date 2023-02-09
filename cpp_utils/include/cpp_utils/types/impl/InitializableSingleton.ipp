@@ -27,7 +27,8 @@ std::shared_ptr<T> InitializableSingleton<T, Index>::the_ptr_;
 
 template <typename T, int Index>
 template <typename ... Args>
-bool InitializableSingleton<T, Index>::initialize(Args... args)
+bool InitializableSingleton<T, Index>::initialize(
+        Args... args)
 {
     the_ptr_ = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
     return true;

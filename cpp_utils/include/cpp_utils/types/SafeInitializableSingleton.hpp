@@ -65,10 +65,12 @@ public:
      * Check class \c InitializableSingleton for more information.
      */
     template <typename ... Args>
-    static bool initialize(Args... args);
+    static bool initialize(
+            Args... args);
 
     //! Get a reference to the instance of this Singleton
-    static T* get_instance(bool create = true) noexcept;
+    static T* get_instance(
+            bool create = true) noexcept;
 
     /**
      * @brief Get a shared reference to the instance of this Singleton
@@ -78,7 +80,8 @@ public:
      *
      * @warning Do not create a double loop between shared references in Singletons, or it will force a memory leak.
      */
-    static std::shared_ptr<T> get_shared_instance(bool create = true) noexcept;
+    static std::shared_ptr<T> get_shared_instance(
+            bool create = true) noexcept;
 
 protected:
 
@@ -88,7 +91,8 @@ protected:
      * @warning This function is supposed to be called with \c mtx_ guarded.
      */
     template <typename ... Args>
-    static bool initialize_nts_(Args... args);
+    static bool initialize_nts_(
+            Args... args);
 
     /**
      * @brief The actual internal ptr of the singleton.

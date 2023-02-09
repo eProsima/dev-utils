@@ -33,7 +33,7 @@ ENUMERATION_BUILDER(
     Type_simple,
     value_1,
     value_2
-);
+    );
 
 eProsima_ENUMERATION_BUILDER(
     Type_simple_Builder,
@@ -42,7 +42,7 @@ eProsima_ENUMERATION_BUILDER(
         { Type_simple::value_1 COMMA { "value_1" } } COMMA
         { Type_simple::value_2 COMMA { "value_2" } }
     }
-);
+    );
 
 /***************************
  * Type_complex
@@ -54,7 +54,7 @@ ENUMERATION_BUILDER(
     value_1,
     value_other,
     ouiii
-);
+    );
 
 eProsima_ENUMERATION_BUILDER(
     Type_complex_Builder,
@@ -64,7 +64,7 @@ eProsima_ENUMERATION_BUILDER(
         { Type_complex::value_other COMMA { "other" COMMA "and_other" COMMA "let's try this"} } COMMA
         { Type_complex::ouiii COMMA { "1" COMMA "2" COMMA "3" COMMA "invalid_value" } }
     }
-);
+    );
 
 } // namespace test
 
@@ -82,11 +82,11 @@ TEST(EnumBuilderTest, test_get_secure_simple)
 {
     // Create builder
     EnumBuilder<test::Type_simple> builder(
-        {
-            { test::Type_simple::value_1 , { "value_1" } } ,
-            { test::Type_simple::value_2 , { "value_2" } }
-        }
-    );
+    {
+        { test::Type_simple::value_1, { "value_1" } },
+        { test::Type_simple::value_2, { "value_2" } }
+    }
+        );
 
     // invalid str
     {
@@ -127,11 +127,11 @@ TEST(EnumBuilderTest, test_get_non_secure_simple)
 {
     // Create builder
     EnumBuilder<test::Type_simple> builder(
-        {
-            { test::Type_simple::value_1 , { "value_1" } } ,
-            { test::Type_simple::value_2 , { "value_2" } }
-        }
-    );
+    {
+        { test::Type_simple::value_1, { "value_1" } },
+        { test::Type_simple::value_2, { "value_2" } }
+    }
+        );
 
     // invalid str
     {
@@ -175,11 +175,11 @@ TEST(EnumBuilderTest, test_get_initialization)
 
     // create empty builder
     EnumBuilder<test::Type_simple> builder(
-        {
-            { test::Type_simple::value_1 , { "value_1" } } ,
-            { test::Type_simple::value_2 , { "value_2" } }
-        }
-    );
+    {
+        { test::Type_simple::value_1, { "value_1" } },
+        { test::Type_simple::value_2, { "value_2" } }
+    }
+        );
 
     // invalid str
     {
@@ -195,9 +195,9 @@ TEST(EnumBuilderTest, test_get_initialization)
 
     // reinitialize
     builder.refactor_values(
-        {
-            { test::Type_simple::value_1 , { "invalid_value" } }
-        });
+    {
+        { test::Type_simple::value_1, { "invalid_value" } }
+    });
 
     // invalid str
     {
@@ -228,9 +228,9 @@ TEST(EnumBuilderTest, test_get_initialization)
     // reinitialize singleton class
     {
         singleton_ref->refactor_values(
-            {
-                { test::Type_simple::value_1 , { "invalid_value" } }
-            });
+        {
+            { test::Type_simple::value_1, { "invalid_value" } }
+        });
     }
 
     // use singleton class
@@ -275,7 +275,7 @@ TEST(EnumBuilderTest, test_singleton_complex)
     // value other str
     {
         test::Type_complex enum_value;
-        std::set<std::string> valid_strings = {"other" , "and_other" , "let's try this"};
+        std::set<std::string> valid_strings = {"other", "and_other", "let's try this"};
 
         for (const auto& str : valid_strings)
         {
@@ -289,7 +289,7 @@ TEST(EnumBuilderTest, test_singleton_complex)
     // value oui str
     {
         test::Type_complex enum_value;
-        std::set<std::string> valid_strings = {"1" , "2" , "3" , "invalid_value"};
+        std::set<std::string> valid_strings = {"1", "2", "3", "invalid_value"};
 
         for (const auto& str : valid_strings)
         {
@@ -317,11 +317,11 @@ TEST(EnumBuilderTest, test_singleton_simple_other_builder)
 
     // create new singleton builder object
     InitializableSingleton<EnumBuilder<test::Type_simple>, 66>::initialize<
-        const std::map< test::Type_simple , std::set<std::string>>&>(
-            {
-                { test::Type_simple::value_1 , { "some_string" } }
-            }
-    );
+        const std::map< test::Type_simple, std::set<std::string>>&>(
+    {
+        { test::Type_simple::value_1, { "some_string" } }
+    }
+        );
     auto singleton_ref = InitializableSingleton<EnumBuilder<test::Type_simple>, 66>::get_instance();
 
     // invalid str with new builder

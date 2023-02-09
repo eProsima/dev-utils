@@ -84,26 +84,26 @@ Value Builder<Key, Value>::find(
     else
     {
         throw ValueNotAllowedException(
-            STR_ENTRY <<
-                "Value " << key << " is not valid for enumeration " << TYPE_NAME(this) << "."
-        );
+                  STR_ENTRY <<
+                      "Value " << key << " is not valid for enumeration " << TYPE_NAME(this) << "."
+                  );
     }
 }
 
 template <typename Key, typename Value>
-std::map<Key, Value> Builder<Key, Value>::indexed_map_from_values_to_keys_(const std::map<Value, std::set<Key>>& values_to_keys)
+std::map<Key, Value> Builder<Key, Value>::indexed_map_from_values_to_keys_(
+        const std::map<Value, std::set<Key>>& values_to_keys)
 {
     std::map<Key, Value> result;
-    for (const auto &it : values_to_keys)
+    for (const auto& it : values_to_keys)
     {
-        for (const auto &k : it.second)
+        for (const auto& k : it.second)
         {
             result[k] = it.first;
         }
     }
     return result;
 }
-
 
 } /* namespace utils */
 } /* namespace eprosima */

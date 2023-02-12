@@ -76,3 +76,32 @@ add_unittest_executable(
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
+
+#####################################
+# HERITABLE TEST
+#####################################
+
+set(TEST_NAME HeritableTest)
+
+set(TEST_SOURCES
+        HeritableTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+    )
+
+set(TEST_LIST
+        constructor_int
+        constructor_string
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )

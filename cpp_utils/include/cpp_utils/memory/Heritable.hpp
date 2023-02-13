@@ -39,25 +39,24 @@ public:
 
     Heritable(T* ptr);
 
-    template <typename ... Args>
-    Heritable(Args... args);
-
     template <typename U>
     Heritable(U* ptr);
-
-    Heritable(const T& copy_element);
-
-    Heritable(T&& move_element);
 
     Heritable(const Heritable<T>& other);
 
     Heritable(Heritable<T>&& other);
 
+    template <typename U>
+    Heritable(const Heritable<U>& other);
+
+    template <typename U>
+    Heritable(Heritable<U>&& other);
+
     Heritable<T>& operator =(const Heritable<T>& other);
 
     Heritable<T>& operator =(Heritable<T>&& other);
 
-    ~Heritable() = default;
+    ~Heritable();
 
     ///////////////////////
     // PTR OPERATORS
@@ -77,13 +76,9 @@ public:
 
     bool operator <(const Heritable<T>& other) const noexcept;
 
-    bool operator <(const T& other) const noexcept;
-
     ///////////////////////
     // ACCESS DATA METHODS
     ///////////////////////
-
-    T* get() const noexcept;
 
     T& get_reference() const noexcept;
 
@@ -91,26 +86,41 @@ public:
     // CAST OPERATORS & METHODS
     ///////////////////////
 
-    operator T&() const noexcept;
+    // template <typename U>
+    // operator Heritable<U>&() const;
 
-    template <typename U>
-    operator U&() const noexcept;
+    // template <typename U>
+    // bool can_cast() const noexcept;
 
-    template <typename U>
-    bool can_cast() const noexcept;
+    // template <typename U>
+    // Heritable<U>& dyn_cast() const;
 
-    template <typename U>
-    U& dyn_cast() const;
+    ///////////////////////
+    // STATIC METHODS
+    ///////////////////////
+
+    template <typename ... Args>
+    static Heritable<T> make_heritable(Args&&... args);
 
 protected:
+
+    ///////////////////////
+    // INTERNAL METHODS
+    ///////////////////////
+
+    T* copy_internal_() const;
+
+    T* move_internal_() const;
 
     ////////////////////////////
     // INTERNAL VARIABLES
     ////////////////////////////
 
     //! Internal shared data protected while this object exists
-    std::unique_ptr<T> data_reference_;
+    mutable T* data_ptr_ = nullptr;
 
+    template <typename U>
+    friend class Heritable;
 };
 
 } /* namespace utils */

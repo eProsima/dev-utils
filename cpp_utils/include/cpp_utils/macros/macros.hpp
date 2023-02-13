@@ -40,6 +40,7 @@ namespace utils {
 //! Same as \c STRINGIFY but adding a comma "," at the end
 #define STRINGIFY_WITH_COMMA(x) #x,
 
+#define COMMA ,
 
 #define CONCATENATE(x, y) x ## y
 

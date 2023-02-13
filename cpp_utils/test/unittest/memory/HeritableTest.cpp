@@ -33,36 +33,80 @@ struct Parent
     {
     }
 
-    int int_value;
-};
-
-struct TestClass
-{
-    TestClass()
-        : int_value(42)
-        , string_value("Douglas Adams")
-        , vector_value({'T', 'U', 'H', 'G'})
+    Parent(const Parent& other)
+        : Parent(other.int_value)
     {
     }
 
-    int get_int()
+    Parent& operator =(const Parent& other)
+    {
+        int_value = other.int_value;
+        return *this;
+    }
+
+    bool operator ==(const Parent& other) const
+    {
+        return other.get_int() == this->get_int();
+    }
+
+    bool operator <(const Parent& other) const
+    {
+        return other.get_int() < this->get_int();
+    }
+
+    virtual int get_int() const
     {
         return int_value;
     }
 
-    std::string get_str()
+    bool greater_than_10() const
     {
-        return string_value;
-    }
-
-    std::vector<char> get_vec()
-    {
-        return vector_value;
+        return get_int() > 10;
     }
 
     int int_value;
-    std::string string_value;
-    std::vector<char> vector_value;
+};
+
+struct Child_A : public Parent
+{
+    Child_A(int y)
+        : Parent(10)
+        , other_value(y)
+    {
+    }
+
+    Child_A()
+        : Child_A(1)
+    {
+    }
+
+    virtual int get_int() const override
+    {
+        return Parent::get_int() + other_value;
+    }
+
+    int other_value;
+};
+
+struct Child_B : public Parent
+{
+    Child_B(int y)
+        : Parent(2)
+        , other_value(y)
+    {
+    }
+
+    Child_B()
+        : Child_B(1)
+    {
+    }
+
+    virtual int get_int() const override
+    {
+        return Parent::get_int() * other_value;
+    }
+
+    int other_value;
 };
 
 } /* namespace test */
@@ -167,6 +211,227 @@ TEST(HeritableTest, constructor_string)
         ASSERT_NE(origin.get_reference(), nova.get_reference());
         ASSERT_EQ(nova.get_reference(), "-abcdefghijklmnopqrstuvwxyz-");
     }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, ptr_operator_parent)
+{
+    // ->
+    {
+        Heritable<test::Parent> h(4);
+        ASSERT_EQ(h->get_int(), 4);
+        ASSERT_FALSE(h->greater_than_10());
+    }
+
+    // *
+    {
+        Heritable<test::Parent> h(11);
+        ASSERT_EQ((*h).get_int(), 11);
+        ASSERT_TRUE((*h).greater_than_10());
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, compare_operator_parent)
+{
+    // == heritable true
+    {
+        Heritable<test::Parent> h1(1);
+        Heritable<test::Parent> h2(1);
+        ASSERT_TRUE(h1.operator==(h2));
+    }
+
+    // == heritable false
+    {
+        Heritable<test::Parent> h1(1);
+        Heritable<test::Parent> h2(2);
+        ASSERT_FALSE(h1.operator==(h2));
+    }
+
+    // == object true
+    {
+        Heritable<test::Parent> h1(1);
+        test::Parent p(1);
+        ASSERT_TRUE(h1.operator==(p));
+    }
+
+    // == object false
+    {
+        Heritable<test::Parent> h1(1);
+        test::Parent p(2);
+        ASSERT_FALSE(h1.operator==(p));
+    }
+
+    // < heritable true
+    {
+        Heritable<test::Parent> h1(0);
+        Heritable<test::Parent> h2(1);
+        ASSERT_TRUE(h1.operator<(h2));
+    }
+
+    // < heritable false
+    {
+        Heritable<test::Parent> h1(0);
+        Heritable<test::Parent> h2(-1);
+        ASSERT_FALSE(h1.operator<(h2));
+    }
+
+    // < object true
+    {
+        Heritable<test::Parent> h1(1);
+        test::Parent p(2);
+        ASSERT_TRUE(h1.operator<(p));
+    }
+
+    // < object false
+    {
+        Heritable<test::Parent> h1(1);
+        test::Parent p(0);
+        ASSERT_FALSE(h1.operator<(p));
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, access_data_methods_parent)
+{
+    // get
+    {
+        test::Parent* p = new test::Parent(11);
+        Heritable<test::Parent> h(p);
+        ASSERT_EQ(h->get_int(), 11);
+        ASSERT_EQ(h.get(), p);
+    }
+
+    // get_reference
+    {
+        test::Parent p = test::Parent(11);
+        Heritable<test::Parent> h(p);
+        test::Parent& p_ref = h.get_reference();
+        ASSERT_TRUE(p_ref.operator==(p));
+        ASSERT_NE(&p_ref, &p);
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, cast_operator)
+{
+    // cast to itself
+    {
+        Heritable<test::Parent> h(11);
+        test::Parent& p = h;
+        ASSERT_TRUE(p.greater_than_10());
+        ASSERT_EQ(p.get_int(), 11);
+    }
+
+    // Cast to parent
+    {
+        Heritable<test::Child_A> h;
+        ASSERT_TRUE(h->greater_than_10());
+        test::Parent& p_ref = h;
+        ASSERT_TRUE(p_ref.greater_than_10());
+
+        // Create a child from child conserves value
+        test::Child_A a = reinterpret_cast<test::Child_A&>(p_ref);
+        ASSERT_TRUE(p_ref.greater_than_10());
+
+        // Create a parent from child does not conserve value
+        test::Parent p = p_ref;
+        ASSERT_FALSE(p.greater_than_10());
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, cast_methods)
+{
+    // cast to itself
+    {
+        Heritable<test::Parent> h(11);
+        ASSERT_TRUE(h.can_cast<test::Parent>());
+        test::Parent& p = h.dyn_cast<test::Parent>();
+        ASSERT_TRUE(p.greater_than_10());
+        ASSERT_EQ(p.get_int(), 11);
+    }
+
+    // Cast to parent
+    {
+        Heritable<test::Child_A> h;
+        ASSERT_TRUE(h->greater_than_10());
+        ASSERT_TRUE(h.can_cast<test::Parent>());
+        test::Parent& p_ref = h.dyn_cast<test::Parent>();
+        ASSERT_TRUE(p_ref.greater_than_10());
+
+        // Create a child from child conserves value
+        test::Child_A a = dynamic_cast<test::Child_A&>(p_ref);
+        ASSERT_TRUE(p_ref.greater_than_10());
+
+        // Create a parent from child does not conserve value
+        test::Parent p = p_ref;
+        ASSERT_FALSE(p.greater_than_10());
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, cast_methods_negative)
+{
+    // cast from parent to child
+    {
+        Heritable<test::Parent> h(11);
+        ASSERT_FALSE(h.can_cast<test::Child_A>());
+        ASSERT_THROW(
+            test::Child_A& a = h.dyn_cast<test::Child_A>(),
+            std::bad_cast);
+    }
+
+    // cast from child A to child B
+    {
+        Heritable<test::Child_A> h;
+        ASSERT_FALSE(h.can_cast<test::Child_B>());
+        ASSERT_THROW(
+            test::Child_B& b = h.dyn_cast<test::Child_B>(),
+            std::bad_cast);
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, inheritance_set_test)
+{
+    std::set<Heritable<test::Parent>> p_set;
+
+    // Add a Parent value
+    Heritable<test::Parent> p(3);
+    ASSERT_EQ(p_set.find(p), p_set.end());
+    p_set.insert(p);
+    ASSERT_NE(p_set.find(test::Parent(3)), p_set.end());
+
+    // Add a child A value
+    Heritable<test::Child_A> a(3);
+    ASSERT_EQ(p_set.find(a), p_set.end());
+    p_set.insert(new test::Child_A(3));
+    ASSERT_NE(p_set.find(test::Child_A(3)), p_set.end());
+
+    // Add another child A value
+    test::Child_A a2(5);
+    auto it = p_set.find(a2);
+
+    std::cout << (*it)->get_int() << std::endl;
+
+    ASSERT_EQ(p_set.find(a2), p_set.end());
+    p_set.insert(a2);
+    ASSERT_NE(p_set.find(test::Child_A(5)), p_set.end());
 }
 
 int main(

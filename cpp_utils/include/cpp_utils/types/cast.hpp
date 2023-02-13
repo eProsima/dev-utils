@@ -27,6 +27,9 @@ template <typename T>
 CPP_UTILS_DllAPI void* cast_to_void_ptr(
         const T* c);
 
+template <typename T>
+CPP_UTILS_DllAPI bool can_cast(const T& el);
+
 } /* namespace utils */
 } /* namespace eprosima */
 

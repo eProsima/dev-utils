@@ -76,6 +76,8 @@ public:
 
     bool operator <(const Heritable<T>& other) const noexcept;
 
+    bool operator <(const T& other) const noexcept;
+
     ///////////////////////
     // ACCESS DATA METHODS
     ///////////////////////
@@ -89,11 +91,11 @@ public:
     // template <typename U>
     // operator Heritable<U>&() const;
 
-    // template <typename U>
-    // bool can_cast() const noexcept;
+    template <typename U>
+    bool can_cast() const noexcept;
 
-    // template <typename U>
-    // Heritable<U>& dyn_cast() const;
+    template <typename U>
+    U& dyn_cast() const;
 
     ///////////////////////
     // STATIC METHODS
@@ -104,20 +106,12 @@ public:
 
 protected:
 
-    ///////////////////////
-    // INTERNAL METHODS
-    ///////////////////////
-
-    T* copy_internal_() const;
-
-    T* move_internal_() const;
-
     ////////////////////////////
     // INTERNAL VARIABLES
     ////////////////////////////
 
     //! Internal shared data protected while this object exists
-    mutable T* data_ptr_ = nullptr;
+    std::shared_ptr<T> data_ptr_;
 
     template <typename U>
     friend class Heritable;

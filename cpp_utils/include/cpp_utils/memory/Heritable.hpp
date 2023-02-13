@@ -42,6 +42,9 @@ public:
     template <typename ... Args>
     Heritable(Args... args);
 
+    template <typename U>
+    Heritable(U* ptr);
+
     Heritable(const T& copy_element);
 
     Heritable(T&& move_element);
@@ -57,31 +60,24 @@ public:
     ~Heritable() = default;
 
     ///////////////////////
-    // OPERATOR
+    // PTR OPERATORS
     ///////////////////////
 
     T* operator ->() const noexcept;
 
     T& operator *() const noexcept;
 
-    bool operator ==(const Heritable<T>& other);
+    ///////////////////////
+    // COMPARE OPERATORS
+    ///////////////////////
 
-    bool operator ==(const T& other);
+    bool operator ==(const Heritable<T>& other) const noexcept;
 
-    bool operator <(const Heritable<T>& other);
+    bool operator ==(const T& other) const noexcept;
 
-    bool operator <(const T& other);
+    bool operator <(const Heritable<T>& other) const noexcept;
 
-    //! Check whether the internal ptr is valid (call \c is_valid )
-    // operator bool() const noexcept;
-
-    operator T&() const noexcept;
-
-    template <typename U>
-    operator U&() const noexcept;
-
-    template <typename U>
-    operator Heritable<U>() const noexcept;
+    bool operator <(const T& other) const noexcept;
 
     ///////////////////////
     // ACCESS DATA METHODS
@@ -91,10 +87,20 @@ public:
 
     T& get_reference() const noexcept;
 
-    // bool is_valid() const noexcept;
+    ///////////////////////
+    // CAST OPERATORS & METHODS
+    ///////////////////////
+
+    operator T&() const noexcept;
 
     template <typename U>
-    Heritable<U> dyn_cast() const noexcept;
+    operator U&() const noexcept;
+
+    template <typename U>
+    bool can_cast() const noexcept;
+
+    template <typename U>
+    U& dyn_cast() const;
 
 protected:
 
@@ -106,22 +112,6 @@ protected:
     std::unique_ptr<T> data_reference_;
 
 };
-
-////////////////////////////
-// EXTERNAL OPERATORS
-////////////////////////////
-
-//! Allow to compare a Heritable with nullptr
-template<class T>
-bool operator ==(
-        const Heritable<T>& lhs,
-        std::nullptr_t) noexcept;
-
-//! Allow to compare a Heritable with nullptr in the other direction (from C++20 this is not needed)
-template<class T>
-bool operator ==(
-        std::nullptr_t,
-        const Heritable<T>& lhs) noexcept;
 
 } /* namespace utils */
 } /* namespace eprosima */

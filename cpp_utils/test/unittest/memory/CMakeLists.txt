@@ -92,6 +92,13 @@ set(TEST_SOURCES
 set(TEST_LIST
         constructor_int
         constructor_string
+        ptr_operator_parent
+        compare_operator_parent
+        access_data_methods_parent
+        cast_operator
+        cast_methods
+        cast_methods_negative
+        inheritance_set_test
     )
 
 set(TEST_EXTRA_LIBRARIES

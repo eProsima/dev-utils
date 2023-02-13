@@ -97,6 +97,7 @@ set(TEST_LIST
         access_data_methods_parent
         cast_methods
         cast_methods_negative
+        serialize_operator
         inheritance_set_test
     )
 

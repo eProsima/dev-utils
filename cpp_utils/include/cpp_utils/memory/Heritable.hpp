@@ -117,6 +117,12 @@ protected:
     friend class Heritable;
 };
 
+//! \c Heritable to stream serializator
+template <typename T>
+CPP_UTILS_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const Heritable<T>& h);
+
 } /* namespace utils */
 } /* namespace eprosima */
 

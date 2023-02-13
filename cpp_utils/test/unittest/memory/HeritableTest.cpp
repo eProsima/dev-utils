@@ -67,6 +67,14 @@ struct Parent
     int int_value;
 };
 
+std::ostream& operator <<(
+        std::ostream& os,
+        const Parent& p)
+{
+    os << "P{" << p.get_int() << "}";
+    return os;
+}
+
 struct Child_A : public Parent
 {
     Child_A(int y)
@@ -367,6 +375,36 @@ TEST(HeritableTest, cast_methods_negative)
         ASSERT_THROW(
             h.dyn_cast<test::Child_B>(),
             std::bad_cast);
+    }
+}
+
+/**
+ * TODO
+ */
+TEST(HeritableTest, serialize_operator)
+{
+    // int
+    {
+        Heritable<int> h(Heritable<int>::make_heritable(-3));
+        std::stringstream ss;
+        ss << h;
+        ASSERT_EQ(ss.str(), "{-3}");
+    }
+
+    // std::string
+    {
+        Heritable<std::string> h(Heritable<std::string>::make_heritable(5, '='));
+        std::stringstream ss;
+        ss << h;
+        ASSERT_EQ(ss.str(), "{=====}");
+    }
+
+    // parent
+    {
+        Heritable<test::Parent> h(Heritable<test::Parent>::make_heritable(17));
+        std::stringstream ss;
+        ss << h;
+        ASSERT_EQ(ss.str(), "{P{17}}");
     }
 }
 

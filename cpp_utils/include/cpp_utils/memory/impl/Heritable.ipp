@@ -179,5 +179,14 @@ Heritable<T> Heritable<T>::make_heritable(Args&&... args)
     return Heritable<T>(new  T(std::forward<Args>(args)...));
 }
 
+template <typename T>
+std::ostream& operator <<(
+        std::ostream& os,
+        const Heritable<T>& h)
+{
+    os << "{" << h.get_reference() << "}";
+    return os;
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

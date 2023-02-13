@@ -20,6 +20,7 @@
 
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <cpp_utils/exception/ValueAccessException.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -30,8 +31,9 @@ namespace utils {
 
 template <typename T>
 Heritable<T>::Heritable(T* ptr)
-    : data_reference_(ptr)
+    : data_ptr_(ptr)
 {
+    logError(DEBUG, this << "\t CTor ptr\t " << data_ptr_);
 }
 
 template <typename T>
@@ -44,52 +46,62 @@ Heritable<T>::Heritable(U* ptr)
         throw std::bad_cast();
     }
 
-    data_reference_.reset(t_ptr);
-}
-
-template <typename T>
-template <typename ... Args>
-Heritable<T>::Heritable(Args... args)
-    : Heritable(new T(std::forward<Args>(args)...))
-{
-}
-
-template <typename T>
-Heritable<T>::Heritable(const T& copy_element)
-    : Heritable(new T(copy_element))
-{
-}
-
-template <typename T>
-Heritable<T>::Heritable(T&& move_element)
-    : Heritable(new T(std::move(move_element)))
-{
+    data_ptr_ = t_ptr;
+    logError(DEBUG, this << "\t CTor ptr U\t " << data_ptr_);
 }
 
 template <typename T>
 Heritable<T>::Heritable(const Heritable<T>& other)
-    : Heritable(new T(other.get_reference()))
+    : Heritable(other.copy_internal_())
 {
+    logError(DEBUG, this << "\t CTor copy\t " << data_ptr_);
 }
 
 template <typename T>
 Heritable<T>::Heritable(Heritable<T>&& other)
-    : Heritable(new T(std::move(other.get_reference())))
+    : Heritable(other.move_internal_())
 {
+    logError(DEBUG, this << "\t CTor move\t " << data_ptr_);
+}
+
+template <typename T>
+template <typename U>
+Heritable<T>::Heritable(const Heritable<U>& other)
+    : Heritable(other.copy_internal_())
+{
+    logError(DEBUG, this << "\t CTor copy U\t " << data_ptr_);
+}
+
+template <typename T>
+template <typename U>
+Heritable<T>::Heritable(Heritable<U>&& other)
+    : Heritable(other.move_internal_())
+{
+    logError(DEBUG, this << "\t CTor move U\t " << data_ptr_);
 }
 
 template <typename T>
 Heritable<T>& Heritable<T>::operator =(const Heritable<T>& other)
 {
-    data_reference_.reset(new T(other.get_reference()));
+    data_ptr_ = other.copy_internal_();
     return *this;
 }
 
 template <typename T>
 Heritable<T>& Heritable<T>::operator =(Heritable<T>&& other)
 {
-    data_reference_.reset(new T(std::move(other.get_reference())));
+    data_ptr_ = other.move_internal_();
     return *this;
+}
+
+template <typename T>
+Heritable<T>::~Heritable()
+{
+    logError(DEBUG, this << "\t DTor\t\t " << data_ptr_);
+    if (data_ptr_)
+    {
+        delete data_ptr_;
+    }
 }
 
 ///////////////////////
@@ -99,13 +111,13 @@ Heritable<T>& Heritable<T>::operator =(Heritable<T>&& other)
 template <typename T>
 T* Heritable<T>::operator ->() const noexcept
 {
-    return data_reference_.operator->();
+    return data_ptr_;
 }
 
 template <typename T>
 T& Heritable<T>::operator *() const noexcept
 {
-    return data_reference_.operator*();
+    return *data_ptr_;
 }
 
 ///////////////////////
@@ -115,42 +127,19 @@ T& Heritable<T>::operator *() const noexcept
 template <typename T>
 bool Heritable<T>::operator ==(const Heritable<T>& other) const noexcept
 {
-    return (*data_reference_) == (*other);
+    return (*data_ptr_) == (*other);
 }
 
 template <typename T>
 bool Heritable<T>::operator ==(const T& other) const noexcept
 {
-    return (*data_reference_) == other;
+    return (*data_ptr_) == other;
 }
 
 template <typename T>
 bool Heritable<T>::operator <(const Heritable<T>& other) const noexcept
 {
-    return (*data_reference_) < (*other);
-}
-
-template <typename T>
-bool Heritable<T>::operator <(const T& other) const noexcept
-{
-    return (*data_reference_) < other;
-}
-
-///////////////////////
-// CAST OPERATOR
-///////////////////////
-
-template <typename T>
-Heritable<T>::operator T&() const noexcept
-{
-    return get_reference();
-}
-
-template <typename T>
-template <typename U>
-Heritable<T>::operator U&() const noexcept
-{
-    return dyn_cast<U>();
+    return (*data_ptr_) < (*other);
 }
 
 ///////////////////////
@@ -158,38 +147,65 @@ Heritable<T>::operator U&() const noexcept
 ///////////////////////
 
 template <typename T>
-T* Heritable<T>::get() const noexcept
-{
-    return data_reference_.get();
-}
-
-template <typename T>
 T& Heritable<T>::get_reference() const noexcept
 {
     return this->operator*();
 }
 
+///////////////////////
+// CAST OPERATORS & METHODS
+///////////////////////
+
+// template <typename T>
+// template <typename U>
+// bool Heritable<T>::can_cast() const noexcept
+// {
+//     try
+//     {
+//         dyn_cast<U>();
+//         return true;
+//     }
+//     catch(const std::bad_cast& /* e */)
+//     {
+//         return false;
+//     }
+// }
+
+// template <typename T>
+// template <typename U>
+// Heritable<U>& Heritable<T>::dyn_cast() const
+// {
+//     U& c = dynamic_cast<U&>(*data_ptr_.get());
+//     return c;
+// }
+
+///////////////////////
+// STATIC METHODS
+///////////////////////
+
 template <typename T>
-template <typename U>
-bool Heritable<T>::can_cast() const noexcept
+template <typename ... Args>
+Heritable<T> Heritable<T>::make_heritable(Args&&... args)
 {
-    try
-    {
-        dyn_cast<U>();
-        return true;
-    }
-    catch(const std::bad_cast& /* e */)
-    {
-        return false;
-    }
+    return Heritable<T>(new  T(std::forward<Args>(args)...));
 }
 
 template <typename T>
-template <typename U>
-U& Heritable<T>::dyn_cast() const
+T* Heritable<T>::copy_internal_() const
 {
-    U& c = dynamic_cast<U&>(*data_reference_.get());
-    return c;
+    T* switch_ptr = data_ptr_;
+    data_ptr_ = new T(*data_ptr_);
+    logError(DEBUG, this << "\t switch\t " << switch_ptr << " for\t " << data_ptr_);
+    return switch_ptr;
+}
+
+template <typename T>
+T* Heritable<T>::move_internal_() const
+{
+    T* switch_ptr = data_ptr_;
+    data_ptr_ = nullptr;
+    logError(DEBUG, this << "\t switch\t " << switch_ptr << " for\t " << data_ptr_);
+    return switch_ptr;
 }
 
 } /* namespace utils */

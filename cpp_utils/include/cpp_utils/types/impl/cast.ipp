@@ -28,5 +28,12 @@ void* cast_to_void_ptr(
     return static_cast<void*>(const_cast<T*>(c));
 }
 
+template <typename T, typename U>
+bool can_cast(const U& el)
+{
+    const T* _ptr = dynamic_cast<const T*>(&el);
+    return _ptr;
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

@@ -50,6 +50,10 @@ namespace utils {
 // TYPES
 /////////////////////////
 
+#define ARE_SAME_TYPE(a, b) (typeid(a) == typeid(b))
+
+#define IS_SAME_TYPE_AS_THIS(a) (ARE_SAME_TYPE(a, this))
+
 /**
  * @brief Force the specialization type of a template to be a subclass of a Class.
  *

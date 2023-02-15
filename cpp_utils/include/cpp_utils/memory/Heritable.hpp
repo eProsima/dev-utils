@@ -46,24 +46,32 @@ public:
     // CONSTRUCTORS
     ///////////////////////
 
-    Heritable(T* ptr);
+    Heritable(
+            T* ptr);
 
     template <typename U>
-    Heritable(U* ptr);
+    Heritable(
+            U* ptr);
 
-    Heritable(const Heritable<T>& other);
+    Heritable(
+            const Heritable<T>& other);
 
-    Heritable(Heritable<T>&& other);
+    Heritable(
+            Heritable<T>&& other);
 
     template <typename U>
-    Heritable(const Heritable<U>& other);
+    Heritable(
+            const Heritable<U>& other);
 
     template <typename U>
-    Heritable(Heritable<U>&& other);
+    Heritable(
+            Heritable<U>&& other);
 
-    Heritable<T>& operator =(const Heritable<T>& other);
+    Heritable<T>& operator =(
+            const Heritable<T>& other);
 
-    Heritable<T>& operator =(Heritable<T>&& other);
+    Heritable<T>& operator =(
+            Heritable<T>&& other);
 
     ~Heritable();
 
@@ -79,13 +87,17 @@ public:
     // COMPARE OPERATORS
     ///////////////////////
 
-    bool operator ==(const Heritable<T>& other) const noexcept;
+    bool operator ==(
+            const Heritable<T>& other) const noexcept;
 
-    bool operator ==(const T& other) const noexcept;
+    bool operator ==(
+            const T& other) const noexcept;
 
-    bool operator <(const Heritable<T>& other) const noexcept;
+    bool operator <(
+            const Heritable<T>& other) const noexcept;
 
-    bool operator <(const T& other) const noexcept;
+    bool operator <(
+            const T& other) const noexcept;
 
     ///////////////////////
     // ACCESS DATA METHODS
@@ -111,7 +123,8 @@ public:
     ///////////////////////
 
     template <typename ... Args>
-    static Heritable<T> make_heritable(Args&&... args);
+    static Heritable<T> make_heritable(
+            Args&&... args);
 
 protected:
 

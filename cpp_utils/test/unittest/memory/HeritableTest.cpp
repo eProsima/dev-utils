@@ -23,7 +23,8 @@ namespace test {
 
 struct Parent
 {
-    Parent(int x)
+    Parent(
+            int x)
         : int_value(x)
     {
     }
@@ -33,23 +34,27 @@ struct Parent
     {
     }
 
-    Parent(const Parent& other)
+    Parent(
+            const Parent& other)
         : Parent(other.int_value)
     {
     }
 
-    Parent& operator =(const Parent& other)
+    Parent& operator =(
+            const Parent& other)
     {
         int_value = other.int_value;
         return *this;
     }
 
-    bool operator ==(const Parent& other) const
+    bool operator ==(
+            const Parent& other) const
     {
         return other.get_int() == this->get_int();
     }
 
-    bool operator <(const Parent& other) const
+    bool operator <(
+            const Parent& other) const
     {
         return this->get_int() < other.get_int();
     }
@@ -77,7 +82,8 @@ std::ostream& operator <<(
 
 struct Child_A : public Parent
 {
-    Child_A(int y)
+    Child_A(
+            int y)
         : Parent(10)
         , other_value(y)
     {
@@ -98,7 +104,8 @@ struct Child_A : public Parent
 
 struct Child_B : public Parent
 {
-    Child_B(int y)
+    Child_B(
+            int y)
         : Parent(10)
         , other_value(y)
     {
@@ -250,56 +257,56 @@ TEST(HeritableTest, compare_operator_parent)
     {
         Heritable<test::Parent> h1(new test::Parent(1));
         Heritable<test::Parent> h2(new test::Parent(1));
-        ASSERT_TRUE(h1.operator==(h2));
+        ASSERT_TRUE(h1.operator ==(h2));
     }
 
     // == heritable false
     {
         Heritable<test::Parent> h1(new test::Parent(1));
         Heritable<test::Parent> h2(new test::Parent(2));
-        ASSERT_FALSE(h1.operator==(h2));
+        ASSERT_FALSE(h1.operator ==(h2));
     }
 
     // == object true
     {
         Heritable<test::Parent> h1(new test::Parent(1));
         test::Parent p(1);
-        ASSERT_TRUE(h1.operator==(p));
+        ASSERT_TRUE(h1.operator ==(p));
     }
 
     // == object false
     {
         Heritable<test::Parent> h1(new test::Parent(1));
         test::Parent p(2);
-        ASSERT_FALSE(h1.operator==(p));
+        ASSERT_FALSE(h1.operator ==(p));
     }
 
     // < heritable true
     {
         Heritable<test::Parent> h1(new test::Parent(0));
         Heritable<test::Parent> h2(new test::Parent(1));
-        ASSERT_TRUE(h1.operator<(h2));
+        ASSERT_TRUE(h1.operator <(h2));
     }
 
     // < heritable false
     {
         Heritable<test::Parent> h1(new test::Parent(0));
         Heritable<test::Parent> h2(new test::Parent(-1));
-        ASSERT_FALSE(h1.operator<(h2));
+        ASSERT_FALSE(h1.operator <(h2));
     }
 
     // < object true
     {
         Heritable<test::Parent> h1(new test::Parent(1));
         test::Parent p(2);
-        ASSERT_TRUE(h1.operator<(p));
+        ASSERT_TRUE(h1.operator <(p));
     }
 
     // < object false
     {
         Heritable<test::Parent> h1(new test::Parent(1));
         test::Parent p(0);
-        ASSERT_FALSE(h1.operator<(p));
+        ASSERT_FALSE(h1.operator <(p));
     }
 }
 
@@ -313,7 +320,7 @@ TEST(HeritableTest, access_data_methods_parent)
         test::Parent p = test::Parent(11);
         Heritable<test::Parent> h(Heritable<test::Parent>::make_heritable(p));
         test::Parent& p_ref = h.get_reference();
-        ASSERT_TRUE(p_ref.operator==(p));
+        ASSERT_TRUE(p_ref.operator ==(p));
         ASSERT_NE(&p_ref, &p);
     }
 }
@@ -370,7 +377,7 @@ TEST(HeritableTest, cast_methods_negative)
 
     // cast from child A to child B
     {
-        Heritable<test::Child_A> h(Heritable<test::Child_A>::make_heritable());;
+        Heritable<test::Child_A> h(Heritable<test::Child_A>::make_heritable());
         ASSERT_FALSE(h.can_cast<test::Child_B>());
         ASSERT_THROW(
             h.dyn_cast<test::Child_B>(),

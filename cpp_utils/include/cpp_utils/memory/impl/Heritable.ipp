@@ -30,53 +30,61 @@ namespace utils {
 ///////////////////////
 
 template <typename T>
-Heritable<T>::Heritable(T* ptr)
+Heritable<T>::Heritable(
+        T* ptr)
     : data_ptr_(ptr)
 {
 }
 
 template <typename T>
 template <typename U>
-Heritable<T>::Heritable(U* ptr)
+Heritable<T>::Heritable(
+        U* ptr)
     : data_ptr_(static_cast<T*>(ptr))
 {
 }
 
 template <typename T>
-Heritable<T>::Heritable(const Heritable<T>& other)
+Heritable<T>::Heritable(
+        const Heritable<T>& other)
     : data_ptr_(other.data_ptr_)
 {
 }
 
 template <typename T>
-Heritable<T>::Heritable(Heritable<T>&& other)
+Heritable<T>::Heritable(
+        Heritable<T>&& other)
     : data_ptr_(std::move(other.data_ptr_))
 {
 }
 
 template <typename T>
 template <typename U>
-Heritable<T>::Heritable(const Heritable<U>& other)
+Heritable<T>::Heritable(
+        const Heritable<U>& other)
     : data_ptr_(std::static_pointer_cast<T>(other.data_ptr_))
 {
 }
 
 template <typename T>
 template <typename U>
-Heritable<T>::Heritable(Heritable<U>&& other)
+Heritable<T>::Heritable(
+        Heritable<U>&& other)
     : data_ptr_(std::static_pointer_cast<T>(std::move(other.data_ptr_)))
 {
 }
 
 template <typename T>
-Heritable<T>& Heritable<T>::operator =(const Heritable<T>& other)
+Heritable<T>& Heritable<T>::operator =(
+        const Heritable<T>& other)
 {
     data_ptr_ = other.data_ptr_;
     return *this;
 }
 
 template <typename T>
-Heritable<T>& Heritable<T>::operator =(Heritable<T>&& other)
+Heritable<T>& Heritable<T>::operator =(
+        Heritable<T>&& other)
 {
     data_ptr_ = std::move(other.data_ptr_);
     return *this;
@@ -108,25 +116,29 @@ T& Heritable<T>::operator *() const noexcept
 ///////////////////////
 
 template <typename T>
-bool Heritable<T>::operator ==(const Heritable<T>& other) const noexcept
+bool Heritable<T>::operator ==(
+        const Heritable<T>& other) const noexcept
 {
     return (*data_ptr_) == (*other);
 }
 
 template <typename T>
-bool Heritable<T>::operator ==(const T& other) const noexcept
+bool Heritable<T>::operator ==(
+        const T& other) const noexcept
 {
     return (*data_ptr_) == other;
 }
 
 template <typename T>
-bool Heritable<T>::operator <(const Heritable<T>& other) const noexcept
+bool Heritable<T>::operator <(
+        const Heritable<T>& other) const noexcept
 {
     return (*data_ptr_) < (*other);
 }
 
 template <typename T>
-bool Heritable<T>::operator <(const T& other) const noexcept
+bool Heritable<T>::operator <(
+        const T& other) const noexcept
 {
     return (*data_ptr_) < other;
 }
@@ -138,7 +150,7 @@ bool Heritable<T>::operator <(const T& other) const noexcept
 template <typename T>
 T& Heritable<T>::get_reference() const noexcept
 {
-    return this->operator*();
+    return this->operator *();
 }
 
 ///////////////////////
@@ -154,7 +166,7 @@ bool Heritable<T>::can_cast() const noexcept
         dyn_cast<U>();
         return true;
     }
-    catch(const std::bad_cast& /* e */)
+    catch (const std::bad_cast& /* e */)
     {
         return false;
     }
@@ -174,7 +186,8 @@ U& Heritable<T>::dyn_cast() const
 
 template <typename T>
 template <typename ... Args>
-Heritable<T> Heritable<T>::make_heritable(Args&&... args)
+Heritable<T> Heritable<T>::make_heritable(
+        Args&&... args)
 {
     return Heritable<T>(new  T(std::forward<Args>(args)...));
 }

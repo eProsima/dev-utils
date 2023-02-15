@@ -29,7 +29,8 @@ void* cast_to_void_ptr(
 }
 
 template <typename T, typename U>
-bool can_cast(const U& el)
+bool can_cast(
+        const U& el)
 {
     const T* _ptr = dynamic_cast<const T*>(&el);
     return _ptr;

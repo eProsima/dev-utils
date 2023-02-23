@@ -151,6 +151,12 @@ uint32_t EventHandler<Args...>::event_count() const noexcept
 }
 
 template <typename ... Args>
+void EventHandler<Args...>::reset_event_count() noexcept
+{
+    number_of_events_registered_.store(0);
+}
+
+template <typename ... Args>
 void EventHandler<Args...>::simulate_event_occurred(
         Args... args) noexcept
 {

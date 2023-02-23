@@ -130,6 +130,9 @@ public:
     //! Return the times the event has occurred since it has started.
     uint32_t event_count() const noexcept;
 
+    //! Set events received counter to 0.
+    void reset_event_count() noexcept;
+
     //! Simulate as if the event had occurred
     void simulate_event_occurred(
             Args... args) noexcept;

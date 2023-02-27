@@ -40,8 +40,7 @@ using FileAccessModeType = int;
  * Linux: See https://linux.die.net/man/2/access
  * Windows: See https://docs.microsoft.com/es-es/cpp/c-runtime-library/reference/access-waccess?view=msvc-170
  */
-enum class FileAccessMode
-{
+enum class FileAccessMode {
     exist               = 0,
     read                = 4,
     write               = 2,

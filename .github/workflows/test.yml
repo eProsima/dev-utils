@@ -1,51 +1,3 @@
-# Main CI for Dev Utils repository
-# This is executed with every PullRequest (new or update), any merge in main and every night
-#
-# These jobs that require to install fastrtps library uses the artifact generated for the nightly job
-# so they do not have to compile the whole fastrtps project. This saves huge amount of time.
-#
-# JOBS:
-#
-#   - coverage-test
-#     - ubuntu-20.04
-#     - Debug
-#     - build code ; run tests ; calculate coverage ; upload coverage
-#
-#   - asan-test
-#     - ubuntu-20.04
-#     - Debug
-#     - build code ; run tests
-#
-#   - tsan-test
-#     - ubuntu-20.04
-#     - Debug
-#     - build code ; run tests
-#
-#   - ubuntu-test
-#     - [ ubuntu-20.04 | ubuntu-22.04 ]
-#     - [ Debug | Release ]
-#     - build code ; run tests
-#
-#   - windows-test
-#     - [ windows-2019 | windows-2022 ]
-#     - [ Debug | Release ]
-#     - build code ; run tests
-#
-#   - flaky-test
-#     - ubuntu-20.04
-#     - Debug
-#     - build code ; test flaky tests
-#
-#   - clang-tidy
-#     - ubuntu-20.04
-#     - Release
-#     - build code ; test clang-tidy
-#
-#   - uncrustify
-#     - ubuntu-20.04
-#     - test uncrustify
-#
-
 name: test
 
 on:
@@ -63,11 +15,12 @@ jobs:
 # UNCRUSTIFY
   uncrustify:
     # (TODO) Use this action from a common repo and not copy it in every repo
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+
     steps:
 
-      - name: Uncrusitify
-        uses: eProsima/eProsima-CI/ubuntu/uncrustify@tools/tmp
+      - name: Uncrustify
+        uses: eProsima/eProsima-CI/ubuntu-22.04/uncrustify@feature/uncrustify
         with:
           result_filename: dev_utils_uncrustify.xml
 
@@ -77,4 +30,3 @@ jobs:
         with:
           name: uncrustify_results
           path: dev_utils_uncrustify.xml
-        if: always()

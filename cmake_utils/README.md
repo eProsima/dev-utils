@@ -88,7 +88,7 @@ Those variables which default is `x` must be set, and those with `-` are not req
 | MODULE_DATA_INSTALL_DIR      | share/                                                                  | Data installation path                                                                             |
 | MODULE_LICENSE_INSTALL_DIR   | share/                                                                  | License installation path                                                                          |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_CPP_VERSION           | C++17                                                                   | C++ version                                                                                        |
+| MODULE_CPP_VERSION           | ''                                                                      | C++ version                                                                                        |
 
 ### Minimum Package Version
 

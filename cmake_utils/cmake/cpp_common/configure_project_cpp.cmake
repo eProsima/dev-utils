@@ -38,7 +38,11 @@ macro(configure_project_cpp)
     set_cmake_build_type()
 
     # Check C++ version
-    check_cpp(${MODULE_CPP_VERSION})
+    if (DEFINED MODULE_CPP_VERSION)
+        force_cpp(${MODULE_CPP_VERSION})
+    else()
+        message(STATUS "C++ version not forced.")
+    endif()
 
     # Set Build Shared Libs as default option
     option(BUILD_SHARED_LIBS "Create shared libraries by default" ON)

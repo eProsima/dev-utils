@@ -124,11 +124,6 @@ macro(load_project_settings)
     #####
     # Module external options
 
-    # Set MODULE_LICENSE_FILE_PATH
-    if (NOT MODULE_CPP_VERSION)
-        set(MODULE_CPP_VERSION "C++17")
-    endif()
-
     # Finish macro
     message (STATUS "Loaded project settings from ${PROJECT_SETTINGS_FILE} to project ${MODULE_NAME_LARGE}:")
 

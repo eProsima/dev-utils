@@ -16,13 +16,13 @@ jobs:
     steps:
 
       - name: Uncrustify
-        uses: eProsima/eProsima-CI/actions/uncrustify@feature/uncrustify
+        uses: eProsima/eProsima-CI/actions/uncrustify@test/feature/uncrustify
 
   python-linter:
     runs-on: ubuntu-22.04
     steps:
 
       - name: Python Linter
-        uses: eProsima/eProsima-CI/actions/python_linter@feature/uncrustify
+        uses: eProsima/eProsima-CI/actions/python_linter@test/feature/uncrustify
         with:
           linter_configuration_version: feature/python-linter

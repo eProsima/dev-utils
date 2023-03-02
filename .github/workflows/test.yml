@@ -11,22 +11,18 @@ on:
 
 jobs:
 
-###########################################################
-# UNCRUSTIFY
   uncrustify:
-    # (TODO) Use this action from a common repo and not copy it in every repo
     runs-on: ubuntu-22.04
-
     steps:
 
       - name: Uncrustify
         uses: eProsima/eProsima-CI/ubuntu-22.04/uncrustify@feature/uncrustify
-        with:
-          result_filename: dev_utils_uncrustify.xml
 
-    # Optional to upload files
-      - name: Upload uncrustify results
-        uses: actions/upload-artifact@v3
+  python-linter:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Python Linter
+        uses: eProsima/eProsima-CI/ubuntu-22.04/python_linter@feature/uncrustify
         with:
-          name: uncrustify_results
-          path: dev_utils_uncrustify.xml
+          linter_configuration_version: feature/python-linter

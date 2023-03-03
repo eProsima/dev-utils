@@ -11,18 +11,95 @@ on:
 
 jobs:
 
-  uncrustify:
-    runs-on: ubuntu-22.04
+  # uncrustify:
+  #   runs-on: ubuntu-22.04
+  #   steps:
+
+  #     - name: Uncrustify
+  #       uses: eProsima/eProsima-CI/actions/uncrustify@test/feature/uncrustify
+
+  # python-linter:
+  #   runs-on: ubuntu-22.04
+  #   steps:
+
+  #     - name: Python Linter
+  #       uses: eProsima/eProsima-CI/actions/python_linter@test/feature/uncrustify
+  #       with:
+  #         linter_configuration_version: feature/python-linter
+
+  build-dependencies:
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
     steps:
 
-      - name: Uncrustify
-        uses: eProsima/eProsima-CI/actions/uncrustify@test/feature/uncrustify
-
-  python-linter:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Python Linter
-        uses: eProsima/eProsima-CI/actions/python_linter@test/feature/uncrustify
+      - name: Sync repository to have access to .repos
+        uses: actions/checkout@v3
         with:
-          linter_configuration_version: feature/python-linter
+          path: src/dev-utils
+
+      - name: Check directories
+        run: |
+          echo "============ ls ==========="
+          ls
+          echo "============ ls src ==========="
+          ls src
+          echo "============ ls dev ==========="
+          ls src/dev-utils
+          echo "============ ls github ==========="
+          ls src/dev-utils/.github/
+          echo "============ ls workflows ==========="
+          ls src/dev-utils/.github/workflows
+          echo "============ ls configurations ==========="
+          ls src/dev-utils/.github/workflows/configurations
+          echo "============ cat ==========="
+          cat src/dev-utils/.github/workflows/configurations/ci.repos
+
+      - name: Generate Fast DDS Dependencies
+        uses: eProsima/eProsima-CI/ubuntu/generate_dependency@feature/build_dependencies
+        with:
+          vcs_repos_file: src/dev-utils/.github/workflows/configurations/ci.repos
+          artifact_name: built_fastdds_${{ matrix.ubuntu-version }}
+
+  download-dependencies:
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
+    steps:
+
+      - name: Download Fast DDS Dependencies
+        uses: eProsima/eProsima-CI/ubuntu/download_dependency@feature/build_dependencies
+        with:
+          artifact_name: built_fastdds_${{ matrix.ubuntu-version }}
+          workflow_source: test.yml
+
+      - name: Check directories
+        run: |
+          echo "============ ls ==========="
+          ls
+          echo "============ ls install ==========="
+          ls install
+
+  test_apt_packages:
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
+    steps:
+
+      - name: Install apt packages by defatul
+        uses: eProsima/eProsima-CI/ubuntu/install_apt_packages@feature/uncrustify
+
+      - name: Install python packages by defatul
+        uses: eProsima/eProsima-CI/ubuntu/install_python_packages@feature/uncrustify

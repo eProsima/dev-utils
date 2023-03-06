@@ -153,7 +153,18 @@ uint32_t EventHandler<Args...>::event_count() const noexcept
 template <typename ... Args>
 void EventHandler<Args...>::reset_event_count() noexcept
 {
+    std::lock_guard<std::mutex> lock(wait_mutex_);
     number_of_events_registered_.store(0);
+}
+
+template <typename ... Args>
+void EventHandler<Args...>::decrement_event_count() noexcept
+{
+    std::lock_guard<std::mutex> lock(wait_mutex_);
+    if (number_of_events_registered_ > 0)
+    {
+        number_of_events_registered_--;
+    }
 }
 
 template <typename ... Args>

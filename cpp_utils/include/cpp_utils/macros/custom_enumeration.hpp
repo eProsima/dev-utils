@@ -76,10 +76,10 @@ namespace utils {
     { return std::vector<std::string> (NAMES_ ## enumeration_name.begin(), NAMES_ ## enumeration_name.end()); }     \
                                                                                                                     \
     /* String to enumeration */                                                                                     \
-    inline bool string_to_enumeration(const std::string& s, enumeration_name& e)                                    \
+    inline bool string_to_enumeration(const std::string& s, enumeration_name & e)                                   \
     {                                                                                                               \
         for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                      \
-        if (NAMES_ ## enumeration_name[i] == s){e=static_cast<enumeration_name>(i); return true;}                   \
+        if (NAMES_ ## enumeration_name[i] == s){e = static_cast<enumeration_name>(i); return true;}                 \
         return false;                                                                                               \
     }                                                                                                               \
                                                                                                                     \
@@ -88,7 +88,7 @@ namespace utils {
     {                                                                                                               \
         enumeration_name e;                                                                                         \
         if (string_to_enumeration(s, e))return e;                                                                   \
-        throw eprosima::utils::InitializationException(                                                             \
+        throw eprosima::utils::InitializationException (                                                            \
                   STR_ENTRY << "Not correct name " << s << " for Enum " << STRINGIFY(enumeration_name) << ".");     \
     }                                                                                                               \
                                                                                                                     \

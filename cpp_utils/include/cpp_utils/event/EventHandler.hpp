@@ -133,6 +133,9 @@ public:
     //! Set events received counter to 0.
     void reset_event_count() noexcept;
 
+    //! Decrease events received counter by 1 (if counter > 0).
+    void decrement_event_count() noexcept;
+
     //! Simulate as if the event had occurred
     void simulate_event_occurred(
             Args... args) noexcept;

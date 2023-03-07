@@ -99,6 +99,27 @@ TEST(enumerationBuilderMacrosTest, n_values)
  * x each element inside
  * - string not in enumeration
  */
+TEST(enumerationBuilderMacrosTest, string_to_enumeration)
+{
+    test::TestCustomEnum value;
+    // x each element inside
+    for (unsigned int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
+    {
+        ASSERT_TRUE(test::string_to_enumeration(test::string_values[i], value));
+        ASSERT_TRUE(value == test::enum_values[i]);
+    }
+
+    // string not in enumeration
+    ASSERT_FALSE(test::string_to_enumeration("el_0", value));
+}
+
+/**
+ * Construct enumeration of type TestCustomEnum from a string.
+ *
+ * CASES:
+ * x each element inside
+ * - string not in enumeration
+ */
 TEST(enumerationBuilderMacrosTest, from_string)
 {
     // x each element inside

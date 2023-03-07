@@ -75,12 +75,20 @@ namespace utils {
     inline std::vector<std::string> string_vector_ ## enumeration_name()                                            \
     { return std::vector<std::string> (NAMES_ ## enumeration_name.begin(), NAMES_ ## enumeration_name.end()); }     \
                                                                                                                     \
+    /* String to enumeration */                                                                                     \
+    inline bool string_to_enumeration(const std::string& s, enumeration_name & e)                                   \
+    {                                                                                                               \
+        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                      \
+        if (NAMES_ ## enumeration_name[i] == s){e = static_cast<enumeration_name>(i); return true;}                 \
+        return false;                                                                                               \
+    }                                                                                                               \
+                                                                                                                    \
     /* From string */                                                                                               \
     inline enumeration_name from_string_ ## enumeration_name(const std::string& s)                                  \
     {                                                                                                               \
-        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                      \
-        if (NAMES_ ## enumeration_name[i] == s)return static_cast<enumeration_name>(i);                             \
-        throw eprosima::utils::InitializationException(                                                             \
+        enumeration_name e;                                                                                         \
+        if (string_to_enumeration(s, e))return e;                                                                   \
+        throw eprosima::utils::InitializationException (                                                            \
                   STR_ENTRY << "Not correct name " << s << " for Enum " << STRINGIFY(enumeration_name) << ".");     \
     }                                                                                                               \
                                                                                                                     \
@@ -95,7 +103,7 @@ namespace utils {
     inline std::array<enumeration_name, COUNT_ARGUMENTS(__VA_ARGS__)> all_values_ ## enumeration_name()             \
     {                                                                                                               \
         std::array<enumeration_name, COUNT_ARGUMENTS(__VA_ARGS__)> result;                                          \
-        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)result[i] = enumeration_name(i);                     \
+        for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)result[i] = enumeration_name(i);                      \
         return result;                                                                                              \
     }                                                                                                               \
                                                                                                                     \

@@ -90,6 +90,7 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         show_how
+        string_to_enumeration
         from_string
         to_string
         serializator

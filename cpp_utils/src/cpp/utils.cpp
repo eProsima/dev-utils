@@ -89,6 +89,16 @@ void to_lowercase(
             });
 }
 
+void to_uppercase(
+        std::string& st) noexcept
+{
+    std::transform(st.begin(), st.end(), st.begin(),
+            [](unsigned char c)
+            {
+                return std::toupper(c);
+            });
+}
+
 void tsnh(
         const Formatter& formatter)
 {

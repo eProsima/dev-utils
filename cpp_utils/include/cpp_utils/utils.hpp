@@ -77,6 +77,16 @@ CPP_UTILS_DllAPI bool match_pattern(
 CPP_UTILS_DllAPI void to_lowercase(
         std::string& st) noexcept;
 
+/**
+ * @brief Convert every alphabetic char in string to upper case
+ *
+ * @attention This function modifies the object given
+ *
+ * @param [in,out] st : string to modify
+ */
+CPP_UTILS_DllAPI void to_uppercase(
+        std::string& st) noexcept;
+
 template <typename T, bool Ptr = false>
 std::ostream& element_to_stream(
         std::ostream& os,

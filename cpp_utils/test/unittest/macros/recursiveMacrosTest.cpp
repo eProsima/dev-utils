@@ -115,6 +115,23 @@ TEST(recursiveMacrosTest, apply_macro_for_each)
         ASSERT_EQ(hello, "hello");
         ASSERT_EQ(bye, "bye");
     }
+
+#define TO_UPPERCASE(x) eprosima::utils::to_uppercase(x);
+
+    // string concatenation
+    {
+        std::string hello = "hello";
+        std::string bye = "ByE";
+
+        APPLY_MACRO_FOR_EACH(
+            TO_UPPERCASE,
+            hello,
+            bye
+            );
+
+        ASSERT_EQ(hello, "HELLO");
+        ASSERT_EQ(bye, "BYE");
+    }
 }
 
 int main(

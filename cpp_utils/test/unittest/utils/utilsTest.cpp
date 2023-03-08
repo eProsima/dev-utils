@@ -329,6 +329,37 @@ TEST(utilsTest, to_lowercase)
 }
 
 /**
+ * Test \c to_uppercase call
+ */
+TEST(utilsTest, to_uppercase)
+{
+    // Uppercase
+    {
+        std::string str = "FOO";
+        to_uppercase(str);
+        ASSERT_EQ(str, "FOO");
+    }
+    // Invariant
+    {
+        std::string str = "foo";
+        to_uppercase(str);
+        ASSERT_EQ(str, "FOO");
+    }
+    // With non-letter characters
+    {
+        std::string str = "!_-.,FoO";
+        to_uppercase(str);
+        ASSERT_EQ(str, "!_-.,FOO");
+    }
+    // Empty
+    {
+        std::string str = "";
+        to_uppercase(str);
+        ASSERT_EQ(str, "");
+    }
+}
+
+/**
  * Test \c tsnh call
  */
 TEST(utilsTest, tsnh_call)

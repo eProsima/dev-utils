@@ -32,6 +32,9 @@ set(TEST_LIST
         tsnh_call
         is_file_accessible
         combined_file_permissions
+        split_string_one_delimiter
+        split_strings_one_delimiter
+        split_string_delimiters
     )
 
 set(TEST_EXTRA_LIBRARIES

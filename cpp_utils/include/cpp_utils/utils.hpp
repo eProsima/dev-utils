@@ -219,6 +219,17 @@ CPP_UTILS_DllAPI std::string number_trailing_zeros_format(
         unsigned int n_chars,
         bool allow_more_chars = true);
 
+CPP_UTILS_DllAPI std::vector<std::string> split_string(
+        const std::string& source,
+        const std::set<std::string>& delimiters);
+
+CPP_UTILS_DllAPI std::vector<std::string> split_string(
+        const std::vector<std::string>& source,
+        const std::string delimiter);
+
+CPP_UTILS_DllAPI std::vector<std::string> split_string(
+        const std::string& source,
+        const std::string delimiter);
 
 } /* namespace utils */
 } /* namespace eprosima */

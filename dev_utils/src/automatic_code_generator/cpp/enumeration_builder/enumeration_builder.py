@@ -26,7 +26,7 @@ import sys
 
 DESCRIPTION = """Script to generate code for ENUMERATION_BUILDER in C++."""
 USAGE = (
-    'python3 enumeration_builder.py'
+    "python3 enumeration_builder.py"
     ' --enum CustomEnum'
     ' --values "value1;value2"'
     ' --output include/output.hpp'
@@ -298,6 +298,30 @@ def main():
             namespaces=parse_values(args.namespaces),
             output_file=output_file))
 
+
+def fun():
+    #a very bad func
+    result = 0
+    for x in range(3):
+        for y in range(3):
+            if x % y:
+                for z in range(5):
+                    result += 1
+            else:
+                for z in range(10):
+                    for a in range(2):
+                        if True:
+                            pass
+                if z % result:
+                    for b in range(2):
+                        result += 2
+                else:
+                    result += 3
+        for y in range(2):
+            if y % 2:
+                result += 1
+            else:
+                return result
 
 if __name__ == '__main__':
     main()

@@ -24,12 +24,14 @@
 
 namespace test {
 
+//! Test enumeration with 2 values
 ENUMERATION_BUILDER(
     Enum1,
     value_1,
     value_2
 );
 
+//! Test EnumBuilder to create enums of type \c Enum1 .
 eprosima::utils::EnumBuilder<Enum1> create_builder()
 {
     return eprosima::utils::EnumBuilder<Enum1>(
@@ -40,7 +42,7 @@ eprosima::utils::EnumBuilder<Enum1> create_builder()
     );
 }
 
-
+//! Test enumeration with 3 heterogenous values
 ENUMERATION_BUILDER(
     Enum2,
     some_value,
@@ -48,6 +50,7 @@ ENUMERATION_BUILDER(
     AND_THE_END
 );
 
+//! Singleton EnumBuilder for \c Enum2
 eProsima_ENUMERATION_BUILDER(
     Enum2_Builder,
     Enum2,
@@ -62,7 +65,7 @@ eProsima_ENUMERATION_BUILDER(
 using namespace eprosima::utils;
 
 /**
- * TODO
+ * Create a CommandReader and check it does not break or have memory leaks.
  */
 TEST(CommandReaderTest, trivial_create)
 {
@@ -71,7 +74,7 @@ TEST(CommandReaderTest, trivial_create)
 }
 
 /**
- * TODO
+ * Read 3 commands of type enum 1.
  */
 TEST(CommandReaderTest, read_lines_enum_1)
 {
@@ -116,7 +119,7 @@ TEST(CommandReaderTest, read_lines_enum_1)
 }
 
 /**
- * TODO
+ * Read a line that does not contains any allowed command value.
  */
 TEST(CommandReaderTest, read_lines_enum_1_negative)
 {
@@ -135,7 +138,7 @@ TEST(CommandReaderTest, read_lines_enum_1_negative)
 }
 
 /**
- * TODO
+ * Read 2 commands using a singleton EnumBuilder
  */
 TEST(CommandReaderTest, read_lines_enum_2_singleton)
 {

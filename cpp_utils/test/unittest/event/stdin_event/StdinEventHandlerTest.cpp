@@ -78,7 +78,7 @@ TEST(StdinEventHandlerTest, read_lines_start)
 }
 
 /**
- * @brief Read from custom source 2 lines
+ * @brief Read from custom source 5 strings separated by spaces
  */
 TEST(StdinEventHandlerTest, read_spaces_start)
 {
@@ -118,7 +118,7 @@ TEST(StdinEventHandlerTest, read_spaces_start)
 }
 
 /**
- * @brief Read from custom source 2 lines
+ * @brief Read from custom source 2 lines by calling read_one_more_line for each
  */
 TEST(StdinEventHandlerTest, read_lines_running)
 {

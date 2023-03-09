@@ -63,7 +63,8 @@ FileAccessMode operator &(
         FileAccessMode mode_b);
 
 //! Perform the wildcard matching using file comparison method
-CPP_UTILS_DllAPI bool match_pattern(
+CPP_UTILS_DllAPI
+bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept;
 
@@ -74,7 +75,8 @@ CPP_UTILS_DllAPI bool match_pattern(
  *
  * @param [in,out] st : string to modify
  */
-CPP_UTILS_DllAPI void to_lowercase(
+CPP_UTILS_DllAPI
+void to_lowercase(
         std::string& st) noexcept;
 
 /**
@@ -135,7 +137,8 @@ bool are_set_of_ptr_equal(
  *
  * @param formatter msg of the unexpected case.
  */
-CPP_UTILS_DllAPI void tsnh(
+CPP_UTILS_DllAPI
+void tsnh(
         const Formatter& formatter);
 
 /**
@@ -165,7 +168,8 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
  * @return true if file is accessible regarding the permissions given
  * @return false otherwise
  */
-CPP_UTILS_DllAPI bool is_file_accessible(
+CPP_UTILS_DllAPI
+bool is_file_accessible(
         const char* file_path,
         FileAccessMode access_mode = FileAccessMode::exist) noexcept;
 
@@ -179,20 +183,24 @@ CPP_UTILS_DllAPI bool is_file_accessible(
  * @return to string convertion of the element
  */
 template <typename T>
-CPP_UTILS_DllAPI std::string generic_to_string(
+CPP_UTILS_DllAPI
+std::string generic_to_string(
         const T& element);
 
 template <typename T>
-CPP_UTILS_DllAPI void* copy_to_void_ptr(
+CPP_UTILS_DllAPI
+void* copy_to_void_ptr(
         const T* source,
         size_t size = sizeof(T));
 
-CPP_UTILS_DllAPI bool replace_first(
+CPP_UTILS_DllAPI
+bool replace_first(
         std::string& st,
         std::string const& to_replace,
         std::string const& replace_by);
 
-CPP_UTILS_DllAPI unsigned int replace_all(
+CPP_UTILS_DllAPI
+unsigned int replace_all(
         std::string& st,
         std::string const& to_replace,
         std::string const& replace_by);
@@ -209,27 +217,61 @@ CPP_UTILS_DllAPI unsigned int replace_all(
  *
  * @return number of strings removed.
  */
-CPP_UTILS_DllAPI unsigned int strip_str(
+CPP_UTILS_DllAPI
+unsigned int strip_str(
         std::string& to_strip,
         const std::string& replace_by = "",
         const std::set<std::string>& undesired_strings = {"\n", "\r"});
 
-CPP_UTILS_DllAPI std::string number_trailing_zeros_format(
+CPP_UTILS_DllAPI
+std::string number_trailing_zeros_format(
         int value_to_print,
         unsigned int n_chars,
         bool allow_more_chars = true);
 
-CPP_UTILS_DllAPI std::vector<std::string> split_string(
+/**
+ * @brief Split string \c source by every delimiter in \c delimiters .
+ *
+ * This method uses split_string(const std::string&, const std::string&) .
+ * For more information, please check that documentation.
+ */
+CPP_UTILS_DllAPI
+std::vector<std::string> split_string(
         const std::string& source,
         const std::set<std::string>& delimiters);
 
-CPP_UTILS_DllAPI std::vector<std::string> split_string(
+/**
+ * @brief Split each string in \c source by \c delimiter .
+ *
+ * This method uses split_string(const std::string&, const std::string&) .
+ * For more information, please check that documentation.
+ */
+CPP_UTILS_DllAPI
+std::vector<std::string> split_string(
         const std::vector<std::string>& source,
-        const std::string delimiter);
+        const std::string& delimiter);
 
-CPP_UTILS_DllAPI std::vector<std::string> split_string(
+/**
+ * @brief Split a string \c source by \c delimiter .
+ *
+ * The delimiter will no longer exist in any of the result strings.
+ *
+ * @example source:"Some String" delimiter:" " result:["Some", "String"]
+ * @example source:" " delimiter:" " result:["", ""]
+ *
+ * @param source string to divide in tokens
+ * @param delimiter string to look for in source and divide it with
+ *
+ * @return vector with strings
+ *
+ * @warning Some results could be empty strings if the delimiter is at the start, end or repeated along source.
+ *
+ * @post There will be always at least 1 element in the result vector
+ */
+CPP_UTILS_DllAPI
+std::vector<std::string> split_string(
         const std::string& source,
-        const std::string delimiter);
+        const std::string& delimiter);
 
 } /* namespace utils */
 } /* namespace eprosima */

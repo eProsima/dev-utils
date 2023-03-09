@@ -447,6 +447,9 @@ TEST(utilsTest, combined_file_permissions)
     ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::exec, FileAccessMode::exec);
 }
 
+/**
+ * Test method split_string(string, string)
+ */
 TEST(utilsTest, split_string_one_delimiter)
 {
     std::vector<
@@ -493,6 +496,9 @@ TEST(utilsTest, split_string_one_delimiter)
     }
 }
 
+/**
+ * Test method split_string(vector<string>, string)
+ */
 TEST(utilsTest, split_strings_one_delimiter)
 {
     std::vector<
@@ -534,6 +540,9 @@ TEST(utilsTest, split_strings_one_delimiter)
     }
 }
 
+/**
+ * Test method split_string(string, set<string>)
+ */
 TEST(utilsTest, split_string_delimiters)
 {
     std::vector<

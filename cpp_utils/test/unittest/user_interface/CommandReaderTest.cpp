@@ -70,7 +70,7 @@ using namespace eprosima::utils;
 TEST(CommandReaderTest, trivial_create)
 {
     auto builder = test::create_builder();
-    auto reader = CommandReader<test::Enum1>(builder);
+    CommandReader<test::Enum1> reader(builder);
 }
 
 /**
@@ -84,7 +84,7 @@ TEST(CommandReaderTest, read_lines_enum_1)
     source << "value_2 more than 1 arg" << "\n";
 
     auto builder = test::create_builder();
-    auto reader = CommandReader<test::Enum1>(
+    CommandReader<test::Enum1> reader(
         builder,
         source);
 
@@ -127,7 +127,7 @@ TEST(CommandReaderTest, read_lines_enum_1_negative)
     source << "value_3" << "\n";
 
     auto builder = test::create_builder();
-    auto reader = CommandReader<test::Enum1>(
+    CommandReader<test::Enum1> reader(
         builder,
         source);
 
@@ -146,7 +146,7 @@ TEST(CommandReaderTest, read_lines_enum_2_singleton)
     source << "andtheend" << "\n";
     source << "1 args" << "\n";
 
-    auto reader = CommandReader<test::Enum2>(
+    CommandReader<test::Enum2> reader(
         *test::Enum2_Builder::get_shared_instance(),
         source);
 

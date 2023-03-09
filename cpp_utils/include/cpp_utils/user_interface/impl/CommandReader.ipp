@@ -24,12 +24,12 @@ CommandReader<CommandEnum>::CommandReader(
         const EnumBuilder<CommandEnum>& builder,
         std::istream& source /* = std::cin */)
     : builder_(builder)
-    , commands_read_(0, true)
     , stdin_handler_(
         [this](std::string st){ this->read_command_callback_(st); },
         true,
         0,
         source)
+    , commands_read_(0, true)
 {
     // Do nothing
 }

@@ -66,6 +66,12 @@ public:
             const EnumBuilder<CommandEnum>& builder,
             std::istream& source = std::cin);
 
+    //! Default dtor
+    ~CommandReader() = default;
+
+    //! Illegal copy of this class due to internal EventHandler. This remove other copy or move operators.
+    CommandReader(const CommandReader& other) = delete;
+
     /**
      * @brief Read next command written in stdin.
      *

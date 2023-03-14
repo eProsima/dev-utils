@@ -18,7 +18,7 @@ namespace eprosima {
 namespace utils {
 
 template <typename Key, typename Value>
-bool SimpleDatabase<Key, Value>::add(
+bool SafeDatabase<Key, Value>::add(
         Key&& key,
         Value&& value)
 {
@@ -30,7 +30,7 @@ bool SimpleDatabase<Key, Value>::add(
 }
 
 template <typename Key, typename Value>
-bool SimpleDatabase<Key, Value>::modify(
+bool SafeDatabase<Key, Value>::modify(
         const Key& key,
         Value&& value)
 {
@@ -48,7 +48,7 @@ bool SimpleDatabase<Key, Value>::modify(
 }
 
 template <typename Key, typename Value>
-bool SimpleDatabase<Key, Value>::erase(
+bool SafeDatabase<Key, Value>::erase(
         const Key& key)
 {
     std::unique_lock<std::shared_mutex> _(mutex_);
@@ -57,7 +57,7 @@ bool SimpleDatabase<Key, Value>::erase(
 }
 
 template <typename Key, typename Value>
-bool SimpleDatabase<Key, Value>::is(
+bool SafeDatabase<Key, Value>::is(
         const Key& key) const
 {
     std::shared_lock<std::shared_mutex> _(mutex_);
@@ -66,30 +66,30 @@ bool SimpleDatabase<Key, Value>::is(
 }
 
 template <typename Key, typename Value>
-SimpleDatabaseIterator<Key, Value> SimpleDatabase<Key, Value>::find(
+SafeDatabaseIterator<Key, Value> SafeDatabase<Key, Value>::find(
         const Key& key) const
 {
     std::shared_lock<std::shared_mutex> _(mutex_);
 
-    return SimpleDatabaseIterator<Key, Value>(internal_db_.find(key), mutex_);
+    return SafeDatabaseIterator<Key, Value>(internal_db_.find(key), mutex_);
 }
 
 template <typename Key, typename Value>
-SimpleDatabaseIterator<Key, Value> SimpleDatabase<Key, Value>::begin() const
+SafeDatabaseIterator<Key, Value> SafeDatabase<Key, Value>::begin() const
 {
-    return SimpleDatabaseIterator<Key, Value>(internal_db_.begin(), mutex_);
+    return SafeDatabaseIterator<Key, Value>(internal_db_.begin(), mutex_);
 }
 
 template <typename Key, typename Value>
-SimpleDatabaseIterator<Key, Value> SimpleDatabase<Key, Value>::end() const
+SafeDatabaseIterator<Key, Value> SafeDatabase<Key, Value>::end() const
 {
-    return SimpleDatabaseIterator<Key, Value>(internal_db_.end(), mutex_);
+    return SafeDatabaseIterator<Key, Value>(internal_db_.end(), mutex_);
 }
 
 template <typename Key, typename Value>
 template<typename V>
 typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
-SimpleDatabase<Key, Value>::at(
+SafeDatabase<Key, Value>::at(
         const Key& key) const
 {
     std::shared_lock<std::shared_mutex> _(mutex_);
@@ -98,7 +98,7 @@ SimpleDatabase<Key, Value>::at(
 }
 
 template <typename Key, typename Value>
-unsigned int SimpleDatabase<Key, Value>::size() const noexcept
+unsigned int SafeDatabase<Key, Value>::size() const noexcept
 {
     std::shared_lock<std::shared_mutex> _(mutex_);
 

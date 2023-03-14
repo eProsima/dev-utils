@@ -18,7 +18,7 @@
 #include <string>
 #include <thread>
 
-#include <cpp_utils/collection/database/SimpleDatabase.hpp>
+#include <cpp_utils/collection/database/SafeDatabase.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/wait/BooleanWaitHandler.hpp>
 
@@ -123,28 +123,28 @@ private:
 using namespace eprosima::utils;
 
 /**
- * Create a SimpleDatabase and expect not failures.
+ * Create a SafeDatabase and expect not failures.
  *
  * CASES:
  * - string, int
  * - Key, A
  * - shared_ptr, unique_ptr
  */
-TEST(SimpleDatabaseTest, create)
+TEST(SafeDatabaseTest, create)
 {
     // string, int
     {
-        SimpleDatabase<std::string, int> db;
+        SafeDatabase<std::string, int> db;
     }
 
     // Key, A
     {
-        SimpleDatabase<test::Key, test::A> db;
+        SafeDatabase<test::Key, test::A> db;
     }
 
     // shared_ptr, unique_ptr
     {
-        SimpleDatabase<std::shared_ptr<int>, std::unique_ptr<test::NonCopyable>> db;
+        SafeDatabase<std::shared_ptr<int>, std::unique_ptr<test::NonCopyable>> db;
     }
 }
 
@@ -155,9 +155,9 @@ TEST(SimpleDatabaseTest, create)
  * - add N values
  * - try to add an already existant value
  */
-TEST(SimpleDatabaseTest, add)
+TEST(SafeDatabaseTest, add)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // add N values
     ASSERT_TRUE(db.add(1, 1000));
@@ -177,9 +177,9 @@ TEST(SimpleDatabaseTest, add)
  * - add values
  * - check values inserted exist
  */
-TEST(SimpleDatabaseTest, is)
+TEST(SafeDatabaseTest, is)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // check values does not exist
     ASSERT_FALSE(db.is(1));
@@ -204,9 +204,9 @@ TEST(SimpleDatabaseTest, is)
  * - find values
  * - find a non existant value
  */
-TEST(SimpleDatabaseTest, find)
+TEST(SafeDatabaseTest, find)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // add values
     ASSERT_TRUE(db.add(1, 1000));
@@ -234,9 +234,9 @@ TEST(SimpleDatabaseTest, find)
  * - get values inserted
  * - try to get a value that does not exist
  */
-TEST(SimpleDatabaseTest, at)
+TEST(SafeDatabaseTest, at)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // add values
     ASSERT_TRUE(db.add(1, 1000));
@@ -260,9 +260,9 @@ TEST(SimpleDatabaseTest, at)
  * - remove values
  * - get size
  */
-TEST(SimpleDatabaseTest, size)
+TEST(SafeDatabaseTest, size)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // get size
     ASSERT_EQ(db.size(), 0u);
@@ -291,9 +291,9 @@ TEST(SimpleDatabaseTest, size)
  * - iterate over database and check all values are included by loop range
  * - iterate over database and check all values are included by begin end loop
  */
-TEST(SimpleDatabaseTest, iterate)
+TEST(SafeDatabaseTest, iterate)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // iterate over an empty database by loop range
     {
@@ -365,9 +365,9 @@ TEST(SimpleDatabaseTest, iterate)
  * - get values again expecting new ones
  * - try modify a non existant value
  */
-TEST(SimpleDatabaseTest, modify)
+TEST(SafeDatabaseTest, modify)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // add some values
     ASSERT_TRUE(db.add(1, 1000));
@@ -404,9 +404,9 @@ TEST(SimpleDatabaseTest, modify)
  * - try erase an already erased value
  * - try erase a non existant value
  */
-TEST(SimpleDatabaseTest, test_erase)
+TEST(SafeDatabaseTest, test_erase)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // add some values
     ASSERT_TRUE(db.add(1, 1000));
@@ -438,9 +438,9 @@ TEST(SimpleDatabaseTest, test_erase)
  * Access database from different threads at the same time
  * Create a common routine of adding a value and getting it and execute it from multiple threads.
  */
-TEST(SimpleDatabaseTest, test_thread_safe)
+TEST(SafeDatabaseTest, test_thread_safe)
 {
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     auto routine = [&db](int i){
         ASSERT_TRUE(db.add(int(i), i*1000));
@@ -483,9 +483,9 @@ TEST(SimpleDatabaseTest, test_thread_safe)
  * - add more values
  * - check values exist
  */
-TEST(SimpleDatabaseTest, test_custom_classes)
+TEST(SafeDatabaseTest, test_custom_classes)
 {
-    SimpleDatabase<test::Key, test::A> db;
+    SafeDatabase<test::Key, test::A> db;
 
     // add values
     {
@@ -576,9 +576,9 @@ TEST(SimpleDatabaseTest, test_custom_classes)
  * - remove value
  * - iterate over values
  */
-TEST(SimpleDatabaseTest, test_unique_ptrs)
+TEST(SafeDatabaseTest, test_unique_ptrs)
 {
-    SimpleDatabase<test::NonCopyable, std::unique_ptr<test::A>> db;
+    SafeDatabase<test::NonCopyable, std::unique_ptr<test::A>> db;
 
     // add values
     {
@@ -667,10 +667,10 @@ TEST(SimpleDatabaseTest, test_unique_ptrs)
  *   - wait to be sure the adding thread has awake
  *   - finish iteration and map should be kept intact
  */
-TEST(SimpleDatabaseTest, loop_while_insertion)
+TEST(SafeDatabaseTest, loop_while_insertion)
 {
     // Database
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // Waiter to notify to add values
     event::BooleanWaitHandler waiter_add(false, true);
@@ -733,10 +733,10 @@ TEST(SimpleDatabaseTest, loop_while_insertion)
  * Check that iterate over a map maintains the map status, even when removing values.
  * Same as before but removing values.
  */
-TEST(SimpleDatabaseTest, loop_while_deletion)
+TEST(SafeDatabaseTest, loop_while_deletion)
 {
     // Database
-    SimpleDatabase<int, int> db;
+    SafeDatabase<int, int> db;
 
     // Waiter to notify to add values
     event::BooleanWaitHandler waiter_erase(false, true);
@@ -793,6 +793,88 @@ TEST(SimpleDatabaseTest, loop_while_deletion)
     iteration_test.join();
 
     ASSERT_EQ(db.size(), 3);
+}
+
+/**
+ * Check that could be 2 threads iterating at the same time over the database without blocking.
+ *
+ * STEPS:
+ * - Add some values
+ * - Execute 2 threads
+ * - thread A
+ *   - wait for access
+ *   - iterate database
+ * - thread B
+ *   - start iteration
+ *   - give access to A (iterate database)
+ *   - wait to be sure A has awaken
+ *   - finish iteration and map should be kept intact
+ */
+TEST(SafeDatabaseTest, parallel_loop)
+{
+    // Database
+    SafeDatabase<int, int> db;
+
+    // Waiter to notify to add values
+    event::BooleanWaitHandler waiter_erase(false, true);
+
+    // Add some values
+    db.add(1, 1000);
+    db.add(2, 2000);
+    db.add(3, 3000);
+    db.add(4, 4000);
+
+    // thread A
+    std::thread erase_test(
+        [&db, &waiter_erase](){
+            // wait for access
+            waiter_erase.wait();
+
+            int sum_key = 0;
+            int sum_value = 0;
+
+            // iterate database
+            for (const auto& it : db)
+            {
+                sum_key += it.first;
+                sum_value += it.second;
+            }
+        }
+    );
+
+    // thread B
+    std::thread iteration_test(
+        [&db, &waiter_erase](){
+
+            int sum_key = 0;
+            int sum_value = 0;
+            int i = 0;
+
+            // start iteration
+            for (const auto& it : db)
+            {
+                if (i == 2)
+                {
+                    // give access to A (iterate database)
+                    waiter_erase.open();
+
+                    // wait to be sure A has awaken
+                    sleep_for(10);
+                }
+                sum_key += it.first;
+                sum_value += it.second;
+
+                i++;
+            }
+
+            // finish iteration and map should be kept intact
+            ASSERT_EQ(sum_key, 10);
+            ASSERT_EQ(sum_value, 10000);
+        }
+    );
+
+    erase_test.join();
+    iteration_test.join();
 }
 
 int main(

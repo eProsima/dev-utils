@@ -27,6 +27,23 @@ bool SimpleDatabase<Key, Value>::add(
 }
 
 template <typename Key, typename Value>
+bool SimpleDatabase<Key, Value>::modify(
+        const Key& key,
+        Value&& value)
+{
+    // TODO
+    return false;
+}
+
+template <typename Key, typename Value>
+bool SimpleDatabase<Key, Value>::remove(
+        const Key& key)
+{
+    // TODO
+    return false;
+}
+
+template <typename Key, typename Value>
 bool SimpleDatabase<Key, Value>::is(
         const Key& key) const
 {
@@ -43,13 +60,13 @@ Value* SimpleDatabase<Key, Value>::get(
 }
 
 template <typename Key, typename Value>
-std::map::const_iterator SimpleDatabase<Key, Value>::begin() const
+typename std::map<Key, Value>::const_iterator SimpleDatabase<Key, Value>::begin() const
 {
     return internal_db_.begin();
 }
 
 template <typename Key, typename Value>
-std::map::const_iterator SimpleDatabase<Key, Value>::end() const
+typename std::map<Key, Value>::const_iterator SimpleDatabase<Key, Value>::end() const
 {
     return internal_db_.end();
 }

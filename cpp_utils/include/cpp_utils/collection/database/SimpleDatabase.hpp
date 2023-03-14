@@ -16,7 +16,7 @@
 
 #include <map>
 
-#include <cpp_utils/collection/database/IDatabase.hpp>
+#include <cpp_utils/collection/database/IModificableDatabase.hpp>
 #include <cpp_utils/types/Atomicable.hpp>
 
 namespace eprosima {
@@ -26,7 +26,7 @@ namespace utils {
  * Class that represents a generic database of values indexed by key.
  */
 template <typename Key, typename Value>
-class SimpleDatabase : public IDatabase<Key, Value, std::map::const_iterator>
+class SimpleDatabase : public IModificableDatabase<Key, Value, typename std::map<Key, Value>::const_iterator>
 {
 public:
 
@@ -34,18 +34,26 @@ public:
             Key&& key,
             Value&& value) override;
 
+    bool modify(
+            const Key& key,
+            Value&& value) override;
+
+    bool remove(
+            const Key& key) override;
+
     bool is(
             const Key& key) const override;
 
     Value* get(
             const Key& key) const override;
 
-    std::map::const_iterator begin() const override;
-    std::map::const_iterator end() const override;
+
+    typename std::map<Key, Value>::const_iterator begin() const override;
+    typename std::map<Key, Value>::const_iterator end() const override;
 
 protected:
 
-    using DbType = SharedAtomicable<std::map<Key, Value>;
+    using DbType = SharedAtomicable<std::map<Key, Value>>;
 
     DbType internal_db_;
 };

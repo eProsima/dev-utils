@@ -24,6 +24,9 @@ set(TEST_LIST
         is
         get
         iterate
+        modify
+        test_remove
+        test_thread_safe
         test_custom_classes
         test_unique_ptrs
     )

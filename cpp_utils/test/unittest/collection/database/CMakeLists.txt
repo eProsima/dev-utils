@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME SimpleDatabaseTest)
+set(TEST_NAME SafeDatabaseTest)
 
 set(TEST_SOURCES
-        SimpleDatabaseTest.cpp
+        SafeDatabaseTest.cpp
     )
 
 set(TEST_LIST
@@ -33,6 +33,7 @@ set(TEST_LIST
         test_unique_ptrs
         loop_while_insertion
         loop_while_deletion
+        parallel_loop
     )
 
 set(TEST_EXTRA_LIBRARIES

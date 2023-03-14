@@ -22,18 +22,23 @@ set(TEST_LIST
         create
         add
         is
-        get
+        find
+        at
+        size
         iterate
         modify
-        test_remove
+        test_erase
         test_thread_safe
         test_custom_classes
         test_unique_ptrs
+        loop_while_insertion
+        loop_while_deletion
     )
 
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
+        cpp_utils
     )
 
 add_unittest_executable(

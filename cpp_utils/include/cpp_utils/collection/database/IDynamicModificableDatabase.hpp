@@ -20,7 +20,7 @@ namespace eprosima {
 namespace utils {
 
 /**
- * Class that represents a generic database of values indexed by key.
+ * TODO
  */
 template <typename Key, typename Value, typename Iterator>
 class IDynamicModificableDatabase : public IModificableDatabase<Key, Value, Iterator>,  public IDynamicDatabase<Key, Value, Iterator>

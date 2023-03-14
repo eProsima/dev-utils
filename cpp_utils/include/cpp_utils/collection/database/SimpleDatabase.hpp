@@ -14,19 +14,43 @@
 
 #pragma once
 
+#include <cstddef>
+#include <iterator>
 #include <map>
+#include <new>
+#include <type_traits>
+#include <shared_mutex>
 
 #include <cpp_utils/collection/database/IModificableDatabase.hpp>
-#include <cpp_utils/types/Atomicable.hpp>
 
 namespace eprosima {
 namespace utils {
 
+template <typename Key, typename Value>
+class SimpleDatabaseIterator : public std::map<Key, Value>::const_iterator
+{
+public:
+
+    SimpleDatabaseIterator(
+            typename std::map<Key, Value>::const_iterator it,
+            std::shared_mutex& mutex)
+        : std::map<Key, Value>::const_iterator(it)
+        , mutex_(mutex)
+    { mutex_.lock_shared(); }
+
+    ~SimpleDatabaseIterator()
+    { mutex_.unlock_shared(); }
+
+private:
+
+    std::shared_mutex& mutex_;
+};
+
 /**
- * Class that represents a generic database of values indexed by key.
+ * TODO
  */
 template <typename Key, typename Value>
-class SimpleDatabase : public IModificableDatabase<Key, Value, typename std::map<Key, Value>::const_iterator>
+class SimpleDatabase : public IModificableDatabase<Key, Value, SimpleDatabaseIterator<Key, Value>>
 {
 public:
 
@@ -38,24 +62,30 @@ public:
             const Key& key,
             Value&& value) override;
 
-    bool remove(
+    bool erase(
             const Key& key) override;
 
     bool is(
             const Key& key) const override;
 
-    Value* get(
+    SimpleDatabaseIterator<Key, Value> find(
             const Key& key) const override;
 
+    SimpleDatabaseIterator<Key, Value> begin() const override;
+    SimpleDatabaseIterator<Key, Value> end() const override;
 
-    typename std::map<Key, Value>::const_iterator begin() const override;
-    typename std::map<Key, Value>::const_iterator end() const override;
+    template<typename V = Value>
+    typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
+    at(
+            const Key& key) const;
+
+    unsigned int size() const noexcept;
 
 protected:
 
-    using DbType = SharedAtomicable<std::map<Key, Value>>;
+    std::map<Key, Value> internal_db_;
 
-    DbType internal_db_;
+    mutable std::shared_mutex mutex_;
 };
 
 } /* namespace utils */

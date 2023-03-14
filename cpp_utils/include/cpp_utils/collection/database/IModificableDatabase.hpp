@@ -28,7 +28,7 @@ public:
             const Key& key,
             Value&& value) = 0;
 
-    virtual bool remove(
+    virtual bool erase(
             const Key& key) = 0;
 };
 

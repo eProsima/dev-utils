@@ -34,7 +34,7 @@ public:
     virtual bool is(
             const Key& key) const = 0;
 
-    virtual Value* get(
+    virtual Iterator find(
             const Key& key) const = 0;
 
     virtual Iterator begin() const = 0;

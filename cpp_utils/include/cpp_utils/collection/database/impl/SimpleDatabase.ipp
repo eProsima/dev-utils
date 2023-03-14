@@ -22,8 +22,11 @@ bool SimpleDatabase<Key, Value>::add(
         Key&& key,
         Value&& value)
 {
-    // TODO
-    return false;
+    std::unique_lock<std::shared_mutex> _(mutex_);
+
+    auto res = internal_db_.insert(std::move(std::pair<Key, Value>(std::move(key), std::move(value))));
+
+    return res.second;
 }
 
 template <typename Key, typename Value>
@@ -31,44 +34,75 @@ bool SimpleDatabase<Key, Value>::modify(
         const Key& key,
         Value&& value)
 {
-    // TODO
-    return false;
+    std::unique_lock<std::shared_mutex> _(mutex_);
+
+    auto it = internal_db_.find(key);
+    if (it == internal_db_.end())
+    {
+        return false;
+    }
+
+    it->second = std::move(value);
+
+    return true;
 }
 
 template <typename Key, typename Value>
-bool SimpleDatabase<Key, Value>::remove(
+bool SimpleDatabase<Key, Value>::erase(
         const Key& key)
 {
-    // TODO
-    return false;
+    std::unique_lock<std::shared_mutex> _(mutex_);
+
+    return internal_db_.erase(key) != 0;
 }
 
 template <typename Key, typename Value>
 bool SimpleDatabase<Key, Value>::is(
         const Key& key) const
 {
-    // TODO
-    return false;
+    std::shared_lock<std::shared_mutex> _(mutex_);
+
+    return internal_db_.find(key) != internal_db_.end();
 }
 
 template <typename Key, typename Value>
-Value* SimpleDatabase<Key, Value>::get(
+SimpleDatabaseIterator<Key, Value> SimpleDatabase<Key, Value>::find(
         const Key& key) const
 {
-    // TODO
-    return nullptr;
+    std::shared_lock<std::shared_mutex> _(mutex_);
+
+    return SimpleDatabaseIterator<Key, Value>(internal_db_.find(key), mutex_);
 }
 
 template <typename Key, typename Value>
-typename std::map<Key, Value>::const_iterator SimpleDatabase<Key, Value>::begin() const
+SimpleDatabaseIterator<Key, Value> SimpleDatabase<Key, Value>::begin() const
 {
-    return internal_db_.begin();
+    return SimpleDatabaseIterator<Key, Value>(internal_db_.begin(), mutex_);
 }
 
 template <typename Key, typename Value>
-typename std::map<Key, Value>::const_iterator SimpleDatabase<Key, Value>::end() const
+SimpleDatabaseIterator<Key, Value> SimpleDatabase<Key, Value>::end() const
 {
-    return internal_db_.end();
+    return SimpleDatabaseIterator<Key, Value>(internal_db_.end(), mutex_);
+}
+
+template <typename Key, typename Value>
+template<typename V>
+typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
+SimpleDatabase<Key, Value>::at(
+        const Key& key) const
+{
+    std::shared_lock<std::shared_mutex> _(mutex_);
+
+    return internal_db_.at(key);
+}
+
+template <typename Key, typename Value>
+unsigned int SimpleDatabase<Key, Value>::size() const noexcept
+{
+    std::shared_lock<std::shared_mutex> _(mutex_);
+
+    return internal_db_.size();
 }
 
 } /* namespace utils */

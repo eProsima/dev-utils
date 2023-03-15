@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <iterator>
 #include <map>
+#include <mutex>
 #include <new>
 #include <type_traits>
 #include <shared_mutex>
@@ -45,7 +46,7 @@ public:
 
     SafeDatabaseIterator(
             typename std::map<Key, Value>::const_iterator it,
-            std::shared_mutex& mutex)
+            std::shared_timed_mutex& mutex)
         : std::map<Key, Value>::const_iterator(it)
         , mutex_(mutex)
     { mutex_.lock_shared(); }
@@ -55,7 +56,7 @@ public:
 
 private:
 
-    std::shared_mutex& mutex_;
+    std::shared_timed_mutex& mutex_;
 };
 
 /**
@@ -125,6 +126,10 @@ public:
     //! Number of keys stored.
     unsigned int size() const noexcept;
 
+    bool add_or_modify(
+            Key&& key,
+            Value&& value);
+
 protected:
 
     /**
@@ -141,7 +146,7 @@ protected:
      * It shares lock for read methods (iterate, find, is, at, size)
      * It uses unique lock for write methods (add, modify, erase)
      */
-    mutable std::shared_mutex mutex_;
+    mutable std::shared_timed_mutex mutex_;
 };
 
 } /* namespace utils */

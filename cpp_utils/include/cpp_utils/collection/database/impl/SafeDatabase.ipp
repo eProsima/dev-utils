@@ -22,7 +22,7 @@ bool SafeDatabase<Key, Value>::add(
         Key&& key,
         Value&& value)
 {
-    std::unique_lock<std::shared_mutex> _(mutex_);
+    std::unique_lock<std::shared_timed_mutex> _(mutex_);
 
     auto res = internal_db_.insert(std::move(std::pair<Key, Value>(std::move(key), std::move(value))));
 
@@ -34,7 +34,7 @@ bool SafeDatabase<Key, Value>::modify(
         const Key& key,
         Value&& value)
 {
-    std::unique_lock<std::shared_mutex> _(mutex_);
+    std::unique_lock<std::shared_timed_mutex> _(mutex_);
 
     auto it = internal_db_.find(key);
     if (it == internal_db_.end())
@@ -51,7 +51,7 @@ template <typename Key, typename Value>
 bool SafeDatabase<Key, Value>::erase(
         const Key& key)
 {
-    std::unique_lock<std::shared_mutex> _(mutex_);
+    std::unique_lock<std::shared_timed_mutex> _(mutex_);
 
     return internal_db_.erase(key) != 0;
 }
@@ -60,7 +60,7 @@ template <typename Key, typename Value>
 bool SafeDatabase<Key, Value>::is(
         const Key& key) const
 {
-    std::shared_lock<std::shared_mutex> _(mutex_);
+    std::shared_lock<std::shared_timed_mutex> _(mutex_);
 
     return internal_db_.find(key) != internal_db_.end();
 }
@@ -69,7 +69,7 @@ template <typename Key, typename Value>
 SafeDatabaseIterator<Key, Value> SafeDatabase<Key, Value>::find(
         const Key& key) const
 {
-    std::shared_lock<std::shared_mutex> _(mutex_);
+    std::shared_lock<std::shared_timed_mutex> _(mutex_);
 
     return SafeDatabaseIterator<Key, Value>(internal_db_.find(key), mutex_);
 }
@@ -92,7 +92,7 @@ typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
 SafeDatabase<Key, Value>::at(
         const Key& key) const
 {
-    std::shared_lock<std::shared_mutex> _(mutex_);
+    std::shared_lock<std::shared_timed_mutex> _(mutex_);
 
     return internal_db_.at(key);
 }
@@ -100,9 +100,31 @@ SafeDatabase<Key, Value>::at(
 template <typename Key, typename Value>
 unsigned int SafeDatabase<Key, Value>::size() const noexcept
 {
-    std::shared_lock<std::shared_mutex> _(mutex_);
+    std::shared_lock<std::shared_timed_mutex> _(mutex_);
 
     return internal_db_.size();
+}
+
+template <typename Key, typename Value>
+bool SafeDatabase<Key, Value>::add_or_modify(
+        Key&& key,
+        Value&& value)
+{
+    std::unique_lock<std::shared_timed_mutex> _(mutex_);
+
+    auto it = internal_db_.find(key);
+    if (it == internal_db_.end())
+    {
+        // Add new value
+        internal_db_.insert(std::move(std::pair<Key, Value>(std::move(key), std::move(value))));
+        return true;
+    }
+    else
+    {
+        // Modify already existent value
+        it->second = std::move(value);
+        return false;
+    }
 }
 
 } /* namespace utils */

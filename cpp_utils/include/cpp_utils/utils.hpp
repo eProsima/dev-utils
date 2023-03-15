@@ -232,7 +232,7 @@ std::string number_trailing_zeros_format(
 /**
  * @brief Split string \c source by every delimiter in \c delimiters .
  *
- * This method uses split_string(const std::string&, const std::string&) .
+ * This method uses split_string(const std::vector<std::string>&, const std::string&) .
  * For more information, please check that documentation.
  */
 CPP_UTILS_DllAPI

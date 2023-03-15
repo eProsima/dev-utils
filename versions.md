@@ -6,6 +6,7 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 ## Forthcoming
 
 * New class **StdinEventHandler** to easily read from std::cin.
+* New class **CommandReader** to easily read from std::cin commands synchronously.
 
 ## Version 0.2.0
 

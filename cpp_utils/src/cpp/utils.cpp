@@ -222,7 +222,8 @@ std::vector<std::string> split_string(
     std::vector<std::string> result;
     int start = 0;
     int end = source.find(delimiter);
-    while (end != -1) {
+    while (end != -1)
+    {
         result.push_back(source.substr(start, end - start));
         start = end + delimiter.size();
         end = source.find(delimiter, start);

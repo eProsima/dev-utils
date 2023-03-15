@@ -31,7 +31,9 @@ using namespace eprosima::utils::event;
 TEST(StdinEventHandlerTest, trivial_create_handler)
 {
     StdinEventHandler handler(
-        [](std::string){ /* empty callback */ },
+        [](std::string)
+        {
+            /* empty callback */ },
         0);
 
     // Let handler to be destroyed by itself

@@ -458,8 +458,8 @@ TEST(utilsTest, split_string_one_delimiter)
                 std::string,  /* first argument */
                 std::string>,  /* second argument */
             std::vector<std::string>  /* expected result */
-        >
-    > test_cases =
+            >
+        > test_cases =
     {
         {
             {"trivial", " "},
@@ -507,8 +507,8 @@ TEST(utilsTest, split_strings_one_delimiter)
                 std::vector<std::string>,  /* first argument */
                 std::string>,  /* second argument */
             std::vector<std::string>  /* expected result */
-        >
-    > test_cases =
+            >
+        > test_cases =
     {
         {
             {{"trivial"}, " "},
@@ -551,8 +551,8 @@ TEST(utilsTest, split_string_delimiters)
                 std::string,  /* first argument */
                 std::set<std::string>>,  /* second argument */
             std::vector<std::string>  /* expected result */
-        >
-    > test_cases =
+            >
+        > test_cases =
     {
         {
             {"trivial", {" "}},

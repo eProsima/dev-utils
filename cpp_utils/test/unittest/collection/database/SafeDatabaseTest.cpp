@@ -784,7 +784,8 @@ TEST(SafeDatabaseTest, loop_while_insertion)
             int i = 0;
 
             // start iteration
-            for (auto it = db.begin(); it != db.end(); ++it)
+            auto it_end = db.end();  // This is required due to windows handle of shared mutex
+            for (auto it = db.begin(); it != it_end; ++it)
             {
                 if (i == 2)
                 {
@@ -850,7 +851,8 @@ TEST(SafeDatabaseTest, loop_while_deletion)
             int i = 0;
 
             // start iteration
-            for (auto it = db.begin(); it != db.end(); ++it)
+            auto it_end = db.end();  // This is required due to windows handle of shared mutex
+            for (auto it = db.begin(); it != it_end; ++it)
             {
                 if (i == 2)
                 {

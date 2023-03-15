@@ -28,6 +28,7 @@ set(TEST_LIST
         iterate
         modify
         test_erase
+        add_or_modify
         test_thread_safe
         test_custom_classes
         test_unique_ptrs

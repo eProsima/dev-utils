@@ -526,7 +526,7 @@ TEST(SafeDatabaseTest, test_thread_safe)
     SafeDatabase<int, int> db;
 
     auto routine = [&db](int i){
-        ASSERT_TRUE(db.add(int(i), i*1000));
+        ASSERT_TRUE(db.add(i, i*1000));
         ASSERT_TRUE(db.is(i));
         ASSERT_EQ(db.at(i), i*1000);
 

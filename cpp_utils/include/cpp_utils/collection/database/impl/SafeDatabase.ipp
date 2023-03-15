@@ -108,7 +108,7 @@ bool SafeDatabase<Key, Value>::add(
         const Key& key,
         const Value& value)
 {
-    return add(Key(key), Value(value));
+    return add(std::move(Key(key)), std::move(Value(value)));
 }
 
 template <typename Key, typename Value>
@@ -157,7 +157,7 @@ bool SafeDatabase<Key, Value>::add_or_modify(
         const Key& key,
         const Value& value)
 {
-    return add_or_modify(Key(key), Value(value));
+    return add_or_modify(std::move(Key(key)), std::move(Value(value)));
 }
 
 } /* namespace utils */

@@ -46,13 +46,9 @@ public:
 
     SafeDatabaseIterator(
             typename std::map<Key, Value>::const_iterator it,
-            std::shared_timed_mutex& mutex)
-        : std::map<Key, Value>::const_iterator(it)
-        , mutex_(mutex)
-    { mutex_.lock_shared(); }
+            std::shared_timed_mutex& mutex);
 
-    ~SafeDatabaseIterator()
-    { mutex_.unlock_shared(); }
+    ~SafeDatabaseIterator();
 
 private:
 

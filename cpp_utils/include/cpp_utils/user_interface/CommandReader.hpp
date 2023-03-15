@@ -70,7 +70,8 @@ public:
     ~CommandReader() = default;
 
     //! Illegal copy of this class due to internal EventHandler. This remove other copy or move operators.
-    CommandReader(const CommandReader& other) = delete;
+    CommandReader(
+            const CommandReader& other) = delete;
 
     /**
      * @brief Read next command written in stdin.
@@ -80,7 +81,8 @@ public:
      * @return true if the data read is parsable to a enum value of \c EnumBuilder .
      * @return false otherwise.
      */
-    bool read_next_command(Command<CommandEnum>& command);
+    bool read_next_command(
+            Command<CommandEnum>& command);
 
 protected:
 
@@ -89,7 +91,8 @@ protected:
      *
      * @param command_read
      */
-    void read_command_callback_(std::string command_read);
+    void read_command_callback_(
+            std::string command_read);
 
     //! Builder to transform string into a command enum value.
     EnumBuilder<CommandEnum> builder_;

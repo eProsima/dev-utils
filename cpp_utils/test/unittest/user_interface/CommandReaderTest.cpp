@@ -29,7 +29,7 @@ ENUMERATION_BUILDER(
     Enum1,
     value_1,
     value_2
-);
+    );
 
 //! Test EnumBuilder to create enums of type \c Enum1 .
 eprosima::utils::EnumBuilder<Enum1> create_builder()
@@ -39,7 +39,7 @@ eprosima::utils::EnumBuilder<Enum1> create_builder()
             {"value_1", Enum1::value_1},
             {"value_2", Enum1::value_2},
         }
-    );
+        );
 }
 
 //! Test enumeration with 3 heterogenous values
@@ -48,7 +48,7 @@ ENUMERATION_BUILDER(
     some_value,
     other,
     AND_THE_END
-);
+    );
 
 //! Singleton EnumBuilder for \c Enum2
 eProsima_ENUMERATION_BUILDER(
@@ -58,7 +58,7 @@ eProsima_ENUMERATION_BUILDER(
         { Enum2::some_value COMMA { "1" } } COMMA
         { Enum2::AND_THE_END COMMA { "value_2" COMMA "andtheend" COMMA "and_the_end" } }
     }
-);
+    );
 
 } /* namespace test */
 

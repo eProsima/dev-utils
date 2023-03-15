@@ -25,7 +25,10 @@ CommandReader<CommandEnum>::CommandReader(
         std::istream& source /* = std::cin */)
     : builder_(builder)
     , stdin_handler_(
-        [this](std::string st){ this->read_command_callback_(st); },
+        [this](std::string st)
+        {
+            this->read_command_callback_(st);
+        },
         true,
         0,
         source)
@@ -35,7 +38,8 @@ CommandReader<CommandEnum>::CommandReader(
 }
 
 template <typename CommandEnum>
-bool CommandReader<CommandEnum>::read_next_command(Command<CommandEnum>& command)
+bool CommandReader<CommandEnum>::read_next_command(
+        Command<CommandEnum>& command)
 {
     stdin_handler_.read_one_more_line();
     std::string full_command = commands_read_.consume();
@@ -49,7 +53,8 @@ bool CommandReader<CommandEnum>::read_next_command(Command<CommandEnum>& command
 }
 
 template <typename CommandEnum>
-void CommandReader<CommandEnum>::read_command_callback_(std::string command_read)
+void CommandReader<CommandEnum>::read_command_callback_(
+        std::string command_read)
 {
     commands_read_.produce(command_read);
 }

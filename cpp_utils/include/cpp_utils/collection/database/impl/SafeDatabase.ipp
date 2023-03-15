@@ -17,6 +17,23 @@
 namespace eprosima {
 namespace utils {
 
+
+template <typename Key, typename Value>
+SafeDatabaseIterator<Key, Value>::SafeDatabaseIterator(
+        typename std::map<Key, Value>::const_iterator it,
+        std::shared_timed_mutex& mutex)
+    : std::map<Key, Value>::const_iterator(it)
+    , mutex_(mutex)
+{
+    mutex_.lock_shared();
+}
+
+template <typename Key, typename Value>
+SafeDatabaseIterator<Key, Value>::~SafeDatabaseIterator()
+{
+    mutex_.unlock_shared();
+}
+
 template <typename Key, typename Value>
 bool SafeDatabase<Key, Value>::add(
         Key&& key,

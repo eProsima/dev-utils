@@ -15,3 +15,4 @@
 # Add test subdirectories
 add_subdirectory(periodic_event)
 add_subdirectory(signal)
+add_subdirectory(stdin_event)

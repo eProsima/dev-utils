@@ -190,5 +190,47 @@ std::string number_trailing_zeros_format(
     return os.str();
 }
 
+std::vector<std::string> split_string(
+        const std::string& source,
+        const std::set<std::string>& delimiters)
+{
+    std::vector<std::string> result = {source};
+    for (const auto& delimiter : delimiters)
+    {
+        result = split_string(result, delimiter);
+    }
+    return result;
+}
+
+std::vector<std::string> split_string(
+        const std::vector<std::string>& source,
+        const std::string& delimiter)
+{
+    std::vector<std::string> result;
+    for (const auto& source_str : source)
+    {
+        auto next_res = split_string(source_str, delimiter);
+        result.insert(result.end(), next_res.begin(), next_res.end());
+    }
+    return result;
+}
+
+std::vector<std::string> split_string(
+        const std::string& source,
+        const std::string& delimiter)
+{
+    std::vector<std::string> result;
+    int start = 0;
+    int end = source.find(delimiter);
+    while (end != -1)
+    {
+        result.push_back(source.substr(start, end - start));
+        start = end + delimiter.size();
+        end = source.find(delimiter, start);
+    }
+    result.push_back(source.substr(start));
+    return result;
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

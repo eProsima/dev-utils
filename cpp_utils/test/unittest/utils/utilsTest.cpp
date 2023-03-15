@@ -447,6 +447,138 @@ TEST(utilsTest, combined_file_permissions)
     ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::exec, FileAccessMode::exec);
 }
 
+/**
+ * Test method split_string(string, string)
+ */
+TEST(utilsTest, split_string_one_delimiter)
+{
+    std::vector<
+        std::pair<
+            std::pair<
+                std::string,  /* first argument */
+                std::string>,  /* second argument */
+            std::vector<std::string>  /* expected result */
+            >
+        > test_cases =
+    {
+        {
+            {"trivial", " "},
+            {"trivial"}
+        },
+
+        {
+            {"one space", " "},
+            {"one", "space"}
+        },
+
+        {
+            {"with other\ndelimiters", "\n"},
+            {"with other", "delimiters"}
+        },
+
+        {
+            {"e be ce", "e"},
+            {"", " b", " c", ""}
+        },
+
+        {
+            {"longer delimiter", "r d"},
+            {"longe", "elimiter"}
+        },
+    };
+
+    for (const auto& test_case : test_cases)
+    {
+        auto& result_expected = test_case.second;
+        auto result = split_string(test_case.first.first, test_case.first.second);
+
+        ASSERT_EQ(result_expected, result);
+    }
+}
+
+/**
+ * Test method split_string(vector<string>, string)
+ */
+TEST(utilsTest, split_strings_one_delimiter)
+{
+    std::vector<
+        std::pair<
+            std::pair<
+                std::vector<std::string>,  /* first argument */
+                std::string>,  /* second argument */
+            std::vector<std::string>  /* expected result */
+            >
+        > test_cases =
+    {
+        {
+            {{"trivial"}, " "},
+            {"trivial"}
+        },
+
+        {
+            {{"one space"}, " "},
+            {"one", "space"}
+        },
+
+        {
+            {{"more than", "one", "sentence here"}, " "},
+            {"more", "than", "one", "sentence", "here"}
+        },
+
+        {
+            {{"other\ndelimiter", "\nhere"}, "\n"},
+            {"other", "delimiter", "", "here"}
+        },
+    };
+
+    for (const auto& test_case : test_cases)
+    {
+        auto& result_expected = test_case.second;
+        auto result = split_string(test_case.first.first, test_case.first.second);
+
+        ASSERT_EQ(result_expected, result);
+    }
+}
+
+/**
+ * Test method split_string(string, set<string>)
+ */
+TEST(utilsTest, split_string_delimiters)
+{
+    std::vector<
+        std::pair<
+            std::pair<
+                std::string,  /* first argument */
+                std::set<std::string>>,  /* second argument */
+            std::vector<std::string>  /* expected result */
+            >
+        > test_cases =
+    {
+        {
+            {"trivial", {" "}},
+            {"trivial"}
+        },
+
+        {
+            {"one space", {" "}},
+            {"one", "space"}
+        },
+
+        {
+            {"with other\ndelimiters", {" ", "\n"}},
+            {"with", "other", "delimiters"}
+        }
+    };
+
+    for (const auto& test_case : test_cases)
+    {
+        auto& result_expected = test_case.second;
+        auto result = split_string(test_case.first.first, test_case.first.second);
+
+        ASSERT_EQ(result_expected, result);
+    }
+}
+
 int main(
         int argc,
         char** argv)

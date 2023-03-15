@@ -154,6 +154,9 @@ TEST(SafeDatabaseTest, create)
  * STEPS:
  * - add N values
  * - try to add an already existant value
+ * - add copying values
+ * - try to add an already existant value by copying
+ * - get size to check values added
  */
 TEST(SafeDatabaseTest, add)
 {
@@ -167,6 +170,17 @@ TEST(SafeDatabaseTest, add)
     // try to add an already existant value
     ASSERT_FALSE(db.add(1, 2));
     ASSERT_FALSE(db.add(1, 1000));
+
+    // add copying values
+    int k1 = 3;
+    ASSERT_TRUE(db.add(k1, 3000));
+
+    // try to add an already existant value by copying
+    int k2 = 3;
+    ASSERT_FALSE(db.add(k2, 4000));
+
+    // get size to check values added
+    ASSERT_EQ(db.size(), 4);
 }
 
 /**
@@ -432,6 +446,75 @@ TEST(SafeDatabaseTest, test_erase)
 
     // try erase a non existant value
     ASSERT_FALSE(db.erase(4));
+}
+
+/**
+ * Add some values to a <int, int> database and then modify them by adding again.
+ *
+ * STEPS:
+ * - add some values
+ * - add some values using add_or_modify
+ * - get values
+ * - modify some values using add_or_modify
+ * - check modifications took place
+ * - add some values using add_or_modify by copy
+ * - get values
+ * - modify some values using add_or_modify by copy
+ * - check modifications took place
+ */
+TEST(SafeDatabaseTest, add_or_modify)
+{
+    SafeDatabase<int, int> db;
+
+    // add some values
+    {
+        ASSERT_TRUE(db.add(1, 1000));
+        ASSERT_TRUE(db.add(2, 2000));
+    }
+
+    // add some values using add_or_modify
+    {
+        ASSERT_TRUE(db.add_or_modify(3, 3000));
+    }
+
+    // get values
+    {
+        ASSERT_EQ(db.at(1), 1000);
+        ASSERT_EQ(db.at(2), 2000);
+        ASSERT_EQ(db.at(3), 3000);
+    }
+
+    // modify some values using add_or_modify
+    {
+        ASSERT_FALSE(db.add_or_modify(1, 1500));
+    }
+
+    // check modifications took place
+    {
+        ASSERT_EQ(db.at(1), 1500);
+    }
+
+    // add some values using add_or_modify by copy
+    {
+        int k = 4;
+        ASSERT_TRUE(db.add_or_modify(k, 4000));
+    }
+
+    // get values
+    {
+        ASSERT_EQ(db.at(4), 4000);
+    }
+
+    // modify some values using add_or_modify by copy
+    {
+        int k = 1;
+        ASSERT_FALSE(db.add_or_modify(k, 1333));
+    }
+
+    // check modifications took place
+    {
+        ASSERT_EQ(db.at(1), 1333);
+    }
 }
 
 /**

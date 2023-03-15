@@ -104,9 +104,17 @@ SafeDatabaseIterator<Key, Value> SafeDatabase<Key, Value>::end() const
 }
 
 template <typename Key, typename Value>
-template<typename V>
-typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
-SafeDatabase<Key, Value>::at(
+bool SafeDatabase<Key, Value>::add(
+        const Key& key,
+        const Value& value)
+{
+    return add(Key(key), Value(value));
+}
+
+template <typename Key, typename Value>
+// template<typename V>
+// typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
+Value SafeDatabase<Key, Value>::at(
         const Key& key) const
 {
     std::shared_lock<std::shared_timed_mutex> _(mutex_);
@@ -142,6 +150,14 @@ bool SafeDatabase<Key, Value>::add_or_modify(
         it->second = std::move(value);
         return false;
     }
+}
+
+template <typename Key, typename Value>
+bool SafeDatabase<Key, Value>::add_or_modify(
+        const Key& key,
+        const Value& value)
+{
+    return add_or_modify(Key(key), Value(value));
 }
 
 } /* namespace utils */

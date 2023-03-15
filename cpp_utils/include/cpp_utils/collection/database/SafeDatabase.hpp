@@ -68,7 +68,7 @@ private:
  * @motivation this class is required to instantiate the interface \c IModificableDatabase and it also represents
  * a thread safe std::map.
  *
- * It adds the method \c at and \c size along with those of the interface.
+ * It adds the method \c at , \c size and some other utilities along with those of the interface.
  *
  * @tparam \c Key type to use as key/index of map.
  * @tparam \c Value type to use as internal value stored on map.
@@ -98,6 +98,17 @@ public:
     SafeDatabaseIterator<Key, Value> begin() const override;
     SafeDatabaseIterator<Key, Value> end() const override;
 
+
+    /**
+     * @brief Add using copy semantics instead of movement.
+     *
+     * This is useful for those types that do not safe time moving (as native types) or when the scope of the variables
+     * to add to the database do not allow movement (const values).
+     */
+    bool add(
+            const Key& key,
+            const Value& value);
+
     /**
      * @brief Return a copy of the value indexed by \c key .
      *
@@ -114,17 +125,29 @@ public:
      * @return copy of the internal value if exist.
      * @throw \c std::out_of_range if key not in database.
      */
-    template<typename V = Value>
-    typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
-    at(
+    Value at(
             const Key& key) const;
 
     //! Number of keys stored.
     unsigned int size() const noexcept;
 
+    /**
+     * @brief Add a new value or modify an existent one with the new value.
+     *
+     * @param key key indexing the new or existent value.
+     * @param value new value to set.
+     *
+     * @return true if value has been added.
+     * @return false if value already exists, in this case the value is modified.
+     */
     bool add_or_modify(
             Key&& key,
             Value&& value);
+
+    //! Add or modify using copy semantics instead of movement.
+    bool add_or_modify(
+            const Key& key,
+            const Value& value);
 
 protected:
 

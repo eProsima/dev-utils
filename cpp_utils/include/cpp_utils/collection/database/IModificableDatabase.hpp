@@ -19,15 +19,48 @@
 namespace eprosima {
 namespace utils {
 
+/**
+ * Inheritance from \c IDatabase that allows to modify or erase a value from a database.
+ */
 template <typename Key, typename Value, typename Iterator>
 class IModificableDatabase : public IDatabase<Key, Value, Iterator>
 {
 public:
 
+    /**
+     * @brief Modify a value that already exist in the database.
+     *
+     * @param key key indexing the new or existent value.
+     * @param value new value to set.
+     *
+     * @return true if value has been modified.
+     * @return false if value did not exist in the database.
+     */
     virtual bool modify(
             const Key& key,
             Value&& value) = 0;
 
+    /**
+     * @brief Add a new value or modify an existent one with the new value.
+     *
+     * @param key key indexing the new or existent value.
+     * @param value new value to set.
+     *
+     * @return true if value has been added.
+     * @return false if value already exists, in this case the value is modified.
+     */
+    virtual bool add_or_modify(
+            Key&& key,
+            Value&& value) = 0;
+
+    /**
+     * @brief Remove the value indexed by \c key that already exist in the database.
+     *
+     * @param key key indexing the value.
+     *
+     * @return true if value has been removed.
+     * @return false if value did not exist in the database.
+     */
     virtual bool erase(
             const Key& key) = 0;
 };

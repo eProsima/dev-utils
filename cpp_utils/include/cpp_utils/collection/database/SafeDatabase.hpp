@@ -38,6 +38,12 @@ namespace utils {
  *
  * @tparam \c Key key type of the SafeDatabase.
  * @tparam \c Value internal value type of the SafeDatabase.
+ *
+ * @warning while using this iterator a shared mutex is locked.
+ * This shared mutex works differently between Linux and Windows. In windows a unique lock call blocks every other
+ * future shared lock, and it keeps the mutex locked until the shared that have it release it.
+ * Thus, if using these iterators in a loop, be careful of setting end() (or stop condition variable) before the
+ * loop and not in every iteration.
  */
 template <typename Key, typename Value>
 class SafeDatabaseIterator : public std::map<Key, Value>::const_iterator
@@ -78,32 +84,50 @@ class SafeDatabase : public IModificableDatabase<Key, Value, SafeDatabaseIterato
 {
 public:
 
+    //! Override \c modify \c IDatabase method.
     bool add(
             Key&& key,
             Value&& value) override;
 
+    //! Override \c modify \c IDynamicDatabase method.
     bool modify(
             const Key& key,
             Value&& value) override;
 
+    //! Override \c add_or_modify \c IDynamicDatabase method.
+    bool add_or_modify(
+            Key&& key,
+            Value&& value) override;
+
+    //! Override \c erase \c IDynamicDatabase method.
     bool erase(
             const Key& key) override;
 
+    //! Override \c is \c IDatabase method.
     bool is(
             const Key& key) const override;
 
+    //! Override \c find \c IDatabase method.
     SafeDatabaseIterator<Key, Value> find(
             const Key& key) const override;
 
+    //! Override \c begin \c IDatabase method.
     SafeDatabaseIterator<Key, Value> begin() const override;
-    SafeDatabaseIterator<Key, Value> end() const override;
 
+    //! Override \c end \c IDatabase method.
+    SafeDatabaseIterator<Key, Value> end() const override;
 
     /**
      * @brief Add using copy semantics instead of movement.
      *
      * This is useful for those types that do not safe time moving (as native types) or when the scope of the variables
      * to add to the database do not allow movement (const values).
+     *
+     * @param key index or key for the new element
+     * @param value new value to store
+     *
+     * @return true if the element was correctly added.
+     * @return false if key is repeated.
      */
     bool add(
             const Key& key,
@@ -131,20 +155,7 @@ public:
     //! Number of keys stored.
     unsigned int size() const noexcept;
 
-    /**
-     * @brief Add a new value or modify an existent one with the new value.
-     *
-     * @param key key indexing the new or existent value.
-     * @param value new value to set.
-     *
-     * @return true if value has been added.
-     * @return false if value already exists, in this case the value is modified.
-     */
-    bool add_or_modify(
-            Key&& key,
-            Value&& value);
-
-    //! Add or modify using copy semantics instead of movement.
+    //! \c add_or_modify using copy semantics instead of movement.
     bool add_or_modify(
             const Key& key,
             const Value& value);

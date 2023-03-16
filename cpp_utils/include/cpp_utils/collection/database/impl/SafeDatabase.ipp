@@ -112,8 +112,6 @@ bool SafeDatabase<Key, Value>::add(
 }
 
 template <typename Key, typename Value>
-// template<typename V>
-// typename std::enable_if<std::is_copy_constructible<V>::value, Value>::type
 Value SafeDatabase<Key, Value>::at(
         const Key& key) const
 {

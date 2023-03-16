@@ -38,9 +38,14 @@ Timestamp now() noexcept
     return std::chrono::system_clock::now();
 }
 
-Timestamp the_end_of_times() noexcept
+Timestamp the_end_of_time() noexcept
 {
     return std::chrono::time_point<std::chrono::system_clock>::max();
+}
+
+Timestamp the_beginning_of_time() noexcept
+{
+    return std::chrono::time_point<std::chrono::system_clock>::min();
 }
 
 Timestamp date_to_timestamp(

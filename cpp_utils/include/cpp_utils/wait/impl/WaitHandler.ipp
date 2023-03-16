@@ -147,7 +147,7 @@ std::unique_lock<std::mutex> WaitHandler<T>::blocking_wait_(
     }
     else
     {
-        time_to_wait_until = utils::the_end_of_times();
+        time_to_wait_until = utils::the_end_of_time();
     }
 
     bool finished_for_condition_met = wait_condition_variable_.wait_until(

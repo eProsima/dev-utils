@@ -42,7 +42,10 @@ using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
 CPP_UTILS_DllAPI Timestamp now() noexcept;
 
 //! Returns the maximum time available for \c Timestamp
-CPP_UTILS_DllAPI Timestamp the_end_of_times() noexcept;
+CPP_UTILS_DllAPI Timestamp the_end_of_time() noexcept;
+
+//! Returns the minimum time available for \c Timestamp
+CPP_UTILS_DllAPI Timestamp the_beginning_of_time() noexcept;
 
 CPP_UTILS_DllAPI Timestamp date_to_timestamp(
         unsigned int year,

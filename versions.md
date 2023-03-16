@@ -7,6 +7,7 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 * New class **StdinEventHandler** to easily read from std::cin.
 * New class **CommandReader** to easily read from std::cin commands synchronously.
+* New class **SafeDatabase** to implement a thread safe map.
 
 ## Version 0.2.0
 

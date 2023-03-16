@@ -418,7 +418,7 @@ TEST(SafeDatabaseTest, modify)
  * - try erase an already erased value
  * - try erase a non existant value
  */
-TEST(SafeDatabaseTest, test_erase)
+TEST(SafeDatabaseTest, erase)
 {
     SafeDatabase<int, int> db;
 
@@ -530,10 +530,10 @@ TEST(SafeDatabaseTest, test_thread_safe)
         ASSERT_TRUE(db.is(i));
         ASSERT_EQ(db.at(i), i*1000);
 
-        int sum = 0;
+        int _ = 0;  // Unused variable
         for (const auto& it : db)
         {
-            sum += it.second;
+            _ += it.second;
         }
     };
 
@@ -837,7 +837,7 @@ TEST(SafeDatabaseTest, loop_while_deletion)
             // wait for access
             waiter_erase.wait();
 
-            // add a value to map
+            // remove a value from map
             db.erase(1);
         }
     );

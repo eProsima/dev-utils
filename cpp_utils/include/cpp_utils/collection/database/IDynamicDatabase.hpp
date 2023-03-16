@@ -21,12 +21,20 @@ namespace utils {
 
 /**
  * Database specialization that allow to register callbacks to get notified each time a new element is added.
+ *
+ * @todo it requires a way to unregister callbacks. This could be done by only accepting a callback (and then
+ * that callback could be to multiple other ones) or by setting an index for each callback (maybe a ptr is enough).
  */
 template <typename Key, typename Value, typename Iterator>
 class IDynamicDatabase : public IDatabase<Key, Value, Iterator>
 {
 public:
 
+    /**
+     * @brief Registering a callback to receive a notification every time a data is added to the database.
+     *
+     * @param callback function to call when value added.
+     */
     virtual void register_callback_add(void(const Key&, const Value&)&& callback) = 0;
 };
 

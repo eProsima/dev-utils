@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # Add test subdirectories
+add_subdirectory(collection)
 add_subdirectory(enum)
 add_subdirectory(event)
 add_subdirectory(exception)

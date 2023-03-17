@@ -12,18 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME CommandReaderTest)
+set(TEST_NAME SafeDatabaseTest)
 
 set(TEST_SOURCES
-        CommandReaderTest.cpp
+        SafeDatabaseTest.cpp
     )
-all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
-        trivial_create
-        read_lines_enum_1
-        read_lines_enum_1_negative
-        read_lines_enum_2_singleton
+        create
+        add
+        is
+        find
+        at
+        size
+        iterate
+        modify
+        erase
+        add_or_modify
+        test_thread_safe
+        test_custom_classes
+        test_unique_ptrs
+        loop_while_insertion
+        loop_while_deletion
+        parallel_loop
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -33,9 +44,8 @@ set(TEST_EXTRA_LIBRARIES
     )
 
 add_unittest_executable(
-    "${TEST_NAME}"
-    "${TEST_SOURCES}"
-    "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}"
-    "${TEST_NEEDED_SOURCES}"
-)
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )

@@ -28,12 +28,14 @@ class A
 {
 public:
 
-    A(int x)
+    A(
+            int x)
         : x_(x)
     {
     }
 
-    bool operator==(const A& other) const
+    bool operator ==(
+            const A& other) const
     {
         return this->get() == other.get();
     }
@@ -44,37 +46,46 @@ public:
     }
 
 private:
+
     int x_;
 };
 
 class Aplus5 : public A
 {
 public:
-    Aplus5(int x)
+
+    Aplus5(
+            int x)
         : A(x + 5)
     {
     }
+
 };
 
 class Aminus5 : public A
 {
 public:
-    Aminus5(int x)
+
+    Aminus5(
+            int x)
         : A(x - 5)
     {
     }
+
 };
 
 class Key
 {
 public:
 
-    Key(const char* name)
+    Key(
+            const char* name)
         : name_(name)
     {
     }
 
-    bool operator<(const Key& other) const
+    bool operator <(
+            const Key& other) const
     {
         return name_ < other.name();
     }
@@ -85,6 +96,7 @@ public:
     }
 
 private:
+
     std::string name_;
 };
 
@@ -92,19 +104,23 @@ class NonCopyable
 {
 public:
 
-    NonCopyable(const char* name)
+    NonCopyable(
+            const char* name)
         : name_(name)
     {
     }
 
-    NonCopyable(const NonCopyable&) = delete;
+    NonCopyable(
+            const NonCopyable&) = delete;
 
-    NonCopyable(NonCopyable&& other)
+    NonCopyable(
+            NonCopyable&& other)
         : name_(std::move(other.name_))
     {
     }
 
-    bool operator<(const NonCopyable& other) const
+    bool operator <(
+            const NonCopyable& other) const
     {
         return name_ < other.name();
     }
@@ -115,6 +131,7 @@ public:
     }
 
 private:
+
     std::string name_;
 };
 
@@ -312,7 +329,7 @@ TEST(SafeDatabaseTest, iterate)
     // iterate over an empty database by loop range
     {
         int count = 0;
-        for(const auto& v : db)
+        for (const auto& v : db)
         {
             count++;
             static_cast<void>(v);
@@ -323,7 +340,7 @@ TEST(SafeDatabaseTest, iterate)
     // iterate over an empty database by begin end loop
     {
         int count = 0;
-        for(auto it = db.begin(); it != db.end(); ++it)
+        for (auto it = db.begin(); it != db.end(); ++it)
         {
             count++;
             static_cast<void>(it);
@@ -341,7 +358,7 @@ TEST(SafeDatabaseTest, iterate)
         int count = 0;
         int key_sum = 0;
         int value_sum = 0;
-        for(const auto& v : db)
+        for (const auto& v : db)
         {
             count++;
             key_sum += v.first;
@@ -357,7 +374,7 @@ TEST(SafeDatabaseTest, iterate)
         int count = 0;
         int key_sum = 0;
         int value_sum = 0;
-        for(auto it = db.begin(); it != db.end(); ++it)
+        for (auto it = db.begin(); it != db.end(); ++it)
         {
             count++;
             key_sum += it->first;
@@ -525,25 +542,26 @@ TEST(SafeDatabaseTest, test_thread_safe)
 {
     SafeDatabase<int, int> db;
 
-    auto routine = [&db](int i){
-        ASSERT_TRUE(db.add(i, i*1000));
-        ASSERT_TRUE(db.is(i));
-        ASSERT_EQ(db.at(i), i*1000);
+    auto routine = [&db](int i)
+            {
+                ASSERT_TRUE(db.add(i, i * 1000));
+                ASSERT_TRUE(db.is(i));
+                ASSERT_EQ(db.at(i), i * 1000);
 
-        int _ = 0;  // Unused variable
-        for (const auto& it : db)
-        {
-            _ += it.second;
-        }
-    };
+                int _ = 0; // Unused variable
+                for (const auto& it : db)
+                {
+                    _ += it.second;
+                }
+            };
 
     std::vector<std::thread> threads(10);
-    for (int i=0; i<10; i++)
+    for (int i = 0; i < 10; i++)
     {
         threads[i] = std::thread(routine, i);
     }
 
-    for (int i=0; i<10; i++)
+    for (int i = 0; i < 10; i++)
     {
         threads[i].join();
     }
@@ -766,18 +784,20 @@ TEST(SafeDatabaseTest, loop_while_insertion)
 
     // thread A
     std::thread addition_test(
-        [&db, &waiter_add](){
+        [&db, &waiter_add]()
+        {
             // wait for access
             waiter_add.wait();
 
             // add a value to map
             db.add(5, 5000);
         }
-    );
+        );
 
     // thread B
     std::thread iteration_test(
-        [&db, &waiter_add](){
+        [&db, &waiter_add]()
+        {
 
             int sum_key = 0;
             int sum_value = 0;
@@ -805,7 +825,7 @@ TEST(SafeDatabaseTest, loop_while_insertion)
             ASSERT_EQ(sum_key, 10);
             ASSERT_EQ(sum_value, 10000);
         }
-    );
+        );
 
     addition_test.join();
     iteration_test.join();
@@ -833,18 +853,20 @@ TEST(SafeDatabaseTest, loop_while_deletion)
 
     // thread A
     std::thread erase_test(
-        [&db, &waiter_erase](){
+        [&db, &waiter_erase]()
+        {
             // wait for access
             waiter_erase.wait();
 
             // remove a value from map
             db.erase(1);
         }
-    );
+        );
 
     // thread B
     std::thread iteration_test(
-        [&db, &waiter_erase](){
+        [&db, &waiter_erase]()
+        {
 
             int sum_key = 0;
             int sum_value = 0;
@@ -872,7 +894,7 @@ TEST(SafeDatabaseTest, loop_while_deletion)
             ASSERT_EQ(sum_key, 10);
             ASSERT_EQ(sum_value, 10000);
         }
-    );
+        );
 
     erase_test.join();
     iteration_test.join();
@@ -911,7 +933,8 @@ TEST(SafeDatabaseTest, parallel_loop)
 
     // thread A
     std::thread iteration_test1(
-        [&db, &waiter_erase](){
+        [&db, &waiter_erase]()
+        {
             // wait for access
             waiter_erase.wait();
 
@@ -925,11 +948,12 @@ TEST(SafeDatabaseTest, parallel_loop)
                 sum_value += it.second;
             }
         }
-    );
+        );
 
     // thread B
     std::thread iteration_test2(
-        [&db, &waiter_erase](){
+        [&db, &waiter_erase]()
+        {
 
             int sum_key = 0;
             int sum_value = 0;
@@ -956,7 +980,7 @@ TEST(SafeDatabaseTest, parallel_loop)
             ASSERT_EQ(sum_key, 10);
             ASSERT_EQ(sum_value, 10000);
         }
-    );
+        );
 
     iteration_test1.join();
     iteration_test2.join();

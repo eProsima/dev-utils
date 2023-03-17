@@ -35,7 +35,7 @@ public:
      *
      * @param callback function to call when value added.
      */
-    virtual void register_callback_add(void(const Key&, const Value&)&& callback) = 0;
+    virtual void register_callback_add(void(const Key&, const Value&) && callback) = 0;
 };
 
 } /* namespace utils */

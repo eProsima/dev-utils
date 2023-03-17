@@ -24,7 +24,8 @@ namespace utils {
  * modified or removed.
  */
 template <typename Key, typename Value, typename Iterator>
-class IDynamicModificableDatabase : public IModificableDatabase<Key, Value, Iterator>,  public IDynamicDatabase<Key, Value, Iterator>
+class IDynamicModificableDatabase : public IModificableDatabase<Key, Value, Iterator>,  public IDynamicDatabase<Key,
+            Value, Iterator>
 {
 public:
 
@@ -33,14 +34,14 @@ public:
      *
      * @param callback function to call when value modified.
      */
-    virtual void register_callback_modify(void(const Key&, const Value&)&& callback) = 0;
+    virtual void register_callback_modify(void(const Key&, const Value&) && callback) = 0;
 
     /**
      * @brief Registering a callback to receive a notification every time a data is removed from the database.
      *
      * @param callback function to call when value removed.
      */
-    virtual void register_callback_remove(void(const Key&, const Value&)&& callback) = 0;
+    virtual void register_callback_remove(void(const Key&, const Value&) && callback) = 0;
 
 };
 

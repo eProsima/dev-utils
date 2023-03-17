@@ -910,7 +910,7 @@ TEST(SafeDatabaseTest, parallel_loop)
     db.add(4, 4000);
 
     // thread A
-    std::thread erase_test(
+    std::thread iteration_test1(
         [&db, &waiter_erase](){
             // wait for access
             waiter_erase.wait();
@@ -928,7 +928,7 @@ TEST(SafeDatabaseTest, parallel_loop)
     );
 
     // thread B
-    std::thread iteration_test(
+    std::thread iteration_test2(
         [&db, &waiter_erase](){
 
             int sum_key = 0;
@@ -958,8 +958,8 @@ TEST(SafeDatabaseTest, parallel_loop)
         }
     );
 
-    erase_test.join();
-    iteration_test.join();
+    iteration_test1.join();
+    iteration_test2.join();
 }
 
 int main(

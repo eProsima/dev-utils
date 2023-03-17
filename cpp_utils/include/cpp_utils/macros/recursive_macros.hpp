@@ -34,7 +34,8 @@ namespace utils {
  *
  * @note This macro is used in \c COUNT_ARGUMENT macro.
  */
-#define _TWENTIETH_ARGUMENT(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, ...) \
+#define _TWENTIETH_ARGUMENT(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, \
+            ...) \
     a20
 
 /**
@@ -96,11 +97,13 @@ namespace utils {
  *
  * @note this is useful for \c APPLY_MACRO_FOR_EACH macro.
  */
-#define _GET_EIGHTEENTH_ARGUMENT(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, NAME, ...) \
+#define _GET_EIGHTEENTH_ARGUMENT(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, NAME, \
+            ...) \
     NAME
 
 #define _APPLY_MACRO_FOR_EACH__UP_TO_EIGHTEEN(action, ...) \
-    _GET_EIGHTEENTH_ARGUMENT(__VA_ARGS__, _FE_18, _FE_17, _FE_16, _FE_15, _FE_14, _FE_13, _FE_12, _FE_11, _FE_10, _FE_9, _FE_8, _FE_7, _FE_6, _FE_5, _FE_4, _FE_3, _FE_2, _FE_1)(action, __VA_ARGS__)
+    _GET_EIGHTEENTH_ARGUMENT(__VA_ARGS__, _FE_18, _FE_17, _FE_16, _FE_15, _FE_14, _FE_13, _FE_12, _FE_11, _FE_10, _FE_9, \
+            _FE_8, _FE_7, _FE_6, _FE_5, _FE_4, _FE_3, _FE_2, _FE_1)(action, __VA_ARGS__)
 
 /**
  * @brief Execute \c action (must be a macro) for every argument after it.

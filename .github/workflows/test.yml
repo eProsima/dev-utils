@@ -449,8 +449,6 @@ jobs:
 # FLAKY TEST
   flaky-test:
     runs-on: ubuntu-20.04
-    environment:
-      name: codecov
 
     steps:
       - name: Sync eProsima/dev-utils repository

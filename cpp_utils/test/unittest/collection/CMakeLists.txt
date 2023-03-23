@@ -12,30 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME CommandReaderTest)
-
-set(TEST_SOURCES
-        CommandReaderTest.cpp
-    )
-all_library_sources("${TEST_SOURCES}")
-
-set(TEST_LIST
-        trivial_create
-        read_lines_enum_1
-        read_lines_enum_1_negative
-        read_lines_enum_2_singleton
-    )
-
-set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
-        cpp_utils
-    )
-
-add_unittest_executable(
-    "${TEST_NAME}"
-    "${TEST_SOURCES}"
-    "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}"
-    "${TEST_NEEDED_SOURCES}"
-)
+# Add test subdirectories
+add_subdirectory(database)

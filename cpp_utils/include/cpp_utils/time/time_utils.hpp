@@ -77,5 +77,9 @@ CPP_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
 CPP_UTILS_DllAPI void sleep_for(
         const Duration_ms& sleep_time) noexcept;
 
+CPP_UTILS_DllAPI Timestamp seconds_to_timestamp(unsigned int seconds);
+
+CPP_UTILS_DllAPI Timestamp microseconds_to_timestamp(unsigned long microseconds);
+
 } /* namespace utils */
 } /* namespace eprosima */

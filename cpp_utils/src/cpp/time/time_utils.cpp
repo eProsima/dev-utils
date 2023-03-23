@@ -111,5 +111,15 @@ void sleep_for(
     std::this_thread::sleep_for(duration_to_ms(sleep_time));
 }
 
+Timestamp seconds_to_timestamp(unsigned int seconds)
+{
+    return std::chrono::time_point<std::chrono::system_clock>(std::chrono::seconds(seconds));
+}
+
+Timestamp microseconds_to_timestamp(unsigned long microseconds)
+{
+    return std::chrono::time_point<std::chrono::system_clock>(std::chrono::microseconds(microseconds));
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

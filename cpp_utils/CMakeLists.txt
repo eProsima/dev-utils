@@ -17,6 +17,14 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.5)
 
+message(STATUS "CMAKE_SIZEOF_VOID_P <${CMAKE_SIZEOF_VOID_P}>")
+
+if (NOT {CMAKE_SIZEOF_VOID_P})
+    set(CMAKE_SIZEOF_VOID_P 8)
+endif()
+
+message(STATUS "after setting CMAKE_SIZEOF_VOID_P <${CMAKE_SIZEOF_VOID_P}>")
+
 ###############################################################################
 # Find package cmake_utils
 ###############################################################################
@@ -31,6 +39,8 @@ find_package(cmake_utils REQUIRED)
 # - Read version
 # - Set installation paths
 configure_project()
+
+message(STATUS "after project CMAKE_SIZEOF_VOID_P <${CMAKE_SIZEOF_VOID_P}>")
 
 # Call explictly project
 project(

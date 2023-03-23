@@ -18,6 +18,8 @@
 cmake_minimum_required(VERSION 3.5)
 cmake_policy(VERSION 3.5...3.13)
 
+message(STATUS "CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P}")
+
 ###############################################################################
 # Project
 ###############################################################################
@@ -41,6 +43,8 @@ project(${MODULE_NAME}
         DESCRIPTION
             ${MODULE_DESCRIPTION}
     )
+
+message(STATUS "after project CMAKE_SIZEOF_VOID_P <${CMAKE_SIZEOF_VOID_P}>")
 
 ###############################################################################
 # Install cmake files
@@ -112,3 +116,5 @@ install(
         DESTINATION
             ${MODULE_DATA_INSTALL_DIR}/${PROJECT_NAME}/cmake
     )
+
+message(STATUS "CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P}")

@@ -45,10 +45,20 @@ bool CommandReader<CommandEnum>::read_next_command(
     std::string full_command = commands_read_.consume();
 
     // Divide command
-    command.arguments = utils::split_string(full_command, " ");
+    return parse_as_command(
+        utils::split_string(full_command, " "),
+        command
+    );
+}
 
+template <typename CommandEnum>
+bool CommandReader<CommandEnum>::parse_as_command(
+        std::vector<std::string>&& args,
+        Command<CommandEnum>& command)
+{
+    // Set args in command, and the enum value will be set string_to_enumeration
+    command.arguments = std::move(args);
     // Check if command exists
-    // The args are already set in command, and the enum value will be set string_to_enumeration
     return builder_.string_to_enumeration(command.arguments[0], command.command);
 }
 
@@ -61,6 +71,17 @@ void CommandReader<CommandEnum>::read_command_callback_(
 
 } /* namespace utils */
 } /* namespace eprosima */
+
+template <typename T>
+std::ostream& operator <<(
+        std::ostream& os,
+        const eprosima::utils::Command<T>& obj)
+{
+    os << "{" << obj.command << " ";
+    container_to_stream(os, obj.arguments);
+    os << "}";
+    return os;
+}
 
 // Include implementation template file
 #include <cpp_utils/user_interface/impl/CommandReader.ipp>

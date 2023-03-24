@@ -84,6 +84,10 @@ public:
     bool read_next_command(
             Command<CommandEnum>& command);
 
+    bool parse_as_command(
+            std::vector<std::string>&& args,
+            Command<CommandEnum>& command);
+
 protected:
 
     /**
@@ -112,6 +116,12 @@ protected:
 
 } /* namespace utils */
 } /* namespace eprosima */
+
+//! \c Command to stream serializator
+template <typename T>
+CPP_UTILS_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const eprosima::utils::Command<T>& obj);
 
 // Include implementation template file
 #include <cpp_utils/user_interface/impl/CommandReader.ipp>

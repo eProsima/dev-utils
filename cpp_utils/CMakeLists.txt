@@ -17,14 +17,8 @@
 ###############################################################################
 cmake_minimum_required(VERSION 3.5)
 
-# TODO this should not be done as it is not portable to other architectures
-# However, this is required as this variable is not set until project() is called.
-# In the future configure_project() must change to be called after project() and we must refactor
-# the repositories using cmake_utils so they call project() BEFORE find_package().
-# Thus this is work for future annapurna team.
-if (NOT CMAKE_SIZEOF_VOID_P)
-    set(CMAKE_SIZEOF_VOID_P 8)
-endif()
+# Done this to set machine architecture and be able to call cmake_utils
+enable_language(CXX)
 
 ###############################################################################
 # Find package cmake_utils

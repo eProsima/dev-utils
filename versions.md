@@ -3,11 +3,15 @@
 This file includes the released versions of **dev-utils** project along with their contributions to the project.
 The *Forthcoming* section includes those features added in `main` branch that are not yet in a stable release.
 
-## Forthcoming
+## Version 0.3.0
 
-* New class **StdinEventHandler** to easily read from std::cin.
-* New class **CommandReader** to easily read from std::cin commands synchronously.
-* New class **SafeDatabase** to implement a thread safe map.
+* New event class **StdinEventHandler** to easily read from std::cin.
+* New event class **CommandReader** to easily read from std::cin commands synchronously.
+* New contariner class **SafeDatabase** to implement a thread safe map.
+* New contariner class **Tree** to implement a thread safe map.
+* Extend **enumeration builder**.
+* Extend **iterative macros** max range.
+* Add some utils functions.
 
 ## Version 0.2.0
 

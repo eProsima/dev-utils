@@ -18,7 +18,7 @@
  * This file contains class TaskId implementation.
  */
 
-#include <random>
+#include <atomic>
 
 #include <cpp_utils/thread_pool/task/TaskId.hpp>
 
@@ -27,7 +27,8 @@ namespace utils {
 
 TaskId new_unique_task_id()
 {
-    return static_cast<TaskId>(std::rand());
+    static std::atomic<TaskId> unique_task_id_{0};
+    return unique_task_id_++;
 }
 
 } /* namespace utils */

@@ -46,7 +46,7 @@ public:
      * @param opened whether the object starts opened or closed
      * @param enabled whether the object starts enabled or disabled
      */
-    BooleanWaitHandler(
+    CPP_UTILS_DllAPI BooleanWaitHandler(
             bool opened = false,
             bool enabled = true);
 

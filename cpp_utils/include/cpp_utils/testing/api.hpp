@@ -12,18 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cpp_utils/macros/macros.hpp>
-#include <cpp_utils/macros/custom_enumeration.hpp>
-#include <cpp_utils/enum/EnumBuilder.hpp>
-#include <cpp_utils/types/Singleton.hpp>
-#include <cpp_utils/wait/BooleanWaitHandler.hpp>
-#include <cpp_utils/testing/api.hpp>
+#pragma once
 
-int main(
+#include <cpp_utils/library/library_dll.h>
 
-        int,
-        char**)
+namespace eprosima {
+namespace utils {
+namespace testing {
+
+/**
+ * TODO remove
+ */
+class TmpApi
 {
-    // Do nothing
-    return 0;
-}
+public:
+
+    // CPP_UTILS_DllAPI
+    TmpApi ();
+
+};
+
+} /* namespace testing */
+} /* namespace utils */
+} /* namespace eprosima */

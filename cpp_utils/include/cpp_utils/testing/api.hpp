@@ -29,7 +29,7 @@ class TmpApi
 {
 public:
 
-    // CPP_UTILS_DllAPI
+    CPP_UTILS_DllAPI
     // This should fail in windows due to not linkage (0x000c35)
     TmpApi ();
 
@@ -59,6 +59,7 @@ void print_something(
 
 // This should not fail
 template <>
+CPP_UTILS_DllAPI
 void print_something(
         const std::string& value);
 

@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include utils for this specific test
-include_directories("TestUtils")
+set(TEST_NAME apiTest)
 
-# Add subdirectory with tests
-add_subdirectory(api)
-add_subdirectory(unittest)
+set(TEST_SOURCES
+        apiTest.cpp
+    )
+
+set(TEST_LIST
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        cpp_utils
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        ""                          # ${TEST_LIST}
+        "${TEST_EXTRA_LIBRARIES}"
+    )

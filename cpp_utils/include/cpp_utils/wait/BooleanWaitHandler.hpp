@@ -46,7 +46,7 @@ public:
      * @param opened whether the object starts opened or closed
      * @param enabled whether the object starts enabled or disabled
      */
-    CPP_UTILS_DllAPI BooleanWaitHandler(
+    BooleanWaitHandler(
             bool opened = false,
             bool enabled = true);
 
@@ -93,5 +93,3 @@ public:
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

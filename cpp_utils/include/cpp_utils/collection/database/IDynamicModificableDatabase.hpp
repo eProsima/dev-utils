@@ -29,19 +29,22 @@ class IDynamicModificableDatabase : public IModificableDatabase<Key, Value, Iter
 {
 public:
 
+    using ModifyCallbackType = std::function<void(const Key&, const Value&)>;
+    using RemoveCallbackType = std::function<void(const Key&, const Value&)>;
+
     /**
      * @brief Registering a callback to receive a notification every time a data is modified in the database.
      *
      * @param callback function to call when value modified.
      */
-    virtual void register_callback_modify(void(const Key&, const Value&) && callback) = 0;
+    virtual void register_callback_modify(ModifyCallbackType&& callback) = 0;
 
     /**
      * @brief Registering a callback to receive a notification every time a data is removed from the database.
      *
      * @param callback function to call when value removed.
      */
-    virtual void register_callback_remove(void(const Key&, const Value&) && callback) = 0;
+    virtual void register_callback_remove(RemoveCallbackType&& callback) = 0;
 
 };
 

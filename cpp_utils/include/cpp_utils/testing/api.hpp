@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <cpp_utils/library/library_dll.h>
 
 namespace eprosima {
@@ -28,9 +30,37 @@ class TmpApi
 public:
 
     // CPP_UTILS_DllAPI
+    // This should fail in windows due to not linkage (0x000c35)
     TmpApi ();
 
 };
+
+/**
+ * TODO remove
+ */
+class TmpApi2
+{
+public:
+
+    // This should not fail
+    CPP_UTILS_DllAPI
+    TmpApi2 ();
+
+};
+
+template <typename T>
+void print_something(
+        const T& value);
+
+// This should fail
+template <>
+void print_something(
+        const int& value);
+
+// This should not fail
+template <>
+void print_something(
+        const std::string& value);
 
 } /* namespace testing */
 } /* namespace utils */

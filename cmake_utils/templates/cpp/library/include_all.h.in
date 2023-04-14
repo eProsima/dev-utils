@@ -12,13 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cpp_utils/library/cpp_utils.h>
+#ifndef _EPROSIMA_INCLUDE_ALL_@MODULE_MACRO@_H_
+#define _EPROSIMA_INCLUDE_ALL_@MODULE_MACRO@_H_
 
-int main(
-
-        int,
-        char**)
-{
-    // Do nothing
-    return 0;
-}
+@ALL_INCLUDES_WITH_MACRO@
+#endif // _EPROSIMA_INCLUDE_ALL_@MODULE_MACRO@_H_

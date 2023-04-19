@@ -15,6 +15,8 @@
 # Include utils for this specific test
 include_directories("TestUtils")
 
+# Add API test
+add_api_test()
+
 # Add subdirectory with tests
-add_subdirectory(api)
 add_subdirectory(unittest)

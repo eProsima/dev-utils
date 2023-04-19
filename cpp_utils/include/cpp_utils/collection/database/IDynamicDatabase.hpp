@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <functional>
+
 #include <cpp_utils/collection/database/IDatabase.hpp>
 
 namespace eprosima {
@@ -30,12 +32,14 @@ class IDynamicDatabase : public IDatabase<Key, Value, Iterator>
 {
 public:
 
+    using AddCallbackType = std::function<void(const Key&, const Value&)>;
+
     /**
      * @brief Registering a callback to receive a notification every time a data is added to the database.
      *
      * @param callback function to call when value added.
      */
-    virtual void register_callback_add(void(const Key&, const Value&) && callback) = 0;
+    virtual void register_callback_add(AddCallbackType&& callback) = 0;
 };
 
 } /* namespace utils */

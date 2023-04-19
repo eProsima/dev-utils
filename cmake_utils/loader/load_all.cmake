@@ -44,3 +44,4 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${cmake_utils_DATA_DIR}/cmake_utils/m
 # Path to the templates for Config.cmake files
 set(cmake_utils_CONFIG_TEMPLATES_PATH "${cmake_utils_DATA_DIR}/cmake_utils/templates/cmake/packaging")
 set(cmake_utils_LIBRARY_HEADERS_TEMPLATES_PATH "${cmake_utils_DATA_DIR}/cmake_utils/templates/cpp/library")
+set(cmake_utils_CPP_TEMPLATES_PATH "${cmake_utils_DATA_DIR}/cmake_utils/templates/cpp")

@@ -93,5 +93,3 @@ public:
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-
-

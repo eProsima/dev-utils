@@ -59,6 +59,53 @@ on:
 
 jobs:
 
+
+#####################################################################
+# TODO-REMOVE test API test in windows with colcon
+
+  multiplatform-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake_build_type:
+          - Release
+          - Debug
+        os:
+          - windows-2019
+          - windows-2022
+
+    steps:
+
+      - name: Sync repository
+        uses: actions/checkout@v3
+        with:
+          path: ${{ github.workspace }}/src
+
+      - name: Install Fast DDS dependencies
+        uses: jparisu/eProsima-CI/multiplatform/install_fast_dependencies@feature/annapurna-workflows
+        with:
+          cmake_build_type: ${{ matrix.cmake_build_type }}
+
+      - name: Get fastdds artifact
+        uses: jparisu/eProsima-CI/multiplatform/download_dependency@feature/annapurna-workflows
+        with:
+          artifact_name: built_fastdds_${{ matrix.os }}_${{ matrix.cmake_build_type }}_nightly
+          workflow_source: build_fastdds.yml
+          target_workspace: install
+          workflow_source_repository: jparisu/eProsima-CI
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/multiplatform/colcon_build_test@feature/annapurna-workflows
+        with:
+          packages_names: cpp_utils
+          cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
+          workspace_dependencies: ${{ github.workspace }}/install
+          ctest_args: --label-exclude "xfail"
+          colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+
+
 ###########################################################
 # COVERAGE TEST
   coverage-test:

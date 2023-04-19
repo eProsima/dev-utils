@@ -74,6 +74,20 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
             ${cmake_utils_LIBRARY_HEADERS_TEMPLATES_PATH}/eProsima_auto_link.h.in
             ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/eProsima_auto_link.h)
 
+        # Configure the include_all.h file
+        all_library_public_headers()
+        message(STATUS "all_library_public_headers set <${ALL_LIBRARY_PUBLIC_HEADERS_RESULT}>")
+
+        set(ALL_INCLUDES_WITH_MACRO "")
+        foreach(HEADER_FILE ${ALL_LIBRARY_PUBLIC_HEADERS_RESULT})
+            set(INCLUDE_LINE "#include <${HEADER_FILE}>\n")  # "#include <" string
+            set(ALL_INCLUDES_WITH_MACRO "${ALL_INCLUDES_WITH_MACRO}${INCLUDE_LINE}")
+        endforeach()
+
+        configure_file(
+            ${cmake_utils_LIBRARY_HEADERS_TEMPLATES_PATH}/include_all.h.in
+            ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/${MODULE_NAME}.h)
+
         # Create library
         add_library(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
         set_target_properties(${MODULE_NAME} PROPERTIES VERSION ${MODULE_VERSION})
@@ -173,6 +187,7 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
                 ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/config.h
                 ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/eProsima_auto_link.h
                 ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/library_dll.h
+                ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/${MODULE_NAME}.h
             DESTINATION
                 ${INCLUDE_INSTALL_DIR}/${MODULE_NAME}/library
             COMPONENT headers

@@ -46,3 +46,21 @@ function(all_header_sources TEST_SOURCES)
     set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
 
 endfunction()
+
+# Generate an API test with an "include_all" file
+# Arguments:
+function(add_api_test)
+
+    # Configure template file with test
+    configure_file(
+        ${cmake_utils_CPP_TEMPLATES_PATH}/test/api_test.cpp.in
+        ${PROJECT_BINARY_DIR}/test/api/api_test.cpp)
+
+    add_unittest_executable(
+            "api_test"                                      # TEST_NAME
+            "${PROJECT_BINARY_DIR}/test/api/api_test.cpp"   # TEST_SOURCES
+            ""                                              # TEST_LIST
+            "${PROJECT_NAME}"                               # TEST_EXTRA_LIBRARIES
+        )
+
+endfunction()

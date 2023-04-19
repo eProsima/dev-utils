@@ -12,22 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME apiTest)
+# set(TEST_NAME apiTest)
 
-set(TEST_SOURCES
-        apiTest.cpp
-    )
+# set(TEST_SOURCES
+#         apiTest.cpp
+#     )
 
-set(TEST_LIST
-    )
+# set(TEST_LIST
+#     )
 
-set(TEST_EXTRA_LIBRARIES
-        cpp_utils
-    )
+# set(TEST_EXTRA_LIBRARIES
+#         cpp_utils
+#     )
 
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        ""                          # ${TEST_LIST}
-        "${TEST_EXTRA_LIBRARIES}"
-    )
+# add_unittest_executable(
+#         "${TEST_NAME}"
+#         "${TEST_SOURCES}"
+#         ""                          # ${TEST_LIST}
+#         "${TEST_EXTRA_LIBRARIES}"
+#     )
+
+# Add API test
+add_api_test()

@@ -68,12 +68,21 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
             if(TEST_FRIENDLY_PATH)
                 set_tests_properties(${TEST_NAME}.${test_name} PROPERTIES ENVIRONMENT "PATH=${TEST_FRIENDLY_PATH}")
             endif(TEST_FRIENDLY_PATH)
+
+            # Add labels to tests
+            set_test_labels(${TEST_NAME}.${test_name})
+
         endforeach()
     else()
+
         # If no tests are provided, create a single test
         message(STATUS "Creating general test ${TEST_NAME}.")
         add_test(NAME ${TEST_NAME}
             COMMAND ${TEST_EXECUTABLE_NAME})
+
+        # Add labels to tests
+        set_test_labels(${TEST_NAME})
+
     endif( TEST_LIST )
 
     target_compile_definitions(${TEST_EXECUTABLE_NAME}
@@ -86,6 +95,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
             ${CMAKE_CURRENT_BINARY_DIR}/${NEEDED_SOURCE}
             COPYONLY)
     endforeach()
+
 
 endfunction(add_test_executable)
 

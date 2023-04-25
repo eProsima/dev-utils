@@ -1,4 +1,0 @@
-SignalEventHandlerTest.receive_signal_trivial
-SignalEventHandlerTest.receive_signal
-SignalEventHandlerTest.receive_n_signals
-SignalEventHandlerTest.erase_callback_while_other_handling

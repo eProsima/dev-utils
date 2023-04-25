@@ -75,6 +75,7 @@ macro(check_gmock)
     endif()
 endmacro()
 
+# TODO remove when possible in favor of test_utils.cmake::add_test_label
 macro(add_xfail_label LIST_FILE)
     if(EXISTS ${LIST_FILE})
         file(STRINGS ${LIST_FILE} TEST_LIST)
@@ -98,4 +99,3 @@ macro(add_xtsan_label LIST_FILE)
         endforeach()
     endif()
 endmacro()
-

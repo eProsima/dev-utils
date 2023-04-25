@@ -83,7 +83,3 @@ add_unittest_executable(
         "${TEST_EXTRA_LIBRARIES}"
         "${TEST_NEEDED_SOURCES}"
     )
-
-# These tests check random behaviours, thys some of them could eventually fail
-# Set flaky tests as xfail
-add_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)

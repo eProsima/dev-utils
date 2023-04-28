@@ -78,6 +78,18 @@ T ConsumerWaitHandler<T>::consume(
     }
 }
 
+template <typename T>
+AwakeReason ConsumerWaitHandler<T>::wait_all_consumed(
+        const utils::Duration_ms& timeout /* = 0 */)
+{
+    return wait(
+        std::function<bool(const CounterType&)>([](const CounterType& value)
+        {
+            return value == 0;
+        }),
+        timeout);
+}
+
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */

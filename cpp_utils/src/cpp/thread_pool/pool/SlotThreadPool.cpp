@@ -114,6 +114,12 @@ void SlotThreadPool::slot(
     }
 }
 
+utils::event::AwakeReason SlotThreadPool::wait_all_consumed(
+        const utils::Duration_ms& timeout /* = 0 */)
+{
+    return task_queue_.wait_all_consumed(timeout);
+}
+
 void SlotThreadPool::thread_routine_()
 {
     logDebug(UTILS_THREAD_POOL, "Starting thread routine: " << std::this_thread::get_id() << ".");

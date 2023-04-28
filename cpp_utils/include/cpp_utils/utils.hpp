@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <map>
 #include <memory>
 #include <set>
 #include <sstream>
@@ -272,6 +273,11 @@ CPP_UTILS_DllAPI
 std::vector<std::string> split_string(
         const std::string& source,
         const std::string& delimiter);
+
+CPP_UTILS_DllAPI
+template <typename Key, typename Value>
+std::set<Key> get_keys(
+        const std::map<Key, Value>& map);
 
 } /* namespace utils */
 } /* namespace eprosima */

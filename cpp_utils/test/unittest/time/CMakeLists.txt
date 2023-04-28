@@ -29,8 +29,8 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        timestamp_to_string
-        timestamp_to_string_local
+        timestamp_to_string_to_timestamp
+        timestamp_to_string_to_timestamp_local
         timestamp_to_string_format
     )
 

@@ -24,6 +24,7 @@
 #include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/exception/PreconditionNotMet.hpp>
+#include <cpp_utils/Log.hpp>
 
 // These functions has different names in windows
 #if _EPROSIMA_WINDOWS_PLATFORM
@@ -68,6 +69,26 @@ Timestamp date_to_timestamp(
     return std::chrono::system_clock::from_time_t(timegm(&tm));
 }
 
+Timestamp time_to_timestamp(
+        unsigned int hour /* = 0 */,
+        unsigned int minute /* = 0 */,
+        unsigned int second /* = 0 */)
+{
+    std::tm tm;
+
+    // Initialise with current timestamp to set date
+    auto current_ts = now();
+    std::chrono::high_resolution_clock::time_point::duration duration = current_ts.time_since_epoch();
+    time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+    tm = *std::gmtime(&duration_seconds);
+
+    tm.tm_sec = static_cast<int>(second);
+    tm.tm_min = static_cast<int>(minute);
+    tm.tm_hour = static_cast<int>(hour);
+
+    return std::chrono::system_clock::from_time_t(timegm(&tm));
+}
+
 std::string timestamp_to_string(
         const Timestamp& timestamp,
         const std::string& format /* = "%Z_%Y-%m-%d_%H-%M-%S" */,
@@ -97,6 +118,42 @@ std::string timestamp_to_string(
         throw PreconditionNotMet(STR_ENTRY << "Format <" << format << "> to convert Timestamp to string is incorrect.");
     }
     return ss.str();
+}
+
+Timestamp string_to_timestamp(
+        const std::string& timestamp,
+        const std::string& format /* = "%Z_%Y-%m-%d_%H-%M-%S" */,
+        bool local_time /* = false */)
+{
+    std::istringstream ss(timestamp);
+    std::tm tm{};
+    ss >> std::get_time(&tm, format.c_str());
+    if (ss.fail())
+    {
+        throw PreconditionNotMet(
+                  STR_ENTRY << "Format <" << format << "> to convert string to Timestamp is not valid for timestamp " << timestamp <<
+                      ".");
+    }
+
+    std::time_t utc_time;
+    if (local_time)
+    {
+        // Attempt to automatically determine if DST in effect
+        tm.tm_isdst = -1;
+        // WARNING: might not be available in all systems, mktime sets this value to 0/1 if succesfully found this info
+        utc_time = std::mktime(&tm);
+        if (tm.tm_isdst < 0)
+        {
+            logWarning(
+                UTILS_TIME,
+                "DST information could not be found in the system, converted timestamp might be an hour off.");
+        }
+    }
+    else
+    {
+        utc_time = timegm(&tm);
+    }
+    return std::chrono::system_clock::from_time_t(utc_time);
 }
 
 std::chrono::milliseconds duration_to_ms(

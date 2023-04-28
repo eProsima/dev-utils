@@ -47,10 +47,17 @@ CPP_UTILS_DllAPI Timestamp the_end_of_time() noexcept;
 //! Returns the minimum time available for \c Timestamp
 CPP_UTILS_DllAPI Timestamp the_beginning_of_time() noexcept;
 
+//! Construct a \c Timestamp given a date and time.
 CPP_UTILS_DllAPI Timestamp date_to_timestamp(
         unsigned int year,
         unsigned int month,
         unsigned int day,
+        unsigned int hour = 0,
+        unsigned int minute = 0,
+        unsigned int second = 0);
+
+//! Construct a \c Timestamp given a time (uses current date).
+CPP_UTILS_DllAPI Timestamp time_to_timestamp(
         unsigned int hour = 0,
         unsigned int minute = 0,
         unsigned int second = 0);
@@ -68,6 +75,20 @@ CPP_UTILS_DllAPI Timestamp date_to_timestamp(
  */
 CPP_UTILS_DllAPI std::string timestamp_to_string(
         const Timestamp& timestamp,
+        const std::string& format = "%Y-%m-%d_%H-%M-%S",
+        bool local_time = false);
+
+/**
+ * @brief Convert to \c Timestamp a string following a specific format.
+ *
+ * @param timestamp string to parse.
+ * @param format string formatting the date.
+ * @param local_time whether to use the local time zone or UTC.
+ *
+ * @return timestamp from the string in the format given
+ */
+CPP_UTILS_DllAPI Timestamp string_to_timestamp(
+        const std::string& timestamp,
         const std::string& format = "%Y-%m-%d_%H-%M-%S",
         bool local_time = false);
 

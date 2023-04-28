@@ -12,31 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME SignalEventHandlerTest)
+# Set list of tests that can fail
+set_test_label_file(${CMAKE_CURRENT_SOURCE_DIR}/XFAIL.list "xfail")
+# Set list of tests that can fail using TSAN
+set_test_label_file(${CMAKE_CURRENT_SOURCE_DIR}/XTSAN.list "xtsan")
 
-set(TEST_SOURCES
-        SignalEventHandlerTest.cpp
-    )
-all_library_sources("${TEST_SOURCES}")
-
-set(TEST_LIST
-        create_signal_handler
-        create_several_signal_handlers
-        receive_signal_trivial
-        receive_signal
-        receive_n_signals
-        erase_callback_while_other_handling
-    )
-
-set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
-        cpp_utils
-    )
-
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-    )
+# Set list of tests that can fail in windows
+if (WIN32)
+    set_test_label_file(${CMAKE_CURRENT_SOURCE_DIR}/WINDOWS_TEST_XFAIL.list "xfail")
+endif()

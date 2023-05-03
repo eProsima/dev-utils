@@ -274,8 +274,8 @@ std::vector<std::string> split_string(
         const std::string& source,
         const std::string& delimiter);
 
-CPP_UTILS_DllAPI
 template <typename Key, typename Value>
+CPP_UTILS_DllAPI
 std::set<Key> get_keys(
         const std::map<Key, Value>& map);
 

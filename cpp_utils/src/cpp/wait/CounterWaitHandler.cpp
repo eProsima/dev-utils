@@ -91,6 +91,12 @@ void CounterWaitHandler::decrease_1_nts_()
     {
         wait_condition_variable_.notify_one();
     }
+    // If the threshold is reached, notify everyone
+    // This event must be notified as, for example, a ConsumerWaitHandler may be waiting for all data to be consumed
+    else if (value_ == threshold_)
+    {
+        wait_condition_variable_.notify_all();
+    }
 }
 
 } /* namespace event */

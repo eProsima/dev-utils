@@ -9,7 +9,9 @@ long_description = description
 
 file_packages = [
     package_name,
-    package_name + '/wait'
+    package_name + '/debugging',
+    package_name + '/time',
+    package_name + '/wait',
 ]
 
 setup(

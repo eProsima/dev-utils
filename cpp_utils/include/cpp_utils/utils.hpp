@@ -274,6 +274,15 @@ std::vector<std::string> split_string(
         const std::string& source,
         const std::string& delimiter);
 
+/**
+ * @brief Get std::map keys.
+ *
+ * Obtain the set of keys relative to a std::map.
+ *
+ * @param map [in] map whose keys are returned
+ *
+ * @return map keys
+ */
 template <typename Key, typename Value>
 CPP_UTILS_DllAPI
 std::set<Key> get_keys(

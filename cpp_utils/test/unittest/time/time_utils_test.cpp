@@ -25,14 +25,16 @@
 using namespace eprosima::utils;
 
 /**
- * Test function timestamp_to_string with a time stamp.
+ * Test function timestamp_to_string with a time stamp, as well the inverse conversion string_to_timestamp.
  *
  * CASES:
  * - now
+ * - now with alternative format
  * - old time
  * - future time
+ * - some time today
  */
-TEST(time_utils_test, timestamp_to_string)
+TEST(time_utils_test, timestamp_to_string_to_timestamp)
 {
     // now
     {
@@ -51,7 +53,40 @@ TEST(time_utils_test, timestamp_to_string)
             << "-" << number_trailing_zeros_format(local_tm.tm_min, 2)
             << "-" << number_trailing_zeros_format(local_tm.tm_sec, 2);
 
+        // Test timestamp_to_string
         ASSERT_EQ(now_time_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp now_time_from_str = string_to_timestamp(now_time_str);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(now_time_from_str), expected_string_os.str());
+    }
+
+    // now with alternative format
+    {
+        Timestamp now_time = now();
+        std::string format = "%S-%M-%H___%d-%m-%Y";
+        std::string now_time_str = timestamp_to_string(now_time, format);
+
+        time_t time = std::chrono::system_clock::to_time_t(now_time);
+        std::tm local_tm = *gmtime(&time);
+
+        std::ostringstream expected_string_os;
+        expected_string_os
+            << number_trailing_zeros_format(local_tm.tm_sec, 2)
+            << "-" << number_trailing_zeros_format(local_tm.tm_min, 2)
+            << "-" << number_trailing_zeros_format(local_tm.tm_hour, 2)
+            << "___" << number_trailing_zeros_format(local_tm.tm_mday, 2)
+            << "-" << number_trailing_zeros_format(local_tm.tm_mon + 1, 2)
+            << "-" << number_trailing_zeros_format(local_tm.tm_year + 1900, 4);
+
+        // Test timestamp_to_string
+        ASSERT_EQ(now_time_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp now_time_from_str = string_to_timestamp(now_time_str, format);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(now_time_from_str, format), expected_string_os.str());
     }
 
     // old time
@@ -68,7 +103,13 @@ TEST(time_utils_test, timestamp_to_string)
             << "-" << 39
             << "-" << 42;
 
+        // Test timestamp_to_string
         ASSERT_EQ(old_time_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp old_time_from_str = string_to_timestamp(old_time_str);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(old_time_from_str), expected_string_os.str());
     }
 
     // future time
@@ -85,19 +126,55 @@ TEST(time_utils_test, timestamp_to_string)
             << "-" << "00"
             << "-" << "00";
 
+        // Test timestamp_to_string
         ASSERT_EQ(future_time_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp future_time_from_str = string_to_timestamp(future_time_str);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(future_time_from_str), expected_string_os.str());
+    }
+
+    // some time today
+    {
+        Timestamp some_time_today = time_to_timestamp(13u, 13u, 13u);
+        std::string some_time_today_str = timestamp_to_string(some_time_today);
+
+        // Get current timestamp and use its date to construct expected string
+        Timestamp now_ts = now();
+        std::string now_time_str = timestamp_to_string(now_ts);
+        time_t now_time = std::chrono::system_clock::to_time_t(now_ts);
+        std::tm now_tm = *gmtime(&now_time);
+
+        std::ostringstream expected_string_os;
+        expected_string_os
+            << number_trailing_zeros_format(now_tm.tm_year + 1900, 4)
+            << "-" << number_trailing_zeros_format(now_tm.tm_mon + 1, 2)
+            << "-" << number_trailing_zeros_format(now_tm.tm_mday, 2)
+            << "_" << "13"
+            << "-" << "13"
+            << "-" << "13";
+
+        // Test timestamp_to_string
+        ASSERT_EQ(some_time_today_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp some_time_today_from_str = string_to_timestamp(some_time_today_str);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(some_time_today_from_str), expected_string_os.str());
     }
 }
 
 /**
- * Test function timestamp_to_string with a time stamp with local time.
+ * Test function timestamp_to_string with a time stamp with local time, as well the inverse conversion string_to_timestamp.
  *
  * NOTE: only case is now because the local time zone depends on the part of the year and the test becomes a mess.
  */
-TEST(time_utils_test, timestamp_to_string_local)
+TEST(time_utils_test, timestamp_to_string_to_timestamp_local)
 {
     Timestamp now_time = now();
-    std::string now_time_str = timestamp_to_string(now_time, "%Y-%m-%d_%H-%M-%S", true);
+    std::string format = "%Y-%m-%d_%H-%M-%S";
+    std::string now_time_str = timestamp_to_string(now_time, format, true);
 
     time_t time = std::chrono::system_clock::to_time_t(now_time);
     std::tm local_tm = *localtime(&time);
@@ -112,7 +189,13 @@ TEST(time_utils_test, timestamp_to_string_local)
         << "-" << number_trailing_zeros_format(local_tm.tm_min, 2)
         << "-" << number_trailing_zeros_format(local_tm.tm_sec, 2);
 
+    // Test timestamp_to_string
     ASSERT_EQ(now_time_str, expected_string_os.str());
+
+    // Test string_to_timestamp
+    Timestamp now_time_from_str = string_to_timestamp(now_time_str, format, true);
+    // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+    ASSERT_EQ(timestamp_to_string(now_time_from_str, format, true), expected_string_os.str());
 }
 
 /**

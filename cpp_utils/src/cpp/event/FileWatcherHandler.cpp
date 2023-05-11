@@ -35,7 +35,7 @@ FileWatcherHandler::FileWatcherHandler(
     , filewatcher_started_(false)
 {
     logDebug(
-        DDSROUTER_PERIODICHANDLER,
+        UTILS_PERIODICHANDLER,
         "FileWatcher Event Handler created with file path " << file_path_ << " .");
 }
 

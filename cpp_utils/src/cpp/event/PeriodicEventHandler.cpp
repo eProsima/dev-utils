@@ -38,7 +38,7 @@ PeriodicEventHandler::PeriodicEventHandler(
     }
 
     logDebug(
-        DDSROUTER_PERIODICHANDLER,
+        UTILS_PERIODICHANDLER,
         "Periodic Event Handler created with period time " << period_time_ << " .");
 }
 
@@ -93,7 +93,7 @@ void PeriodicEventHandler::start_period_thread_nts_() noexcept
         &PeriodicEventHandler::period_thread_routine_, this);
 
     logDebug(
-        DDSROUTER_PERIODICHANDLER,
+        UTILS_PERIODICHANDLER,
         "Periodic Event Handler thread starts with period time " << period_time_ << " .");
 }
 
@@ -110,7 +110,7 @@ void PeriodicEventHandler::stop_period_thread_nts_() noexcept
     period_thread_.join();
 
     logDebug(
-        DDSROUTER_PERIODICHANDLER,
+        UTILS_PERIODICHANDLER,
         "Periodic Event Handler thread stops.");
 }
 

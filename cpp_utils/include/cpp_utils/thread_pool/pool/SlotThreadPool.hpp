@@ -112,6 +112,18 @@ public:
             const TaskId& task_id,
             Task&& task);
 
+    /**
+     * @brief Wait until all queued tasks are executed.
+     *
+     * This method will wait until all scheduled tasks are executed.
+     * In case there is no programmed task at the moment of calling this method, it returns immediately.
+     *
+     * @param timeout maximum time to wait in milliseconds. If 0, not time limit. [default 0].
+     * @return AwakeReason Whether the method returned due to timeout or because all tasks were executed.
+     */
+    CPP_UTILS_DllAPI utils::event::AwakeReason wait_all_consumed(
+            const utils::Duration_ms& timeout = 0);
+
 protected:
 
     /**

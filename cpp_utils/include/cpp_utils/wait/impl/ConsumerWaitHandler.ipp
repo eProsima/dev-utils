@@ -78,6 +78,13 @@ T ConsumerWaitHandler<T>::consume(
     }
 }
 
+template <typename T>
+AwakeReason ConsumerWaitHandler<T>::wait_all_consumed(
+        const utils::Duration_ms& timeout /* = 0 */)
+{
+    return wait_threshold_reached(timeout);
+}
+
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */

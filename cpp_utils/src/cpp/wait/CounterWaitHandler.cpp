@@ -62,6 +62,62 @@ AwakeReason CounterWaitHandler::wait_and_decrement(
     return result;
 }
 
+AwakeReason CounterWaitHandler::wait_threshold_reached(
+        const utils::Duration_ms& timeout /* = 0 */) noexcept
+{
+    // Do wait with mutex taken
+    std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
+
+    // Check if it is disabled and exit
+    if (!enabled())
+    {
+        return AwakeReason::disabled;
+    }
+
+    // Increment number of threads waiting
+    // WARNING: mutex must be taken
+    threads_waiting_++;
+
+    utils::Timestamp time_to_wait_until;
+
+    // If timeout is 0, use wait, if not use wait for timeout
+    if (timeout > 0)
+    {
+        time_to_wait_until = utils::now() + utils::duration_to_ms(timeout);
+    }
+    else
+    {
+        time_to_wait_until = utils::the_end_of_time();
+    }
+
+    bool finished_for_condition_met = threshold_reached_cv_.wait_until(
+        lock,
+        time_to_wait_until,
+        [this]
+        {
+            // Exit if threshold reached or if this has been disabled
+            return !enabled_.load() || (value_ == threshold_);
+        });
+
+    // Decrement number of threads waiting
+    // NOTE: mutex is still taken
+    threads_waiting_--;
+
+    // Check awake reason. Mutex is taken so it can not change while checking
+    if (!enabled_.load())
+    {
+        return AwakeReason::disabled;
+    }
+    else if (finished_for_condition_met)
+    {
+        return AwakeReason::condition_met;
+    }
+    else
+    {
+        return AwakeReason::timeout;
+    }
+}
+
 CounterWaitHandler& CounterWaitHandler::operator ++()
 {
     // NOTE: This operation could be done using the WaitHandler methods, but it will be less efficient than
@@ -90,6 +146,11 @@ void CounterWaitHandler::decrease_1_nts_()
     if (value_ > threshold_)
     {
         wait_condition_variable_.notify_one();
+    }
+    // If the threshold is reached, notify threads waiting for this event
+    else if (value_ == threshold_)
+    {
+        threshold_reached_cv_.notify_all();
     }
 }
 

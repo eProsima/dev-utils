@@ -108,6 +108,21 @@ public:
     T consume(
             const utils::Duration_ms& timeout = 0);
 
+    /////
+    // Synchronization methods
+
+    /**
+     * @brief Wait until all elements in the internal collection are consumed.
+     *
+     * This method will wait until there is no more data to be consumed in the internal collection.
+     * In case there is no data at the moment of calling this method, it returns immediately.
+     *
+     * @param timeout maximum time to wait in milliseconds. If 0, not time limit. [default 0].
+     * @return AwakeReason Whether the method returned due to timeout or because all elements were consumed.
+     */
+    AwakeReason wait_all_consumed(
+            const utils::Duration_ms& timeout = 0);
+
 protected:
 
     /**

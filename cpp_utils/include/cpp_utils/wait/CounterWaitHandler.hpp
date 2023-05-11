@@ -99,6 +99,16 @@ public:
     CPP_UTILS_DllAPI AwakeReason wait_and_decrement(
             const utils::Duration_ms& timeout = 0) noexcept;
 
+    /**
+     * @brief Wait current thread until counter reaches \c threshold.
+     *
+     * @param timeout maximum time in milliseconds that should wait until awaking for timeout
+     *
+     * @return reason why thread was awaken
+     */
+    CPP_UTILS_DllAPI AwakeReason wait_threshold_reached(
+            const utils::Duration_ms& timeout = 0) noexcept;
+
     /////
     // Value methods
 
@@ -121,6 +131,8 @@ protected:
     void decrease_1_nts_();
 
     const CounterType threshold_;
+
+    std::condition_variable threshold_reached_cv_;
 };
 
 } /* namespace event */

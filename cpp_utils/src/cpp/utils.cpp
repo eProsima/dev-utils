@@ -116,7 +116,7 @@ bool is_file_accessible(
     if ((FileAccessMode::exec& access_mode) == FileAccessMode::exec)
     {
         logWarning(
-            DDSROUTER_UTILS,
+            UTILS_UTILS,
             "Windows does not allow to check execution permission for file.");
         // Take out the FileAccessMode::exec bit
         access_mode =

@@ -579,6 +579,36 @@ TEST(utilsTest, split_string_delimiters)
     }
 }
 
+/**
+ * Test method get_keys
+ */
+TEST(utilsTest, get_keys)
+{
+    // std::string keys
+    {
+        std::set<std::string> keys = {"a", "b", "c", "d"};
+        std::map<std::string, std::string> map;
+        for (auto key: keys)
+        {
+            map.emplace(key, "value");
+        }
+
+        ASSERT_EQ(keys, get_keys(map));
+    }
+
+    // int keys
+    {
+        std::set<int> keys = {1, 2, 3, 4};
+        std::map<int, std::string> map;
+        for (auto key: keys)
+        {
+            map.emplace(key, "value");
+        }
+
+        ASSERT_EQ(keys, get_keys(map));
+    }
+}
+
 int main(
         int argc,
         char** argv)

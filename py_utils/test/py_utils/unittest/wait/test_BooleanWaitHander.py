@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ def test_ctor_trivial():
 
 
 def test_wait_condition_met():
-    # Create waiter disabled
+    # Create waiter enabled
     waiter = BooleanWaitHandler(True, True)
 
     # Test to wait without waiting

@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,5 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import py_utils.wait.WaitHandler  # noqa: F401
+"""
+Test to import every module in the library to check everything is ok.
+"""
+
+import py_utils.debugging.debug_utils  # noqa: F401
 import py_utils.time.Timer  # noqa: F401
+import py_utils.wait.WaitHandler  # noqa: F401
+import py_utils.wait.BooleanWaitHandler  # noqa: F401
+import py_utils.wait.IntWaitHandler  # noqa: F401

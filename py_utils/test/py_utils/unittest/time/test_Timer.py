@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Test Timer class methods.
+"""
+
 import time
 
 from py_utils.time.Timer import Timer
@@ -22,11 +26,12 @@ TEST_RESIDUAL_TIME = 0.1
 
 
 def test_ctor_trivial():
-    """Create an object of the class"""
+    """Create an object of the class and do nothing."""
     timer = Timer()  # noqa: F841
 
 
 def test_elapsed():
+    """Create an object of the class and do nothing."""
     timer = Timer()
     time.sleep(TEST_SLEEP_TIME)
     elapsed = timer.elapsed()

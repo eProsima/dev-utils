@@ -58,7 +58,7 @@ class WaitHandler:
     # Enabled method
     def enabled(self):
         with self._lock:
-            return self._enable_nts()
+            return self._enabled_nts()
 
     def blank_predicate(_):
         return False
@@ -85,6 +85,7 @@ class WaitHandler:
     # Enable/disable methods
     def _enable_nts(self):
         self._enabled = True
+        # It is not required to notify, as if it was disabled none thread would be waiting
 
     def _disable_nts(self):
         self._enabled = False

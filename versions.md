@@ -3,6 +3,14 @@
 This file includes the released versions of **dev-utils** project along with their contributions to the project.
 The *Forthcoming* section includes those features added in `main` branch that are not yet in a stable release.
 
+## Forthcoming
+
+* New package **py_utils** with Python utils:
+  * logging utils
+  * debugging utils
+  * WaitHandlers implementations
+  * Timer implementations
+
 ## Version 0.3.0
 
 * New event class **StdinEventHandler** to easily read from std::cin.

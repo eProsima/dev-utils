@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Timer class implementation.
+"""
+
 import time
 
 
@@ -45,12 +49,3 @@ class Timer:
             float: The elapsed time in seconds.
         """
         return time.time() - self._start_time
-
-    def elapsed_ms(self):
-        """
-        Calculates the elapsed time since the start time in milliseconds.
-
-        Returns:
-            float: The elapsed time in milliseconds.
-        """
-        return round(self.elapsed() * 1000, 2)

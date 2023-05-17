@@ -31,22 +31,15 @@ def test_ctor_trivial():
 
 
 def test_elapsed():
-    """Create an object of the class and do nothing."""
+    """Test elapsed method."""
     timer = Timer()
     time.sleep(TEST_SLEEP_TIME)
     elapsed = timer.elapsed()
     assert elapsed >= TEST_SLEEP_TIME and elapsed <= TEST_SLEEP_TIME + TEST_RESIDUAL_TIME
 
 
-def test_elapsed_ms():
-    timer = Timer()
-    time.sleep(TEST_SLEEP_TIME)
-    elapsed_ms = timer.elapsed_ms()
-    assert (elapsed_ms >= TEST_SLEEP_TIME*1000
-            and elapsed_ms <= (TEST_SLEEP_TIME + TEST_RESIDUAL_TIME)*1000)
-
-
 def test_reset():
+    """Test reset method."""
     timer = Timer()
     time.sleep(TEST_SLEEP_TIME)
     timer.reset()

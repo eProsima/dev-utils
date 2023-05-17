@@ -1,6 +1,5 @@
 """Setup file to create py_utils library."""
 from setuptools import setup
-import os
 
 package_name = 'py_utils'
 
@@ -10,6 +9,7 @@ long_description = description
 file_packages = [
     package_name,
     package_name + '/debugging',
+    package_name + '/logging',
     package_name + '/time',
     package_name + '/wait',
 ]

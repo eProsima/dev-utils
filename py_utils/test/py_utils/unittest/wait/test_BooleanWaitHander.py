@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Test BooleanWaitHandler class methods.
+"""
+
 import time
 import threading
 
@@ -24,10 +28,12 @@ TEST_RESIDUAL_TIME = 0.1
 
 
 def test_ctor_trivial():
+    """Test create an object of the class and to nothing."""
     waiter = BooleanWaitHandler(True, True)  # noqa: F841
 
 
 def test_wait_condition_met():
+    """Test to wait for condition met."""
     # Create waiter enabled
     waiter = BooleanWaitHandler(True, True)
 

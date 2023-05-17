@@ -12,16 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def object_introspection(obj):
+"""
+This file contains utils to debug python code.
+"""
+
+from py_utils.logging.log_utils import logger
+
+
+def debug_object_introspection(obj):
+    """Log in debug introspection information regarding an object."""
     class_name = type(obj).__name__
     methods = [method_name for method_name in dir(obj) if callable(getattr(obj, method_name))]
-    return f'{{Class: <{class_name}; Methods: {methods}}}'
+    logger.debug(f'{{Class: <{class_name}; Methods: {methods}}}')
 
 
-def debug_function(func):
+def debug_function_decorator(
+        func):
+    """Decorator to debug information regarding start, arguments and finish of a function."""
     def wrapper(*args, **kwargs):
-        print(f'Function <{func.__name__}> called with arguments: <{args}>, <{kwargs}>')
+        logger.debug(f'Function <{func.__name__}> called with arguments: <{args}>, <{kwargs}>')
         result = func(*args, **kwargs)
-        print(f'Function <{func.__name__}> finished')
+        logger.debug(f'Function <{func.__name__}> finished')
         return result
+
     return wrapper

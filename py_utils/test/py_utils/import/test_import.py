@@ -17,6 +17,7 @@ Test to import every module in the library to check everything is ok.
 """
 
 import py_utils.debugging.debug_utils  # noqa: F401
+import py_utils.logging.log_utils  # noqa: F401
 import py_utils.time.Timer  # noqa: F401
 import py_utils.wait.WaitHandler  # noqa: F401
 import py_utils.wait.BooleanWaitHandler  # noqa: F401

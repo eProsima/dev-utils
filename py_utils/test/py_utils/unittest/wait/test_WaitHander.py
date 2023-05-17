@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Test WaitHandler class methods.
+"""
+
 import time
 import threading
 
@@ -24,10 +28,12 @@ TEST_RESIDUAL_TIME = 0.1
 
 
 def test_ctor_trivial():
+    """Test create an object of the class and to nothing."""
     waiter = WaitHandler(True, 0)  # noqa: F841
 
 
 def test_wait_condition_met():
+    """Test to wait for condition met."""
     # Create waiter disabled
     waiter = WaitHandler(True, 0)
 
@@ -50,6 +56,7 @@ def test_wait_condition_met():
 
 
 def test_wait_timeout():
+    """Test to wait for timeout."""
     # Create waiter
     waiter = WaitHandler(True, 0)
 
@@ -61,6 +68,7 @@ def test_wait_timeout():
 
 
 def test_wait_disable():
+    """Test to wait for disable."""
     # Create waiter disabled
     waiter = WaitHandler(False, 0)
 

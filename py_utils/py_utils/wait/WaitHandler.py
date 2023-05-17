@@ -113,7 +113,8 @@ class WaitHandler:
         This is useful to do a stoppable sleep.
 
         Arguments:
-            predicate (function): predicate that returns True if thread must awake, False otherwise.
+            predicate (function):
+                predicate that returns True if thread must awake, False otherwise.
             timeout (float): max time in seconds to wait. None means no maximum time.
 
         Return:

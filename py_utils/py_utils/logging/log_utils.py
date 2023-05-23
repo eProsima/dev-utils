@@ -45,7 +45,7 @@ class CustomLogger(logging.Logger):
 
     def set_format(
             self,
-            format: str = '[%(asctime)s][%(name)s][%(levelname)s] %(message)s'):
+            format: str = '[%(asctime)s][%(name)s][%(levelname)s][%(filename)s:%(lineno)s - %(funcName)s] %(message)s'):
         """Modifies format for logger."""
         l_format = logging.Formatter(format)
         l_handler = logging.StreamHandler()

@@ -44,19 +44,26 @@ class IntWaitHandler(WaitHandler):
         """
         super().__init__(enabled, init_value)
 
-    def increase(self, value: int = 1):
+    def increase(
+            self,
+            value: int = 1):
         """Increment the internal integer in value."""
         with self._lock:
             self._value += value
             self._condition.notify_all()
 
-    def decrease(self, value: int = 1):
+    def decrease(
+            self,
+            value: int = 1):
         """Decrease the internal integer in value."""
         with self._lock:
             self._value -= value
             self._condition.notify_all()
 
-    def wait_equal(self, value, timeout=None):
+    def wait_equal(
+            self,
+            value: int,
+            timeout: float = None):
         """
         Wait till internal object is equal the given value.
 
@@ -68,10 +75,16 @@ class IntWaitHandler(WaitHandler):
         """
         return super().wait(predicate=(lambda v: value == v), timeout=timeout)
 
-    def wait_greater_equal(self, value, timeout=None):
+    def wait_greater_equal(
+            self,
+            value: int,
+            timeout: float = None):
         """Wait for the internal integer to be greater or equal the value given."""
         return super().wait(predicate=(lambda v: v >= value), timeout=timeout)
 
-    def wait_greater(self, value, timeout=None):
+    def wait_greater(
+            self,
+            value: int,
+            timeout: float = None):
         """Wait for the internal integer to be greater than value given."""
         return super().wait(predicate=(lambda v: v > value), timeout=timeout)

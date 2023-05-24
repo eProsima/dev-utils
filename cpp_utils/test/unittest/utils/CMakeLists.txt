@@ -35,7 +35,8 @@ set(TEST_LIST
         split_string_one_delimiter
         split_strings_one_delimiter
         split_string_delimiters
-        get_keys
+        get_map_keys
+        get_unordered_map_keys
     )
 
 set(TEST_EXTRA_LIBRARIES

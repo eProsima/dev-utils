@@ -177,5 +177,17 @@ std::set<Key> get_keys(
     return ret;
 }
 
+template <typename Key, typename Value>
+std::set<Key> get_keys(
+        const std::unordered_map<Key, Value>& map)
+{
+    std::set<Key> ret;
+    for (const auto& elem : map)
+    {
+        ret.insert(elem.first);
+    }
+    return ret;
+}
+
 } /* namespace utils */
 } /* namespace eprosima */

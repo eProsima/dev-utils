@@ -25,6 +25,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <cpp_utils/macros/macros.hpp>
@@ -287,6 +288,11 @@ template <typename Key, typename Value>
 CPP_UTILS_DllAPI
 std::set<Key> get_keys(
         const std::map<Key, Value>& map);
+
+template <typename Key, typename Value>
+CPP_UTILS_DllAPI
+std::set<Key> get_keys(
+        const std::unordered_map<Key, Value>& map);
 
 } /* namespace utils */
 } /* namespace eprosima */

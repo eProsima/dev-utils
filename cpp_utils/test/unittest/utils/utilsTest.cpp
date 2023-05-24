@@ -580,9 +580,9 @@ TEST(utilsTest, split_string_delimiters)
 }
 
 /**
- * Test method get_keys
+ * Test method get_keys from std::map
  */
-TEST(utilsTest, get_keys)
+TEST(utilsTest, get_map_keys)
 {
     // std::string keys
     {
@@ -600,6 +600,36 @@ TEST(utilsTest, get_keys)
     {
         std::set<int> keys = {1, 2, 3, 4};
         std::map<int, std::string> map;
+        for (auto key: keys)
+        {
+            map.emplace(key, "value");
+        }
+
+        ASSERT_EQ(keys, get_keys(map));
+    }
+}
+
+/**
+ * Test method get_keys from std::unordered_map
+ */
+TEST(utilsTest, get_unordered_map_keys)
+{
+    // std::string keys
+    {
+        std::set<std::string> keys = {"a", "b", "c", "d"};
+        std::unordered_map<std::string, std::string> map;
+        for (auto key: keys)
+        {
+            map.emplace(key, "value");
+        }
+
+        ASSERT_EQ(keys, get_keys(map));
+    }
+
+    // int keys
+    {
+        std::set<int> keys = {1, 2, 3, 4};
+        std::unordered_map<int, std::string> map;
         for (auto key: keys)
         {
             map.emplace(key, "value");

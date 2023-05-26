@@ -147,6 +147,10 @@ public:
     bool operator !=(
             const T& other) const noexcept;
 
+    const T* operator ->() const noexcept;
+
+    T* operator ->() noexcept;
+
     /////////////////////////
     // GET METHODS
     /////////////////////////
@@ -194,7 +198,7 @@ protected:
      *
      * By default this value would be initialized with default constructor.
      */
-    T value = T();
+    T value_ = T();
 
     /**
      * @brief Fuzzy level of this object.
@@ -202,7 +206,7 @@ protected:
      * This defines the certainty with which the internal \c value has been set.
      * By default is set to \c fuzzy_level_default if the internal value has not been set.
      */
-    FuzzyLevelType fuzzy_level = FuzzyLevelValues::fuzzy_level_default;
+    FuzzyLevelType fuzzy_level_ = FuzzyLevelValues::fuzzy_level_default;
 };
 
 

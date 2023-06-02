@@ -20,7 +20,8 @@
 # TEST_NAME -> test name (name of the class of the test in Test .cpp)
 # TEST_LIST -> test cases implemented in the Test .cpp
 # TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
-# TEST_NEEDED_SOURCES -> source files required to be copies for the test execution
+# TEST_NEEDED_SOURCES -> source files required to be copied for the test execution
+# ARGV6 -> TEST_EXTRA_HEADERS -> extra headers needed for the test (sixth optional argument)
 #
 # NOTE:
 # pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
@@ -106,6 +107,9 @@ endfunction(add_test_executable)
 # TEST_SOURCES -> sources for the test
 # TEST_LIST -> test cases implemented in the Test .cpp
 # TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
+# ARGV4 -> TEST_NEEDED_SOURCES -> source files required to be copied for the test execution (fourth optional argument)
+# ARGV5 -> TEST_EXTRA_HEADERS -> extra headers needed for the test (fifth optional argument)
+#                                ARGV4 required if this argument is set
 function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIBRARIES)
 
     add_test_executable(
@@ -115,6 +119,7 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIB
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
         "${ARGV4}"                  # TEST_NEEDED_SOURCES (EQUAL "" if not provided)
+        "${ARGV5}"                  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 
 endfunction(add_unittest_executable)
@@ -125,7 +130,8 @@ endfunction(add_unittest_executable)
 # TEST_NAME -> test name (it will add "_Test" after name)
 # TEST_SOURCES -> sources for the test
 # TEST_LIST -> test cases implemented in the Test .cpp
-# ARGV4 -> extra headers needed for the test (fifth optional argument)
+# TEST_NEEDED_SOURCES -> source files required to be copies for the test execution
+# ARGV4 -> TEST_EXTRA_HEADERS -> extra headers needed for the test (fifth optional argument)
 function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SOURCES)
 
     # Add all cpp files to sources

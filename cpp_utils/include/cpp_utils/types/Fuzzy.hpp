@@ -147,8 +147,10 @@ public:
     bool operator !=(
             const T& other) const noexcept;
 
+    //! Operator to access the internal object
     const T* operator ->() const noexcept;
 
+    //! Operator to access the internal object
     T* operator ->() noexcept;
 
     /////////////////////////

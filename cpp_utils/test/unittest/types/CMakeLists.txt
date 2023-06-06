@@ -28,6 +28,7 @@ set(TEST_LIST
         default_construct
         construct
         assign_operator
+        arrow_operator
     )
 
 set(TEST_EXTRA_LIBRARIES

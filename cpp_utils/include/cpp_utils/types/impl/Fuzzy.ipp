@@ -26,8 +26,8 @@ template <typename T>
 Fuzzy<T>::Fuzzy(
         const T& other,
         FuzzyLevelType level /* = FuzzyLevelValues::set */)
-    : value(other)
-    , fuzzy_level(level)
+    : value_(other)
+    , fuzzy_level_(level)
 {
 }
 
@@ -35,8 +35,8 @@ template <typename T>
 Fuzzy<T>::Fuzzy(
         T&& other,
         FuzzyLevelType level /* = FuzzyLevelValues::set */)
-    : value(std::move(other))
-    , fuzzy_level(level)
+    : value_(std::move(other))
+    , fuzzy_level_(level)
 {
 }
 
@@ -47,13 +47,13 @@ Fuzzy<T>::Fuzzy(
 template <typename T>
 Fuzzy<T>::operator T&() noexcept
 {
-    return value;
+    return value_;
 }
 
 template <typename T>
 Fuzzy<T>::operator T() const noexcept
 {
-    return value;
+    return value_;
 }
 
 template <typename T>
@@ -67,7 +67,7 @@ bool Fuzzy<T>::operator ==(
     }
     else
     {
-        return this->fuzzy_level == other.fuzzy_level && this->value == other.get_reference();
+        return this->fuzzy_level_ == other.fuzzy_level_ && this->value_ == other.get_reference();
     }
 }
 
@@ -81,7 +81,7 @@ bool Fuzzy<T>::operator ==(
     }
     else
     {
-        return this->value == other;
+        return this->value_ == other;
     }
 }
 
@@ -99,6 +99,18 @@ bool Fuzzy<T>::operator !=(
     return !(this->operator ==(other));
 }
 
+template <typename T>
+const T* Fuzzy<T>::operator ->() const noexcept
+{
+    return &value_;
+}
+
+template <typename T>
+T* Fuzzy<T>::operator ->() noexcept
+{
+    return &value_;
+}
+
 /////////////////////////
 // GET METHODS
 /////////////////////////
@@ -106,37 +118,37 @@ bool Fuzzy<T>::operator !=(
 template <typename T>
 bool Fuzzy<T>::is_valid() const noexcept
 {
-    return fuzzy_level >= FuzzyLevelValues::fuzzy_level_default;
+    return fuzzy_level_ >= FuzzyLevelValues::fuzzy_level_default;
 }
 
 template <typename T>
 bool Fuzzy<T>::is_set() const noexcept
 {
-    return fuzzy_level >= FuzzyLevelValues::fuzzy_level_fuzzy;
+    return fuzzy_level_ >= FuzzyLevelValues::fuzzy_level_fuzzy;
 }
 
 template <typename T>
 T& Fuzzy<T>::get_reference() noexcept
 {
-    return value;
+    return value_;
 }
 
 template <typename T>
 const T& Fuzzy<T>::get_reference() const noexcept
 {
-    return value;
+    return value_;
 }
 
 template <typename T>
 T Fuzzy<T>::get_value() const noexcept
 {
-    return value;
+    return value_;
 }
 
 template <typename T>
 FuzzyLevelType Fuzzy<T>::get_level() const noexcept
 {
-    return fuzzy_level;
+    return fuzzy_level_;
 }
 
 /////////////////////////
@@ -146,8 +158,8 @@ FuzzyLevelType Fuzzy<T>::get_level() const noexcept
 template <typename T>
 void Fuzzy<T>::unset()
 {
-    // It is not needed to change value, as it would be used as it is not set
-    fuzzy_level = FuzzyLevelValues::fuzzy_level_unset;
+    // It is not needed to change value_, as it would be used as it is not set
+    fuzzy_level_ = FuzzyLevelValues::fuzzy_level_unset;
 }
 
 template <typename T>
@@ -155,15 +167,15 @@ void Fuzzy<T>::set_value(
         const T& new_value,
         FuzzyLevelType level /* = FuzzyLevelValues::SET */)
 {
-    value = new_value;
-    fuzzy_level = level;
+    value_ = new_value;
+    fuzzy_level_ = level;
 }
 
 template <typename T>
 void Fuzzy<T>::set_level(
         FuzzyLevelType level /* = FuzzyLevelValues::fuzzy_level_set */)
 {
-    fuzzy_level = level;
+    fuzzy_level_ = level;
 }
 
 /////////////////////////
@@ -181,5 +193,3 @@ std::ostream& operator <<(
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

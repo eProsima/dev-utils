@@ -155,6 +155,29 @@ TEST(fuzzyTest, assign_operator)
     }
 }
 
+/**
+ * Test Fuzzy arrow operator
+ *
+ * CASES:
+ * - const
+ * - no const
+ */
+TEST(fuzzyTest, arrow_operator)
+{
+    // no const
+    {
+        Fuzzy<std::string> f;
+        f = std::string("hello");
+        ASSERT_EQ(f->size(), 5);
+    }
+
+    // const
+    {
+        const Fuzzy<std::string> f (std::string("hello"));
+        ASSERT_EQ(f->size(), 5);
+    }
+}
+
 int main(
         int argc,
         char** argv)

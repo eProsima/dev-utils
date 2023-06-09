@@ -18,6 +18,7 @@ This file contains system utils.
 
 import os
 
+
 def is_linux() -> bool:
     """
     @brief Check if the script is running in a Linux environment.
@@ -25,6 +26,7 @@ def is_linux() -> bool:
     @return: True if the script is running in a Linux environment, False otherwise.
     """
     return os.name == 'posix'
+
 
 def is_windows() -> bool:
     """

@@ -10,6 +10,7 @@ file_packages = [
     package_name,
     package_name + '/debugging',
     package_name + '/logging',
+    package_name + '/system',
     package_name + '/time',
     package_name + '/wait',
 ]

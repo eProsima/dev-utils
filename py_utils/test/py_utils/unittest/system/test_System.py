@@ -17,37 +17,33 @@ Test system_utils methods.
 """
 
 import os
+
 from py_utils.system.system_utils import is_linux, is_windows
 
 
 def test_is_linux():
     # Test case 1: Running the script on a Linux system
     os.name = 'posix'
-    assert (is_linux() is True)
+    assert is_linux()
 
     # Test case 2: Running the script on a Windows system
     os.name = 'nt'
-    assert (is_linux() is False)
+    assert not is_linux()
 
     # Test case 3: Running the script on a different operating system
     os.name = 'mac'
-    assert (is_linux() is False)
+    assert not is_linux()
 
 
 def test_is_windows():
     # Test case 1: Running the script on a Linux system
     os.name = 'posix'
-    assert (is_windows() is False)
+    assert not is_windows()
 
     # Test case 2: Running the script on a Windows system
     os.name = 'nt'
-    assert (is_windows() is True)
+    assert is_windows()
 
     # Test case 3: Running the script on a different operating system
     os.name = 'mac'
-    assert (is_windows() is False)
-
-
-# Run the tests
-test_is_linux()
-test_is_windows()
+    assert not is_windows()

@@ -22,46 +22,45 @@ as any other Logger:
 - logger.debug(...)
 - logger.log(logging.DEBUG, ...)
 
-In order to set a different log level, use set_log_level or activate_debug logger methods.
+In order to set a different log level, use setLevel or activate_debug logger methods.
 """
 
 import logging
 
 
-class CustomLogger(logging.Logger):
+def getCustomLogger(log_level: int = logging.INFO,
+                    logger_name: str = 'GLOBAL_LOG'):
     """
-    Class to create a global Logger shared by the whole process.
-    It inherits from native logging.Logger and implement auxiliary methods.
+    Return a custom logger set with eProsima default configurations.
+
+    It gets a Logger object.
+    If it exists, return it as it have been configured,
+    if it does not, create it and set default format and level.
     """
 
-    def __init__(
-            self,
-            log_level=logging.INFO,
-            logger_name: str = 'GLOBAL_LOG'):
-        """Creates an object of Logger class and set log level and default format."""
-        super().__init__(logger_name)
-        self.set_format()
-        self.set_log_level(log_level)
+    alreadyExist = logger_name in logging.root.manager.loggerDict.keys()
+    logger = logging.getLogger(logger_name)
 
-    def set_format(
-            self,
-            format: str = '[%(asctime)s][%(name)s][%(levelname)s][%(filename)s:%(lineno)s - %(funcName)s] %(message)s'):
-        """Modifies format for logger."""
-        l_format = logging.Formatter(format)
-        l_handler = logging.StreamHandler()
-        l_handler.setFormatter(l_format)
-        self.addHandler(l_handler)
+    # If Logger already existed, use it as it was configured
+    if alreadyExist:
+        return logger
 
-    def set_log_level(
-            self,
-            log_level):
-        """Modifies logger level."""
-        self.setLevel(log_level)
+    # Otherwise, use default values for it
+    l_format = logging.Formatter(
+      '[%(asctime)s][%(name)s][%(levelname)s][%(filename)s:%(lineno)s - %(funcName)s] %(message)s')
+    l_handler = logging.StreamHandler()
+    l_handler.setFormatter(l_format)
+    logger.addHandler(l_handler)
 
-    def activate_debug(self):
-        """Modifies logger level so it accepts everything equalt or greater than DEBUG."""
-        self.set_log_level(logging.DEBUG)
+    logger.setLevel(log_level)
+
+    return logger
+
+
+def activate_debug(logger_name: str = 'GLOBAL_LOG'):
+    logger = getCustomLogger(logger_name=logger_name)
+    logger.setLevel(logging.DEBUG)
 
 
 """Global instance of logger using CustomLogger class."""
-logger = CustomLogger()
+logger = getCustomLogger()

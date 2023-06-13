@@ -24,7 +24,7 @@ from py_utils.time.Timer import Timer
 
 
 TEST_SLEEP_TIME = 0.5
-TEST_RESIDUAL_TIME = 0.1
+TEST_RESIDUAL_TIME = TEST_SLEEP_TIME / 5
 
 
 def test_ctor_trivial():
@@ -56,15 +56,20 @@ def test_wait_condition_met():
         waiter.decrease(3)
 
     t = threading.Thread(target=condition_met_waiter_function, args=(waiter,))
-    t.start()
 
     # Create a Timer to check is actually waiting
     timer = Timer()
+
+    # Execute thread AFTER start timer (otherwise it could happen that elapsed time is lower)
+    t.start()
 
     # Wait till condition met
     waiter.wait_greater_equal(1)
     waiter.wait_greater(2)
     waiter.wait_equal(0)
 
+    # Get time elapsed waiting
     elapsed = timer.elapsed()
+
+    # Check that such time is in range expected
     assert elapsed >= TEST_SLEEP_TIME * 3 and elapsed <= TEST_SLEEP_TIME * 3 + TEST_RESIDUAL_TIME

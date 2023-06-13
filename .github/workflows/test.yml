@@ -42,10 +42,6 @@
 #     - ubuntu-22.04
 #     - test python linter
 #
-# TODO: when merge CI in eprosima-CI repository, the jparisu fork must change for eProsima in actions.
-#
-# TODO: Add Windows CI
-#
 
 name: test
 

@@ -52,7 +52,10 @@ macro(check_and_add_tests_label TEST_NAME TEST_LABEL_LIST LABEL)
 
     if(${TEST_NAME} IN_LIST "${TEST_LABEL_LIST}")
         message(STATUS "Setting label ${LABEL} to test ${TEST_NAME}")
-        set_property(TEST ${TEST_NAME} PROPERTY LABELS ${LABEL})
+        # NOTE: set_property override other labels, it must append new label
+        get_property(CURRENT_LABELS TEST ${TEST_NAME} PROPERTY LABELS)
+        list(APPEND CURRENT_LABELS ${LABEL})
+        set_property(TEST ${TEST_NAME} PROPERTY LABELS ${CURRENT_LABELS})
     endif()
 
 endmacro()

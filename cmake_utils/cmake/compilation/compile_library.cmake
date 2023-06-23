@@ -158,7 +158,7 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
         # Packaging
         ###############################################################################
         # Install headers
-        install(DIRECTORY ${_INCLUDE_PATH}/${MODULE_NAME}
+        install(DIRECTORY ${_INCLUDE_PATH}/${MODULE_HEADERS_PATH}
                 DESTINATION ${INCLUDE_INSTALL_DIR}
                 COMPONENT headers
                 FILES_MATCHING
@@ -174,7 +174,7 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
                 ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/eProsima_auto_link.h
                 ${PROJECT_BINARY_DIR}/include/${MODULE_NAME}/library/library_dll.h
             DESTINATION
-                ${INCLUDE_INSTALL_DIR}/${MODULE_NAME}/library
+                ${INCLUDE_INSTALL_DIR}/${MODULE_HEADERS_INSTALL_PATH}/library
             COMPONENT headers
             )
 

@@ -33,6 +33,8 @@
 # - MODULE_NAME_LARGE       : Project large name (default MODULE_NAME)
 # - MODULE_DESCRIPTION      : Project description (default MODULE_SUMMARY)
 # - MODULE_MACRO            : String to set macros in project (default MODULE_NAME in UPPERCASE)
+# - MODULE_HEADERS_PATH     : Path (relative to include) where headers to be installed are located (default MODULE_NAME)
+# - MODULE_HEADERS_INSTALL_PATH    : Path (relative to install dir) where headers are installed (default MODULE_HEADERS_PATH)
 #
 # TODO
 #
@@ -119,6 +121,16 @@ macro(load_project_settings)
     # Set MODULE_LICENSE_FILE_PATH
     if (NOT MODULE_LICENSE_FILE_PATH)
         set (MODULE_LICENSE_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE")
+    endif()
+
+    # Set MODULE_HEADERS_PATH
+    if (NOT MODULE_HEADERS_PATH)
+        set (MODULE_HEADERS_PATH ${MODULE_NAME})
+    endif()
+
+    # Set MODULE_HEADERS_INSTALL_PATH
+    if (NOT MODULE_HEADERS_INSTALL_PATH)
+        set (MODULE_HEADERS_INSTALL_PATH ${MODULE_HEADERS_PATH})
     endif()
 
     #####

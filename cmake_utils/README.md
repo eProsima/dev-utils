@@ -66,6 +66,8 @@ Those variables which default is `x` must be set, and those with `-` are not req
 | MODULE_SUMMARY               | ${MODULE_NAME_LARGE}                                                    | Summary (short description)                                                                        |
 | MODULE_DESCRIPTION           | ${MODULE_SUMMARY}                                                       | Description                                                                                        |
 | MODULE_MACRO                 | TOUPPER ${MODULE_NAME}                                                  | Macro to use in CMake and C++ definitions (it is recommended to leave it as Uppercase of name)     |
+| MODULE_HEADERS_PATH          | ${MODULE_NAME}                                                          | Path (relative to include) where headers to be installed are located                               |
+| MODULE_HEADERS_INSTALL_PATH  | ${MODULE_HEADERS_PATH}                                                  | Path (relative to install dir) where headers are installed                                         |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 | MODULE_FIND_PACKAGES         | -                                                                       | Modules that require to be found by find_package                                                   |
 | MODULE_THIRDPARTY_HEADERONLY | -                                                                       | Headeronly thirdparties that require to be included (must be inside ${MODULE_THIRDPARTY_PATH} dir) |

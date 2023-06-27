@@ -18,7 +18,57 @@ This file contains utils to debug python code.
 
 import sys
 
+from py_utils.decorator.oop import pure_virtual
 from py_utils.logging.log_utils import logger, logging
+
+
+class IntrospectionInformation():
+
+    @pure_virtual
+    def __init__(self, obj, recursive: int, privates: bool):
+        pass
+
+    @pure_virtual
+    def type(self):
+        pass
+
+    @pure_virtual
+    def __str__(self):
+        pass
+
+    @pure_virtual
+    def pretty_print(self, indent: int):
+        pass
+
+
+class ModuleIntrospectionInformation(IntrospectionInformation):
+
+    def __init__(self, module):
+
+        if not isinstance(module, type(sys)):
+            raise TypeError(f'Object {module} not of Module type.')
+
+        self.name_ = module.__name__
+        self.importables_ = []
+        for name in dir(module):
+            self.importables_.append((name, type(getattr(module, name))))
+
+    def __str__(self):
+
+
+
+def get_module_introspection(obj) -> dict:
+    result = {}
+
+    if not isinstance(obj, type(sys)):
+        return result
+
+    result['name'] = obj.__name__
+    result['importables'] = []
+    for name in dir(obj):
+        importables.append((name, type(getattr(obj, name))))
+
+    logger.log(debug_level, f'{{MODULE: <{module_name}>; Importables: <{importables}>}}')
 
 
 def debug_module_introspection(obj, debug_level: int = logging.DEBUG):
@@ -90,4 +140,4 @@ def debug_function_decorator(
 def debug_separator(
         debug_level: int = logging.DEBUG):
     print()
-    logger.log(debug_level, '##################################################################\n')
+    logger.log(debug_level, '####################################################################\n')

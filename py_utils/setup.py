@@ -1,4 +1,6 @@
 """Setup file to create py_utils library."""
+
+import os
 from setuptools import setup
 
 package_name = 'py_utils'
@@ -6,13 +8,12 @@ package_name = 'py_utils'
 description = 'Developer Python utils'
 long_description = description
 
+# Get all python files in any directory with an __init__.py file in it (except __init__.py files)
 file_packages = [
-    package_name,
-    package_name + '/debugging',
-    package_name + '/logging',
-    package_name + '/time',
-    package_name + '/wait',
-]
+    root
+    for root, _, files
+    in os.walk(package_name)
+    if '__init__.py' in files]
 
 setup(
     name=package_name,

@@ -3,14 +3,21 @@
 This file includes the released versions of **dev-utils** project along with their contributions to the project.
 The *Forthcoming* section includes those features added in `main` branch that are not yet in a stable release.
 
-## Forthcoming
 
+## Version 0.4.0
+
+* CI new features:
+  * Update CI to use `eProsima CI <https://github.com/eProsima/eProsima-CI>`__.
 * New package **py_utils** with Python utils:
   * logging utils
   * debugging utils
   * WaitHandlers implementations
   * Timer implementations
-
+* Sub-packages updated:
+  * **cmake_utils**
+    * Refactor the way to set labels to tests.
+  * **cpp_utils**
+    * Add some utils functions.
 ## Version 0.3.0
 
 * New event class **StdinEventHandler** to easily read from std::cin.

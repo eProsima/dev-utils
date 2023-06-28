@@ -18,6 +18,7 @@ The *Forthcoming* section includes those features added in `main` branch that ar
     * Refactor the way to set labels to tests.
   * **cpp_utils**
     * Add some utils functions.
+
 ## Version 0.3.0
 
 * New event class **StdinEventHandler** to easily read from std::cin.

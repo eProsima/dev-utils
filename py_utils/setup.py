@@ -16,7 +16,7 @@ file_packages = [
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='0.4.0',
     packages=file_packages,
     long_description=long_description,
     data_files=[

@@ -114,6 +114,9 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
                 $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${MODULE_NAME}>
                 $<BUILD_INTERFACE:${_SOURCE_PATH}>
                 $<INSTALL_INTERFACE:include>
+                ${MODULE_PUBLIC_EXTRA_HEADERS}
+            PRIVATE
+                ${MODULE_PRIVATE_EXTRA_HEADERS}
             )
 
         target_link_libraries(${MODULE_NAME}

@@ -58,39 +58,41 @@ Every module requires to have a `LICENSE` file in order to install it with the r
 These are the variables that could/must be set in the `project_settings.cmake` file.
 Those variables which default is `x` must be set, and those with `-` are not required.
 
-| Variable                     | Default                                                                 | Description                                                                                        |
+| Variable | Default | Description |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_NAME                  | x                                                                       | Name of the module (must be project name)                                                          |
-| MODULE_TARGET_NAME           | ${MODULE_NAME}                                                          | Output name of the target                                                                          |
-| MODULE_NAME_LARGE            | ${MODULE_NAME}                                                          | Large name                                                                                         |
-| MODULE_SUMMARY               | ${MODULE_NAME_LARGE}                                                    | Summary (short description)                                                                        |
-| MODULE_DESCRIPTION           | ${MODULE_SUMMARY}                                                       | Description                                                                                        |
-| MODULE_MACRO                 | TOUPPER ${MODULE_NAME}                                                  | Macro to use in CMake and C++ definitions (it is recommended to leave it as Uppercase of name)     |
-| MODULE_HEADERS_PATH          | ${MODULE_NAME}                                                          | Path (relative to include) where headers to be installed are located                               |
-| MODULE_HEADERS_INSTALL_PATH  | ${MODULE_HEADERS_PATH}                                                  | Path (relative to install dir) where headers are installed                                         |
+| MODULE_NAME | x | Name of the module (must be project name) |
+| MODULE_TARGET_NAME | ${MODULE_NAME} | Output name of the target |
+| MODULE_NAME_LARGE | ${MODULE_NAME} | Large name |
+| MODULE_SUMMARY | ${MODULE_NAME_LARGE} | Summary (short description) |
+| MODULE_DESCRIPTION | ${MODULE_SUMMARY} | Description |
+| MODULE_MACRO | TOUPPER ${MODULE_NAME} | Macro to use in CMake and C++ definitions (it is recommended to leave it as Uppercase of name) |
+| MODULE_HEADERS_PATH | ${MODULE_NAME} | Path (relative to include) where headers to be installed are located |
+| MODULE_HEADERS_INSTALL_PATH | ${MODULE_HEADERS_PATH} | Path (relative to install dir) where headers are installed |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_FIND_PACKAGES         | -                                                                       | Modules that require to be found by find_package                                                   |
-| MODULE_THIRDPARTY_HEADERONLY | -                                                                       | Headeronly thirdparties that require to be included (must be inside ${MODULE_THIRDPARTY_PATH} dir) |
-| MODULE_THIRDPARTY_PATH       | ../thirdparty                                                           | Thirdparties parent dir path                                                                       |
-| MODULE_DEPENDENCIES          | ${MODULE_FIND_PACKAGES}                                                 | Libraries that require to be linked by the target                                                  |
+| MODULE_FIND_PACKAGES | - | Modules that require to be found by find_package |
+| MODULE_THIRDPARTY_HEADERONLY | - | Headeronly thirdparties that require to be included (must be inside ${MODULE_THIRDPARTY_PATH} dir) |
+| MODULE_THIRDPARTY_PATH | ../thirdparty | Thirdparties parent dir path |
+| MODULE_DEPENDENCIES | ${MODULE_FIND_PACKAGES} | Libraries that require to be linked by the target |
+| MODULE_PUBLIC_EXTRA_HEADERS | - | Specifies public scope include directories to use when compiling a given target. |
+| MODULE_PRIVATE_EXTRA_HEADERS | - | Specifies private scope include directories to use when compiling a given target. |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_VERSION_FILE_PATH     | ../VERSION                                                              | Path to the file containing version information                                                    |
-| MODULE_VERSION_MAJOR         | x (if not set, are taken from VERSION file)                             | Major version                                                                                      |
-| MODULE_VERSION_MINOR         | x (if not set, are taken from VERSION file)                             | Minor version                                                                                      |
-| MODULE_VERSION_PATCH         | x (if not set, are taken from VERSION file)                             | Patch version                                                                                      |
-| MODULE_VERSION               | ${MODULE_VERSION_MAJOR}.${MODULE_VERSION_MINOR}.${MODULE_VERSION_PATCH} | Module version                                                                                     |
-| MODULE_VERSION_STRING        | v${MODULE_VERSION}                                                      | Module version                                                                                     |
+| MODULE_VERSION_FILE_PATH | ../VERSION | Path to the file containing version information |
+| MODULE_VERSION_MAJOR | x (if not set, are taken from VERSION file) | Major version |
+| MODULE_VERSION_MINOR | x (if not set, are taken from VERSION file) | Minor version |
+| MODULE_VERSION_PATCH | x (if not set, are taken from VERSION file) | Patch version |
+| MODULE_VERSION | ${MODULE_VERSION_MAJOR}.${MODULE_VERSION_MINOR}.${MODULE_VERSION_PATCH} | Module version |
+| MODULE_VERSION_STRING | v${MODULE_VERSION} | Module version |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_LICENSE_FILE_PATH     | ../LICENSE                                                              | Path to the license file                                                                           |
-| MODULE_RESOURCES_PATH        | (if not given, no resources will be installed)                          | Path of the resources to install                                                                   |
+| MODULE_LICENSE_FILE_PATH | ../LICENSE | Path to the license file |
+| MODULE_RESOURCES_PATH | (if not given, no resources will be installed) | Path of the resources to install |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_BIN_INSTALL_DIR       | bin/                                                                    | Binary installation path                                                                           |
-| MODULE_INCLUDE_INSTALL_DIR   | include/                                                                | Include installation path                                                                          |
-| MODULE_LIB_INSTALL_DIR       | lib/                                                                    | Library installation path                                                                          |
-| MODULE_DATA_INSTALL_DIR      | share/                                                                  | Data installation path                                                                             |
-| MODULE_LICENSE_INSTALL_DIR   | share/                                                                  | License installation path                                                                          |
+| MODULE_BIN_INSTALL_DIR | bin/ | Binary installation path |
+| MODULE_INCLUDE_INSTALL_DIR | include/ | Include installation path |
+| MODULE_LIB_INSTALL_DIR | lib/ | Library installation path |
+| MODULE_DATA_INSTALL_DIR | share/ | Data installation path |
+| MODULE_LICENSE_INSTALL_DIR | share/ | License installation path |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_CPP_VERSION           | ''                                                                      | C++ version                                                                                        |
+| MODULE_CPP_VERSION | '' | C++ version |
 
 ### Minimum Package Version
 
@@ -101,7 +103,7 @@ e.g.
 
 ```cmake
 set(MODULE_FIND_PACKAGES fastrtps)
-set(fastrtps_MINIMUM_VERSION "2.8")  # This will force to use a version of fastrtps higher or equal 2.8
+set(fastrtps_MINIMUM_VERSION "2.8") # This will force to use a version of fastrtps higher or equal 2.8
 ```
 
 ---

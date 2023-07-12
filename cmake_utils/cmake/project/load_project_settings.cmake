@@ -133,6 +133,16 @@ macro(load_project_settings)
         set (MODULE_HEADERS_INSTALL_PATH ${MODULE_HEADERS_PATH})
     endif()
 
+    # Set MODULE_PUBLIC_EXTRA_HEADERS
+    if (NOT MODULE_PUBLIC_EXTRA_HEADERS)
+        set (MODULE_PUBLIC_EXTRA_HEADERS "")
+    endif()
+
+    # Set MODULE_PRIVATE_EXTRA_HEADERS
+    if (NOT MODULE_PRIVATE_EXTRA_HEADERS)
+        set (MODULE_PRIVATE_EXTRA_HEADERS "")
+    endif()
+
     #####
     # Module external options
 

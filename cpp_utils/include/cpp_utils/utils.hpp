@@ -289,10 +289,44 @@ CPP_UTILS_DllAPI
 std::set<Key> get_keys(
         const std::map<Key, Value>& map);
 
+/**
+ * @brief Get std::unordered_map keys.
+ *
+ * Obtain the set of keys relative to a std::unordered_map.
+ *
+ * @param map [in] map whose keys are returned
+ *
+ * @return map keys
+ */
 template <typename Key, typename Value>
 CPP_UTILS_DllAPI
 std::set<Key> get_keys(
         const std::unordered_map<Key, Value>& map);
+
+/**
+ * @brief Encode string using base64.
+ *
+ * @param in [in] string to encode
+ *
+ * @return string in base64
+ */
+CPP_UTILS_DllAPI
+std::string base64_encode(
+        const std::string& in);
+
+/**
+ * @brief Decode base64 string.
+ *
+ * @param in [in] string in base64 to decode
+ *
+ * @return decoded string
+ */
+CPP_UTILS_DllAPI
+std::string base64_decode(
+        const std::string& in);
+
+//! Set of characters used in base64 encoding/decoding algorithms
+const std::string base64_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 } /* namespace utils */
 } /* namespace eprosima */

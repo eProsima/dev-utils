@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <cpp_utils/library/library_dll.h>
 
 namespace eprosima {

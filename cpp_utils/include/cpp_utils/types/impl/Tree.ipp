@@ -113,7 +113,7 @@ std::list<TreeNode<Info>> TreeNode<Info>::all_nodes() const noexcept
     for (const auto& b : branches_)
     {
         auto b_branches = b.all_nodes();
-        result.splice(result.end(), b_branches);
+        result.splice(result.begin(), b_branches);
     }
     return result;
 }

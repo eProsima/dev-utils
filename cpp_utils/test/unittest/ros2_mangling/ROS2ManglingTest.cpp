@@ -15,6 +15,7 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+
 #include <cpp_utils/ros2_mangling.hpp>
 
 using namespace eprosima::utils;

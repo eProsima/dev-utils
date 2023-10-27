@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <cpp_utils/library/library_dll.h>
+
 namespace eprosima {
 namespace utils {
 
@@ -25,6 +27,7 @@ namespace utils {
  * @return name stripped of prefix, or
  * @return "" if name doesn't start with prefix
  */
+CPP_UTILS_DllAPI
 std::string remove_prefix(
         const std::string& name,
         const std::string& prefix);
@@ -34,6 +37,7 @@ std::string remove_prefix(
  * @param[in] prefix prefix to be added
  * @return Returns the name with the prefix added "prefixname"
  */
+CPP_UTILS_DllAPI
 std::string add_prefix(
         const std::string& name,
         const std::string& prefix);
@@ -41,6 +45,7 @@ std::string add_prefix(
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string add_suffix(
         const std::string& name,
         const std::string& suffix);
@@ -48,6 +53,7 @@ std::string add_suffix(
 /**
  * @return Returns the ROS specific prefix if present, otherwise "".
  */
+CPP_UTILS_DllAPI
 std::string get_ros_prefix_if_exists(
         const std::string& topic_name);
 
@@ -56,100 +62,117 @@ std::string get_ros_prefix_if_exists(
  *
  * @return Returns the topic name stripped of a ROS specific prefix if present.
  */
+CPP_UTILS_DllAPI
 std::string remove_ros_prefix_if_exists(
         const std::string& topic_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string add_ros_topic_prefix(
         const std::string& topic_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string add_ros_service_requester_prefix(
         const std::string& topic_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string add_ros_service_response_prefix(
         const std::string& topic_name);
 
 /**
  * @return Returns \c ros_prefixes_.
  */
+CPP_UTILS_DllAPI
 const std::vector<std::string>& get_all_ros_prefixes();
 
 /**
  * @return Returns the demangle ROS topic or the original if not a ROS topic.
  */
+CPP_UTILS_DllAPI
 std::string demangle_if_ros_topic(
         const std::string& topic_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string mangle_if_ros_topic(
         const std::string& topic_name);
 
 /**
  * @return Returns the demangled ROS type or the original if not a ROS type.
  */
+CPP_UTILS_DllAPI
 std::string demangle_if_ros_type(
         const std::string& dds_type_string);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string mangle_if_ros_type(
         const std::string& ros2_type_string);
 
 /**
  * @return Returns the topic name for a given topic if it is part of a ROS topic, otherwise "".
  */
+CPP_UTILS_DllAPI
 std::string demangle_ros_topic_prefix_from_topic(
         const std::string& topic_name);
 
 /**
  * @return Returns the service name for a given topic if it is part of a ROS service, otherwise "".
  */
+CPP_UTILS_DllAPI
 std::string demangle_ros_service_prefix_from_topic(
         const std::string& topic_name);
 /**
  * @return Returns the service name for a given topic if it is part of a ROS service request, otherwise "".
  */
+CPP_UTILS_DllAPI
 std::string demangle_ros_service_request_prefix_from_topic(
         const std::string& topic_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string mangle_ros_service_request_prefix_in_topic(
         const std::string& topic_name);
 
 /**
  * @return Returns the service name for a given topic if it is part of a service response, otherwise "".
  */
+CPP_UTILS_DllAPI
 std::string demangle_ros_service_reply_prefix_from_topic(
         const std::string& topic_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string mangle_ros_service_reply_prefix_in_topic(
         const std::string& topic_name);
 
 /**
  * @return Returns the demangled service type if it is an ROS srv type, otherwise "".
  */
+CPP_UTILS_DllAPI
 std::string demangle_service_type_only(
         const std::string& dds_type_name);
 
 /**
  * @todo
  */
+CPP_UTILS_DllAPI
 std::string mangle_service_type_only(
         const std::string& ros2_type_name);
 

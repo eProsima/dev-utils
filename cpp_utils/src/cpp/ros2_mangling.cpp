@@ -17,6 +17,7 @@
 #include <vector>
 
 #include <cpp_utils/Log.hpp>
+#include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/utils.hpp>
 
 #include <cpp_utils/ros2_mangling.hpp>

@@ -13,8 +13,6 @@
 // limitations under the License.
 
 #include <algorithm>
-#include <string>
-#include <vector>
 
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/macros/macros.hpp>
@@ -31,6 +29,8 @@ const char* const ros_service_response_prefix = "rr";
 
 const std::vector<std::string> ros_prefixes_ =
 {ros_topic_prefix, ros_service_requester_prefix, ros_service_response_prefix};
+
+const char* const ros2_msgs_format = "_msgs/msg/";
 
 std::string remove_prefix(
         const std::string& name,
@@ -155,7 +155,7 @@ std::string mangle_if_ros_type(
 {
     std::string dds_type_string = ros2_type_string;
 
-    size_t substring_position = dds_type_string.find("_msgs/msg/");
+    size_t substring_position = dds_type_string.find(ros2_msgs_format);
     if (substring_position == std::string::npos)
     {
         return dds_type_string;
@@ -163,8 +163,9 @@ std::string mangle_if_ros_type(
 
     std::string substring = "dds_::";
 
-    std::string type_namespace = dds_type_string.substr(0, substring_position + 10);
-    std::string type_name = dds_type_string.substr(substring_position + 10, dds_type_string.length() - 1);
+    std::string type_namespace = dds_type_string.substr(0, substring_position + strlen(ros2_msgs_format));
+    std::string type_name = dds_type_string.substr(substring_position + strlen(ros2_msgs_format),
+                    dds_type_string.length() - substring_position - strlen(ros2_msgs_format));
 
     if (type_name.length() == 0)
     {
@@ -219,8 +220,8 @@ std::string mangle_ros_service_in_topic(
         const std::string& topic_name,
         const std::string suffix)
 {
-    size_t suffix_position = topic_name.rfind("/");
-    if (suffix_position != 0)
+    size_t topic_name_position = topic_name.rfind("/");
+    if (topic_name_position != 0)
     {
         return "";
     }
@@ -323,17 +324,18 @@ std::string mangle_service_type_only(
         return "";
     }
 
-    std::string dds_type_name = ros2_type_name.substr(0, ns_substring_srv_position + 5) + "dds_::";
-    dds_type_name = dds_type_name + ros2_type_name.substr(ns_substring_srv_position + 5, ros2_type_name.length() - 1);
+    std::string dds_type_name = ros2_type_name.substr(0, ns_substring_srv_position + strlen("/srv/")) + "dds_::";
+    dds_type_name = dds_type_name + ros2_type_name.substr(ns_substring_srv_position + strlen(
+                        "/srv/"), ros2_type_name.length() - ns_substring_srv_position - strlen("/srv/"));
 
     size_t ns_substring_rq_position = ros2_type_name.find("rq/");
     size_t ns_substring_rr_position = ros2_type_name.find("rr/");
 
-    if (std::string::npos != ns_substring_rq_position)
+    if (0 == ns_substring_rq_position)
     {
         dds_type_name = dds_type_name + "_Request_";
     }
-    else if (std::string::npos != ns_substring_rr_position)
+    else if (0 == ns_substring_rr_position)
     {
         dds_type_name = dds_type_name + "_Response_";
     }

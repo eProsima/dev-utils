@@ -477,8 +477,8 @@ TEST(ROS2ManglingTest, demangle_service_type_only)
  * CASES:
  * - DDS Service Name: "hello"            Return: ""
  * - DDS Service Name: "rt/hello"         Return: ""
- * - DDS Service Name: "rq/hello"         Return: "rq::dds_::hello_Request_"
- * - DDS Service Name: "rr/hello"         Return: "rr::dds_::hello_Response_"
+ * - DDS Service Name: "rq/srv/hello"     Return: "rq::srv::dds_::hello_Request_"
+ * - DDS Service Name: "rr/srv/hello"     Return: "rr::srv::dds_::hello_Response_"
  * - DDS Service Name: "rq::dds_::hello"  Return: ""
  * - DDS Service Name: "rr::dds_::hello"  Return: ""
  * - DDS Service Name: "rt::dds_::hello"  Return: ""

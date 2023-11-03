@@ -479,6 +479,8 @@ TEST(ROS2ManglingTest, demangle_service_type_only)
  * - DDS Service Name: "rt/hello"         Return: ""
  * - DDS Service Name: "rq/srv/hello"     Return: "rq::srv::dds_::hello_Request_"
  * - DDS Service Name: "rr/srv/hello"     Return: "rr::srv::dds_::hello_Response_"
+ * - DDS Service Name: "/srv/hello"       Return: ""
+ * - DDS Service Name: "/srv/hello"       Return: ""
  * - DDS Service Name: "rq::dds_::hello"  Return: ""
  * - DDS Service Name: "rr::dds_::hello"  Return: ""
  * - DDS Service Name: "rt::dds_::hello"  Return: ""
@@ -490,6 +492,9 @@ TEST(ROS2ManglingTest, mangle_service_type_only)
 
     EXPECT_EQ("rq::srv::dds_::hello_Request_", mangle_service_type_only("rq/srv/hello"));
     EXPECT_EQ("rr::srv::dds_::hello_Response_", mangle_service_type_only("rr/srv/hello"));
+
+    EXPECT_EQ("", mangle_service_type_only("/srv/hello"));
+    EXPECT_EQ("", mangle_service_type_only("/srv/hello"));
 
     EXPECT_EQ("", mangle_service_type_only("rq::dds_::hello"));
     EXPECT_EQ("", mangle_service_type_only("rr::dds_::hello"));

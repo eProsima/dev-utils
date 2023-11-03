@@ -23,11 +23,18 @@ namespace eprosima {
 namespace utils {
 
 /**
- * @param[in] name string that will be stripped from prefix
- * @param[in] prefix prefix to be stripped
+ * @brief Remove a specified prefix from a string.
  *
- * @return name stripped of prefix, or
- * @return "" if name doesn't start with prefix
+ * This function takes a string and a prefix as input. It checks if the string starts with the specified prefix
+ * followed by a forward slash ('/'). If the prefix exists at the beginning of the string, it removes the prefix
+ * and the following slash and returns the modified string. If the prefix is not found at the beginning of the
+ * string, an empty string is returned.
+ *
+ * @param[in] name The input string from which the prefix will be removed.
+ * @param[in] prefix The prefix to be removed from the input string.
+ *
+ * @return The modified string with the specified prefix removed, or an empty string if the prefix is not present
+ * at the beginning of the input string.
  */
 CPP_UTILS_DllAPI
 std::string remove_prefix(
@@ -35,10 +42,15 @@ std::string remove_prefix(
         const std::string& prefix);
 
 /**
- * @param[in] name string to be prefixed with "prefix"
- * @param[in] prefix prefix to be added
+ * @brief Add a specified prefix to a string.
  *
- * @return Returns the name with the prefix added "prefixname"
+ * This function takes a string and a prefix as input. It concatenates the prefix with the input string
+ * and returns the resulting string with the prefix added.
+ *
+ * @param[in] name The input string to which the prefix will be added.
+ * @param[in] prefix The prefix to be added to the input string.
+ *
+ * @return The modified string with the specified prefix added.
  */
 CPP_UTILS_DllAPI
 std::string add_prefix(
@@ -46,10 +58,15 @@ std::string add_prefix(
         const std::string& prefix);
 
 /**
- * @param[in] name string to be suffixed with "suffix"
- * @param[in] suffix suffix to be added
+ * @brief Add a specified suffix to a string.
  *
- * @return Returns the name with the suffix added "namesuffix"
+ * This function takes a string and a suffix as input. It concatenates the suffix with the input string
+ * and returns the resulting string with the suffix added.
+ *
+ * @param[in] name The input string to which the suffix will be added.
+ * @param[in] suffix The suffix to be added to the input string.
+ *
+ * @return The modified string with the specified suffix added.
  */
 CPP_UTILS_DllAPI
 std::string add_suffix(
@@ -57,70 +74,93 @@ std::string add_suffix(
         const std::string& suffix);
 
 /**
- * @param[in] topic_name The name of the topic to be processed.
+ * @brief Get a ROS prefix if it exists at the beginning of a topic name.
  *
- * @return Returns the ROS specific prefix if present, otherwise "".
+ * This function takes a topic name as input and checks if it starts with any of the ROS prefixes.
+ * If a matching ROS prefix is found at the beginning of the topic name, the prefix is returned.
+ * If no matching prefix is found, an empty string is returned.
+ *
+ * @param[in] topic_name The input topic name to be checked for a ROS prefix.
+ *
+ * @return The ROS prefix found at the beginning of the topic name, or an empty string if no prefix exists.
  */
 CPP_UTILS_DllAPI
 std::string get_ros_prefix_if_exists(
         const std::string& topic_name);
 
 /**
- * @brief Remove the ROS specific prefix from the \c topic_name if it exists.
+ * @brief Remove a ROS prefix if it exists at the beginning of a topic name.
+ *
+ * This function takes a topic name as input and checks if it starts with any of the ROS prefixes.
+ * If a matching ROS prefix is found at the beginning of the topic name, the prefix is removed,
+ * and the modified topic name is returned. If no matching prefix is found, the original topic name is returned unchanged.
  *
  * @param[in] topic_name The name of the topic to be processed.
  *
- * @return Returns the topic name stripped of a ROS specific prefix if present.
+ * @return The topic name with the ROS prefix removed, or the original topic name if no prefix exists.
  */
 CPP_UTILS_DllAPI
 std::string remove_ros_prefix_if_exists(
         const std::string& topic_name);
 
 /**
- * @brief Add the ROS Topic prefix in the \c topic_name.
+ * @brief Add the ROS topic prefix to a given topic name.
  *
- * @param[in] topic_name The name of the topic to be processed.
+ * This function takes a topic name as input and adds the ROS topic prefix to it.
+ * The modified topic name with the prefix added is returned.
  *
- * @return Returns the topic name with the ROS Topic prefix.
+ * @param[in] topic_name The input topic name to which the ROS topic prefix will be added.
+ *
+ * @return The modified topic name with the ROS topic prefix added.
  */
 CPP_UTILS_DllAPI
 std::string add_ros_topic_prefix(
         const std::string& topic_name);
 
 /**
- * @brief Add the ROS Service Requester prefix in the \c topic_name.
+ * @brief Add the ROS service requester prefix to a given topic name.
  *
- * @param[in] topic_name The name of the topic to be processed.
+ * This function takes a topic name as input and adds the ROS service requester prefix to it.
+ * The modified topic name with the prefix added is returned.
  *
- * @return Returns the topic name with the ROS Requester prefix.
+ * @param[in] topic_name The input topic name to which the ROS service requester prefix will be added.
+ *
+ * @return The modified topic name with the ROS service requester prefix added.
  */
 CPP_UTILS_DllAPI
 std::string add_ros_service_requester_prefix(
         const std::string& topic_name);
 
 /**
- * @brief Add the ROS Service Response prefix in the \c topic_name.
+ * @brief Add the ROS service response prefix to a given topic name.
  *
- * @param[in] topic_name The name of the topic to be processed.
+ * This function takes a topic name as input and adds the ROS service response prefix to it.
+ * The modified topic name with the prefix added is returned.
  *
- * @return Returns the topic name with the ROS Response prefix.
+ * @param[in] topic_name The input topic name to which the ROS service response prefix will be added.
+ *
+ * @return The modified topic name with the ROS service response prefix added.
  */
 CPP_UTILS_DllAPI
 std::string add_ros_service_response_prefix(
         const std::string& topic_name);
 
 /**
- * @return Returns \c ros_prefixes_.
+ * @brief Get a reference to the collection of all ROS prefixes.
+ *
+ * This function returns a reference to the collection of ROS prefixes stored in the `ros_prefixes_` variable.
+ *
+ * @return A reference to the collection of all ROS prefixes.
  */
 CPP_UTILS_DllAPI
 const std::vector<std::string>& get_all_ros_prefixes();
 
 /**
- * @brief Obtain the ROS topic associated with the provided \c topic_name,
- * excluding the ROS prefix.
+ * @brief Demangle a ROS topic name by removing the ROS prefix if it exists.
  *
- * If the topic_name begins with a ROS prefix (i.e., starts with ROS prefix + "/").
- * If the input topic name does not contain a ROS prefix + "/", it is returned unchanged.
+ * This function takes a ROS topic name as input and attempts to demangle it by removing the ROS prefix.
+ * If the input topic name contains a ROS prefix, it is removed. If there is no ROS prefix, the topic name
+ * is returned unchanged.
  *
  * @param[in] topic_name The name of the topic to be processed.
  *
@@ -205,7 +245,7 @@ CPP_UTILS_DllAPI
 std::string demangle_ros_service_prefix_from_topic(
         const std::string& topic_name);
 /**
- * @brief Demangle a ROS service request topic name by removing the requester prefix.
+ * @brief Demangle a ROS service request topic name by removing the requester prefix and "Request" suffix.
  *
  * This function takes a ROS service request topic name as input and removes the specified requester prefix and the common "Request" suffix.
  * If the input topic name does not contain both the requester prefix

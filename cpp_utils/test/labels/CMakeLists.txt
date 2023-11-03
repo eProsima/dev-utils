@@ -19,5 +19,5 @@ set_test_label_file(${CMAKE_CURRENT_SOURCE_DIR}/XTSAN.list "xtsan")
 
 # Set list of tests that can fail in windows
 if (WIN32)
-    set_test_label_file(${CMAKE_CURRENT_SOURCE_DIR}/WINDOWS_TEST_XFAIL.list "xfail")
+    set_test_label_file(${CMAKE_CURRENT_SOURCE_DIR}/WINDOWS_XFAIL.list "xfail")
 endif()

@@ -151,6 +151,42 @@ FuzzyLevelType Fuzzy<T>::get_level() const noexcept
     return fuzzy_level_;
 }
 
+template <typename T>
+std::string Fuzzy<T>::get_level_as_str() const noexcept
+{
+    // Ideally, we would overload the << operator for FuzzyLevelType, but we can't since it's a namespace to a short.
+    std::string fuzzy_level;
+
+    switch (fuzzy_level_)
+    {
+        case FuzzyLevelValues::fuzzy_level_unset:
+            fuzzy_level = "UNSET";
+            break;
+
+        case FuzzyLevelValues::fuzzy_level_default:
+            fuzzy_level = "DEFAULT";
+            break;
+
+        case FuzzyLevelValues::fuzzy_level_fuzzy:
+            fuzzy_level = "FUZZY";
+            break;
+
+        case FuzzyLevelValues::fuzzy_level_set:
+            fuzzy_level = "SET";
+            break;
+
+        case FuzzyLevelValues::fuzzy_level_hard:
+            fuzzy_level = "HARD";
+            break;
+
+        default:
+            // TODO: error?
+            break;
+    }
+
+    return fuzzy_level;
+}
+
 /////////////////////////
 // SET METHODS
 /////////////////////////
@@ -187,7 +223,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f)
 {
-    os << "Fuzzy{Level(" << f.get_level() << ") " << f.get_reference() << "}";
+    os << "Fuzzy{Level(" << f.get_level_as_str() << ") " << f.get_reference() << "}";
     return os;
 }
 

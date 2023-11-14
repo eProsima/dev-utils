@@ -30,7 +30,7 @@ const char* const ros_service_response_prefix = "rr";
 const std::vector<std::string> ros_prefixes_ =
 {ros_topic_prefix, ros_service_requester_prefix, ros_service_response_prefix};
 
-const char* const ros2_msgs_format = "_msgs/msg/";
+const char* const ros2_msgs_format = "/msg/";
 const char* const ros2_srv_format = "/srv/";
 
 std::string remove_prefix(

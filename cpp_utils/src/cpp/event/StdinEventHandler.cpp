@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <thread>
+
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/event/StdinEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>

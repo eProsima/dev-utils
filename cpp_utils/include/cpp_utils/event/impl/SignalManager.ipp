@@ -20,6 +20,7 @@
 #pragma once
 
 #include <algorithm>
+#include <thread>
 
 #include <cpp_utils/exception/InconsistencyException.hpp>
 #include <cpp_utils/Log.hpp>

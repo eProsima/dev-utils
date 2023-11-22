@@ -17,6 +17,8 @@
  *
  */
 
+#include <thread>
+
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/event/PeriodicEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>

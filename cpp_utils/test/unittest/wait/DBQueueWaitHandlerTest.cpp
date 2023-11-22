@@ -14,6 +14,7 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+#include <thread>
 
 #include <cpp_utils/wait/DBQueueWaitHandler.hpp>
 #include <cpp_utils/exception/DisabledException.hpp>

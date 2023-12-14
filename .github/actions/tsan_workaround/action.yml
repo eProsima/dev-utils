@@ -8,8 +8,8 @@ runs:
     - name: Download gcc-10 and copy file of interest
       run: |
 
-        apt update && apt install libgcc-10-dev
+        sudo apt update && sudo apt install libgcc-10-dev
         dpkg -S libtsan_preinit.o
-        cp /usr/lib/gcc/x86_64-linux-gnu/10/libtsan_preinit.o /usr/lib/gcc/x86_64-linux-gnu/9
+        sudo cp /usr/lib/gcc/x86_64-linux-gnu/10/libtsan_preinit.o /usr/lib/gcc/x86_64-linux-gnu/9
 
       shell: bash

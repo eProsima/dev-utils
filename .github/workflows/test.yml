@@ -19,7 +19,7 @@
 #     - execute tests with ASAN flag
 #
 #   - tsan
-#     - ubuntu-22.04
+#     - ubuntu-20.04
 #     - execute tests with TSAN flag
 #
 #   - clang
@@ -144,7 +144,7 @@ jobs:
 # TSAN
 
   tsan:
-    # NOTE: there is a known issue in TSAN 20.04 with std::condition_variable::wait_for
+    # NOTE: there is a known issue in TSAN 22.04 with std::condition_variable::wait_for
     # https://github.com/google/sanitizers/issues/1259
     # Until this is fixed, we use 20.04 for TSAN work
     runs-on: ubuntu-20.04
@@ -163,10 +163,15 @@ jobs:
           dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
+      # NOTE: workaround for https://bugs.launchpad.net/ubuntu/+source/gcc-9/+bug/2029910
+      - name: TSAN workaround
+        uses: ./src/.github/actions/tsan_workaround
+
       - name: Compile and run tests
         uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@v0
         with:
           packages_names: ${{ env.cpp_packages_names }}
+          cmake_args: -DCMAKE_CXX_FLAGS='-pthread'
           workspace_dependencies: './install'
 
 

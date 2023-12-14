@@ -32,5 +32,15 @@ set(MODULE_DEPENDENCIES
         ${MODULE_FIND_PACKAGES}
     )
 
+###################################################################################
+# NOTE: workaround for https://bugs.launchpad.net/ubuntu/+source/gcc-9/+bug/2029910
+# Better be done with FindThreads.cmake as in Fast-DDS, but it's just a workaround
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+###################################################################################
+
 set(MODULE_THIRDPARTY_HEADERONLY
     filewatch)

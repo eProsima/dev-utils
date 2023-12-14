@@ -1,0 +1,15 @@
+name: tsan_workaround
+description: Install gcc-10 to copy its libtsan_preinit.o to gcc-9 (missing due to bug https://bugs.launchpad.net/ubuntu/+source/gcc-9/+bug/2029910).
+
+runs:
+  using: composite
+  steps:
+
+    - name: Download gcc-10 and copy file of interest
+      run: |
+
+        apt update && apt install libgcc-10-dev
+        dpkg -S libtsan_preinit.o
+        cp /usr/lib/gcc/x86_64-linux-gnu/10/libtsan_preinit.o /usr/lib/gcc/x86_64-linux-gnu/9
+
+      shell: bash

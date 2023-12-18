@@ -173,6 +173,9 @@ public:
     //! Get the Fuzzy Level internal value.
     FuzzyLevelType get_level() const noexcept;
 
+    //! Get the FuzzyLevel's internal value as a string.
+    std::string get_level_as_str() const noexcept;
+
     /////////////////////////
     // SET METHODS
     /////////////////////////
@@ -218,7 +221,8 @@ protected:
 
 //! \c Fuzzy to stream serializator
 template <typename T>
-CPP_UTILS_DllAPI std::ostream& operator <<(
+CPP_UTILS_DllAPI
+std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f);
 

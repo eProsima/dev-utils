@@ -16,7 +16,13 @@
 # Compile C++ Library
 ###############################################################################
 
-# TODO
+# Compile library
+#
+# ARGUMENTS:
+# _SOURCE_PATH -> Path to the source files
+# _INCLUDE_PATH -> Path to the header files
+# ARGV2 -> Source files to use (not _SOURCE_PATH) (optional)
+# ARGV3 -> Header files to use (not _INCLUDE_PATH) (optional)
 function(compile_library _SOURCE_PATH _INCLUDE_PATH)
 
     if (BUILD_LIBRARY)
@@ -32,27 +38,36 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
         # Get source files
         ###############################################################################
         # Project sources
-        file(
-            GLOB_RECURSE SOURCES_FILES
-                "${_SOURCE_PATH}/*.c"
-                "${_SOURCE_PATH}/*.cpp"
-                "${_SOURCE_PATH}/*.cxx"
-                "${_SOURCE_PATH}/**/*.c"
-                "${_SOURCE_PATH}/**/*.cpp"
-                "${_SOURCE_PATH}/**/*.cxx"
+
+        if ("${ARGV2}" STREQUAL "")
+            file(
+                GLOB_RECURSE SOURCES_FILES
+                    "${_SOURCE_PATH}/*.c"
+                    "${_SOURCE_PATH}/*.cpp"
+                    "${_SOURCE_PATH}/*.cxx"
+                    "${_SOURCE_PATH}/**/*.c"
+                    "${_SOURCE_PATH}/**/*.cpp"
+                    "${_SOURCE_PATH}/**/*.cxx"
             )
+        else()
+            set(SOURCES_FILES ${ARGV2})
+        endif()
 
         # Project headers
         if(MSVC)
-            file(
-                GLOB_RECURSE HEADERS_FILES
-                    ${_INCLUDE_PATH}/**/*.h
-                    ${_INCLUDE_PATH}/**/*.hpp
-                    ${_INCLUDE_PATH}/**/*.ipp
-                    ${_SOURCE_PATH}/**/*.h
-                    ${_SOURCE_PATH}/**/*.hpp
-                    ${_SOURCE_PATH}/**/*.ipp
-                )
+            if ("${ARGV3}" STREQUAL "")
+                file(
+                    GLOB_RECURSE HEADERS_FILES
+                        ${_INCLUDE_PATH}/**/*.h
+                        ${_INCLUDE_PATH}/**/*.hpp
+                        ${_INCLUDE_PATH}/**/*.ipp
+                        ${_SOURCE_PATH}/**/*.h
+                        ${_SOURCE_PATH}/**/*.hpp
+                        ${_SOURCE_PATH}/**/*.ipp
+                    )
+            else()
+                set(HEADERS_FILES ${ARGV2})
+            endif()
         endif()
 
         set(${MODULE_NAME}_SOURCES

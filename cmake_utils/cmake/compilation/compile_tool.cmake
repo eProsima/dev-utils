@@ -38,7 +38,7 @@ function(compile_tool _SOURCE_PATH)
         # Project sources
         if ("${ARGV1}" STREQUAL "")
             file(
-                GLOB_RECURSE SOURCES_FILES
+                GLOB_RECURSE ${MODULE_NAME}_SOURCES
                     "${_SOURCE_PATH}/*.c"
                     "${_SOURCE_PATH}/*.cpp"
                     "${_SOURCE_PATH}/*.cxx"
@@ -47,14 +47,14 @@ function(compile_tool _SOURCE_PATH)
                     "${_SOURCE_PATH}/**/*.cxx"
                 )
         else()
-            set(SOURCES_FILES ${ARGV1})
+            set(${MODULE_NAME}_SOURCES ${ARGV1})
         endif()
         ###############################################################################
         # Compile executable
         ###############################################################################
 
         # Add executable
-        add_executable(${MODULE_NAME} ${SOURCES_FILES})
+        add_executable(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
 
         # Set name for target
         set_target_properties(

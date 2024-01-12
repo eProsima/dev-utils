@@ -16,7 +16,11 @@
 # Compile C++ Executable Tool
 ###############################################################################
 
-# TODO
+# Compile library
+#
+# ARGUMENTS:
+# _SOURCE_PATH -> Path to the source files
+# ARGV1 -> Source files to use (not _SOURCE_PATH) (optional)
 function(compile_tool _SOURCE_PATH)
 
     if (BUILD_TOOL)
@@ -32,22 +36,25 @@ function(compile_tool _SOURCE_PATH)
         # Get source files
         ###############################################################################
         # Project sources
-        file(
-            GLOB_RECURSE ${MODULE_NAME}_SOURCES
-                "${_SOURCE_PATH}/*.c"
-                "${_SOURCE_PATH}/*.cpp"
-                "${_SOURCE_PATH}/*.cxx"
-                "${_SOURCE_PATH}/**/*.c"
-                "${_SOURCE_PATH}/**/*.cpp"
-                "${_SOURCE_PATH}/**/*.cxx"
-            )
-
+        if ("${ARGV1}" STREQUAL "")
+            file(
+                GLOB_RECURSE SOURCES_FILES
+                    "${_SOURCE_PATH}/*.c"
+                    "${_SOURCE_PATH}/*.cpp"
+                    "${_SOURCE_PATH}/*.cxx"
+                    "${_SOURCE_PATH}/**/*.c"
+                    "${_SOURCE_PATH}/**/*.cpp"
+                    "${_SOURCE_PATH}/**/*.cxx"
+                )
+        else()
+            set(SOURCES_FILES ${ARGV1})
+        endif()
         ###############################################################################
         # Compile executable
         ###############################################################################
 
         # Add executable
-        add_executable(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
+        add_executable(${MODULE_NAME} ${SOURCES_FILES})
 
         # Set name for target
         set_target_properties(
@@ -55,7 +62,6 @@ function(compile_tool _SOURCE_PATH)
             PROPERTIES OUTPUT_NAME
                 "${MODULE_TARGET_NAME}"
         )
-
         if(LOG_INFO)
             target_compile_definitions(${MODULE_NAME}
                 PRIVATE FASTDDS_ENFORCE_LOG_INFO
@@ -76,7 +82,6 @@ function(compile_tool _SOURCE_PATH)
             RUNTIME DESTINATION
                 ${BIN_INSTALL_DIR}
         )
-
     endif()
 
 endfunction()

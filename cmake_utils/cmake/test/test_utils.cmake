@@ -15,19 +15,24 @@
 # Return a list of all cpp and hpp files in library
 # Arguments:
 # TEST_SOURCES -> List of source files where new sources will be added
+# ARGV1 -> List of source files to use (not TEST_SOURCES) (optional)
 function(all_library_sources TEST_SOURCES)
 
-    file(GLOB_RECURSE LIBRARY_SOURCES
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.h"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hpp"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hxx"
-            "${PROJECT_SOURCE_DIR}/test/TestUtils/**/*.cpp"
-            "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cpp"
-        )
-    set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
+    if ("${ARGV1}" STREQUAL "")
+        file(GLOB_RECURSE LIBRARY_SOURCES
+                "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
+                "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
+                "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
+                "${PROJECT_SOURCE_DIR}/src/cpp/**/*.h"
+                "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hpp"
+                "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hxx"
+                "${PROJECT_SOURCE_DIR}/test/TestUtils/**/*.cpp"
+                "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cpp"
+            )
+        set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
+    else()
+        set(NEW_TEST_SOURCES "${TEST_SOURCES};${ARGV1}")
+    endif()
     set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
 
 endfunction()

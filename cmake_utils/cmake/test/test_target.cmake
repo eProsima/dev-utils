@@ -132,10 +132,14 @@ endfunction(add_unittest_executable)
 # TEST_LIST -> test cases implemented in the Test .cpp
 # TEST_NEEDED_SOURCES -> source files required to be copies for the test execution
 # ARGV4 -> TEST_EXTRA_HEADERS -> extra headers needed for the test (fifth optional argument)
+# ARGV5 -> TEST_LIBRARY_SOURCES -> list of extra sources files for the test (sixth optional argument)
 function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SOURCES)
 
-    # Add all cpp files to sources
-    all_library_sources("${TEST_SOURCES}")
+    # Add cpp files to sources
+    all_library_sources(
+        "${TEST_SOURCES}"
+        "${ARGV5}"
+    )
 
     # Add all library needed by sources
     set(EXTRA_LIBRARIES

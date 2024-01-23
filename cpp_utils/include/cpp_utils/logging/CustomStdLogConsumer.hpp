@@ -45,7 +45,7 @@ public:
     //! Create new CustomStdLogConsumer with regex filter generated from a string and with maximum verbosity kind.
     CPP_UTILS_DllAPI
     CustomStdLogConsumer(
-        const LogFilter& log_filter_map,
+        const LogFilter& log_filter_,
         const eprosima::fastdds::dds::Log::Kind& log_verbosity);
 
     //! Default destructor
@@ -82,7 +82,7 @@ protected:
             const Log::Entry& entry);
 
     //! Regex filter for entry category
-    LogFilter filter_map_;
+    LogFilter filter_;
 
     //! Maximum Log Kind that will be printed.
     eprosima::fastdds::dds::Log::Kind verbosity_;

@@ -23,9 +23,9 @@ namespace eprosima {
 namespace utils {
 
 CustomStdLogConsumer::CustomStdLogConsumer(
-        const LogFilter& log_filter_map,
+        const LogFilter& log_filter_,
         const eprosima::fastdds::dds::Log::Kind& log_verbosity)
-        : filter_map_(log_filter_map)
+        : filter_(log_filter_)
         , verbosity_(log_verbosity)
 {
     // Do nothing
@@ -62,7 +62,7 @@ bool CustomStdLogConsumer::accept_entry_(
     }
 
     // Filter by regex
-    std::regex filter_regex(filter_map_[entry.kind]);
+    std::regex filter_regex(filter_[entry.kind]);
 
     if (!std::regex_search(entry.context.category, filter_regex))
     {

@@ -16,7 +16,7 @@ file_packages = [
 
 setup(
     name=package_name,
-    version='0.4.0',
+    version='0.5.0',
     packages=file_packages,
     long_description=long_description,
     data_files=[
@@ -27,7 +27,7 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='eprosima',
-    maintainer_email='javierparis@eprosima.com',
+    maintainer_email='raul@eprosima.com',
     description=description,
     license='Apache License, Version 2.0',
     tests_require=['pytest'],

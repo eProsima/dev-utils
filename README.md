@@ -103,7 +103,7 @@ is explained in the following section.
 ```bash
 mkdir -p ~/DDS-Router/src
 cd ~/DDS-Router
-wget https://raw.githubusercontent.com/eProsima/dev-utils/main/dev_utils.repos
+wget https://raw.githubusercontent.com/eProsima/dev-utils/v0.5.0/dev_utils.repos
 vcs import src < dev_utils.repos
 ```
 

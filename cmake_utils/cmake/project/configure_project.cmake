@@ -54,6 +54,11 @@ macro(configure_project)
     # Set variables for project
     load_project_settings()
 
+    # Find module dependencies packages
+    foreach(MODULE_DEPENDENCY ${MODULE_DEPENDENCIES})
+        find_package(${MODULE_DEPENDENCY} QUIET)
+    endforeach()
+
     # Read version if it is not already set
     if( NOT DEFINED MODULE_VERSION_MAJOR OR
         NOT DEFINED MODULE_VERSION_MINOR OR

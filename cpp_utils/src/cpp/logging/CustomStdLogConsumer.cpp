@@ -25,8 +25,8 @@ namespace utils {
 CustomStdLogConsumer::CustomStdLogConsumer(
         const LogFilter& filter,
         const VerbosityKind& verbosity)
-        : filter_(filter)
-        , verbosity_(verbosity)
+    : filter_(filter)
+    , verbosity_(verbosity)
 {
     // Do nothing
 }

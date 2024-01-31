@@ -45,8 +45,8 @@ public:
 
     //! Create new CustomStdLogConsumer with regex filter generated from a string and with maximum verbosity kind.
     CPP_UTILS_DllAPI CustomStdLogConsumer(
-        const LogFilter& log_filter_,
-        const VerbosityKind& log_verbosity);
+            const LogFilter& log_filter_,
+            const VerbosityKind& log_verbosity);
 
     //! Default destructor
     CPP_UTILS_DllAPI ~CustomStdLogConsumer() noexcept = default;

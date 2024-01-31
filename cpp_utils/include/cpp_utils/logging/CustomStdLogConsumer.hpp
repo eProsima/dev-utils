@@ -26,7 +26,8 @@
 namespace eprosima {
 namespace utils {
 
-using LogFilter = std::map<eprosima::fastdds::dds::Log::Kind, std::string>;
+using VerbosityKind = Log::Kind;
+using LogFilter = std::map<VerbosityKind, std::string>;
 
 /**
  * Custom Log Consumer with Standard (logical) behaviour.
@@ -43,10 +44,9 @@ class CustomStdLogConsumer : public utils::LogConsumer
 public:
 
     //! Create new CustomStdLogConsumer with regex filter generated from a string and with maximum verbosity kind.
-    CPP_UTILS_DllAPI
-    CustomStdLogConsumer(
+    CPP_UTILS_DllAPI CustomStdLogConsumer(
         const LogFilter& log_filter_,
-        const eprosima::fastdds::dds::Log::Kind& log_verbosity);
+        const VerbosityKind& log_verbosity);
 
     //! Default destructor
     CPP_UTILS_DllAPI ~CustomStdLogConsumer() noexcept = default;
@@ -85,7 +85,7 @@ protected:
     LogFilter filter_;
 
     //! Maximum Log Kind that will be printed.
-    eprosima::fastdds::dds::Log::Kind verbosity_;
+    VerbosityKind verbosity_;
 };
 
 } /* namespace utils */

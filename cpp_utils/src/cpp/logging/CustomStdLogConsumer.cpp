@@ -23,10 +23,10 @@ namespace eprosima {
 namespace utils {
 
 CustomStdLogConsumer::CustomStdLogConsumer(
-        const LogFilter& log_filter_,
-        const eprosima::fastdds::dds::Log::Kind& log_verbosity)
-        : filter_(log_filter_)
-        , verbosity_(log_verbosity)
+        const LogFilter& filter,
+        const VerbosityKind& verbosity)
+        : filter_(filter)
+        , verbosity_(verbosity)
 {
     // Do nothing
 }
@@ -49,33 +49,20 @@ void CustomStdLogConsumer::Consume(
 bool CustomStdLogConsumer::accept_entry_(
         const Log::Entry& entry)
 {
-    // Filter by kind
-    if (entry.kind > verbosity_)
-    {
-        return false;
-    }
-    else if (entry.kind == eprosima::fastdds::dds::Log::Kind::Error &&
-            entry.kind < verbosity_)
-    {
-        // In case it is an error message and verbosity is not error, filter does not care
-        return true;
-    }
-
     // Filter by regex
     std::regex filter_regex(filter_[entry.kind]);
+    const bool is_category_valid = std::regex_search(entry.context.category, filter_regex);
+    const bool is_message_valid = std::regex_search(entry.message, filter_regex);
+    // Filter by kind
+    const bool is_kind_valid = entry.kind <= verbosity_;
 
-    if (!std::regex_search(entry.context.category, filter_regex))
-    {
-        return false;
-    }
-
-    return true;
+    return (is_kind_valid && is_category_valid) || (is_kind_valid && is_message_valid);
 }
 
 std::ostream& CustomStdLogConsumer::get_stream_(
         const Log::Entry& entry)
 {
-    if (entry.kind < eprosima::fastdds::dds::Log::Kind::Warning)
+    if (entry.kind < VerbosityKind::Warning)
     {
         return std::cout;
     }

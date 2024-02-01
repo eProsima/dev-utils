@@ -20,14 +20,12 @@
 
 #include <regex>
 
-#include <cpp_utils/Log.hpp>
 #include <cpp_utils/library/library_dll.h>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/logging/LogConfiguration.hpp>
 
 namespace eprosima {
 namespace utils {
-
-using VerbosityKind = Log::Kind;
-using LogFilter = std::map<VerbosityKind, std::string>;
 
 /**
  * Custom Log Consumer with Standard (logical) behaviour.
@@ -45,8 +43,7 @@ public:
 
     //! Create new CustomStdLogConsumer with regex filter generated from a string and with maximum verbosity kind.
     CPP_UTILS_DllAPI CustomStdLogConsumer(
-            const LogFilter& log_filter_,
-            const VerbosityKind& log_verbosity);
+            const LogConfiguration& log_configuration);
 
     //! Default destructor
     CPP_UTILS_DllAPI ~CustomStdLogConsumer() noexcept = default;

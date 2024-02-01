@@ -23,16 +23,15 @@ namespace eprosima {
 namespace utils {
 
 CustomStdLogConsumer::CustomStdLogConsumer(
-        const LogFilter& filter,
-        const VerbosityKind& verbosity)
-    : filter_(filter)
-    , verbosity_(verbosity)
+        const LogConfiguration& log_configuration)
+    : filter_(log_configuration.filter)
+    , verbosity_(log_configuration.verbosity)
 {
     // Do nothing
 }
 
 void CustomStdLogConsumer::Consume(
-        const utils::Log::Entry& entry)
+        const Log::Entry& entry)
 {
     if (accept_entry_(entry))
     {
@@ -53,10 +52,12 @@ bool CustomStdLogConsumer::accept_entry_(
     std::regex filter_regex(filter_[entry.kind]);
     const bool is_category_valid = std::regex_search(entry.context.category, filter_regex);
     const bool is_message_valid = std::regex_search(entry.message, filter_regex);
+    const bool is_content_valid = is_category_valid || is_message_valid;
+
     // Filter by kind
     const bool is_kind_valid = entry.kind <= verbosity_;
 
-    return (is_kind_valid && is_category_valid) || (is_kind_valid && is_message_valid);
+    return is_kind_valid && is_content_valid;
 }
 
 std::ostream& CustomStdLogConsumer::get_stream_(

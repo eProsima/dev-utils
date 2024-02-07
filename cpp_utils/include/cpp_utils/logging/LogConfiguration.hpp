@@ -25,7 +25,7 @@ namespace eprosima {
 namespace utils {
 
 using VerbosityKind = Log::Kind;
-using LogFilter = std::map<VerbosityKind, std::string>;
+using LogFilter = std::map<VerbosityKind, Fuzzy<std::string>>;
 
 /**
  * The collection of settings related to Logging.
@@ -48,9 +48,9 @@ struct LogConfiguration
     /////////////////////////
 
     //! Verbosity kind
-    utils::Fuzzy<utils::VerbosityKind> verbosity;
+    Fuzzy<VerbosityKind> verbosity;
     //! Log Filter
-    utils::Fuzzy<utils::LogFilter> filter;
+    LogFilter filter;
 
     /////////////////////////
     // METHODS
@@ -61,7 +61,7 @@ struct LogConfiguration
      */
     CPP_UTILS_DllAPI
     bool is_valid(
-            utils::Formatter& error_msg) const noexcept;
+            Formatter& error_msg) const noexcept;
 
 };
 
@@ -71,7 +71,7 @@ struct LogConfiguration
 CPP_UTILS_DllAPI
 std::ostream& operator <<(
         std::ostream& os,
-        const utils::Fuzzy<utils::VerbosityKind>& kind);
+        const Fuzzy<VerbosityKind>& kind);
 
 /**
  * @brief \c LogFilter to stream serialization
@@ -79,15 +79,7 @@ std::ostream& operator <<(
 CPP_UTILS_DllAPI
 std::ostream& operator <<(
         std::ostream& os,
-        const utils::LogFilter& filter);
-
-/**
- * @brief \c LogFilter to stream Fuzzy level
- */
-CPP_UTILS_DllAPI
-std::ostream& operator <<(
-        std::ostream& os,
-        const utils::Fuzzy<utils::LogFilter>& filter);
+        const LogFilter& filter);
 
 } /* namespace utils */
 } /* namespace eprosima */

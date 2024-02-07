@@ -27,25 +27,14 @@ namespace utils {
 LogConfiguration::LogConfiguration()
     : verbosity{VerbosityKind::Warning, FuzzyLevelValues::fuzzy_level_default}
 {
-    LogFilter filter_template;
-    filter_template[VerbosityKind::Info] = "";
-    filter_template[VerbosityKind::Warning] = "";
-    filter_template[VerbosityKind::Error] = "";
-    filter.set_value(filter_template, FuzzyLevelValues::fuzzy_level_default);
+    filter[VerbosityKind::Info].set_value("", FuzzyLevelValues::fuzzy_level_default);
+    filter[VerbosityKind::Warning].set_value("", FuzzyLevelValues::fuzzy_level_default);
+    filter[VerbosityKind::Error].set_value("", FuzzyLevelValues::fuzzy_level_default);
 }
 
 bool LogConfiguration::is_valid(
         Formatter& error_msg) const noexcept
 {
-    // Verifica si verbosity es uno de los valores permitidos
-    if (verbosity.get_value() != VerbosityKind::Error &&
-            verbosity.get_value() != VerbosityKind::Warning &&
-            verbosity.get_value() != VerbosityKind::Info)
-    {
-        error_msg << "Invalid verbosity level. Valid values are Error, Warning, or Info.";
-        return false;
-    }
-
     return true;
 }
 
@@ -64,17 +53,9 @@ std::ostream& operator <<(
     for (const auto& entry : filter)
     {
         os << "Kind: " << entry.first <<
-            ", Regex: " << entry.second << std::endl;
+            ", Regex: " << entry.second.get_value() << std::endl;
     }
 
-    return os;
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const Fuzzy<LogFilter>& filter)
-{
-    os << "Fuzzy{Level(" << filter.get_level_as_str() << ") " << filter.get_reference() << "}";
     return os;
 }
 

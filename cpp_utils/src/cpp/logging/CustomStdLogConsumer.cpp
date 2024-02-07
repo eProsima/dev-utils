@@ -49,7 +49,7 @@ bool CustomStdLogConsumer::accept_entry_(
         const Log::Entry& entry)
 {
     // Filter by regex
-    std::regex filter_regex(filter_[entry.kind]);
+    std::regex filter_regex(filter_[entry.kind].get_value());
     const bool is_category_valid = std::regex_search(entry.context.category, filter_regex);
     const bool is_message_valid = std::regex_search(entry.message, filter_regex);
     const bool is_content_valid = is_category_valid || is_message_valid;

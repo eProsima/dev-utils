@@ -44,15 +44,6 @@ struct LogConfiguration
     CPP_UTILS_DllAPI LogConfiguration();
 
     /////////////////////////
-    // VARIABLES
-    /////////////////////////
-
-    //! Verbosity kind
-    Fuzzy<VerbosityKind> verbosity;
-    //! Log Filter
-    LogFilter filter;
-
-    /////////////////////////
     // METHODS
     /////////////////////////
 
@@ -62,6 +53,29 @@ struct LogConfiguration
     CPP_UTILS_DllAPI
     bool is_valid(
             Formatter& error_msg) const noexcept;
+
+    /**
+     * @brief \c set_if_unset method, if verbosity is unset it is set with default values.
+     */
+    CPP_UTILS_DllAPI
+    void set_if_unset(
+        utils::Fuzzy<VerbosityKind> log_verbosity) noexcept;
+
+    /**
+     * @brief \c set_if_unset method, if filter is unset it is set with default values.
+     */
+    CPP_UTILS_DllAPI
+    void set_if_unset(
+        LogFilter log_filter) noexcept;
+
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
+
+    //! Verbosity kind
+    Fuzzy<VerbosityKind> verbosity;
+    //! Log Filter
+    LogFilter filter;
 
 };
 

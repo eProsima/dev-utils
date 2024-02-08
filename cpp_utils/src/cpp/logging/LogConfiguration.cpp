@@ -38,6 +38,34 @@ bool LogConfiguration::is_valid(
     return true;
 }
 
+void LogConfiguration::set_if_unset(
+        utils::Fuzzy<VerbosityKind> log_verbosity) noexcept
+{
+    if (!verbosity.is_set())
+    {
+        verbosity = log_verbosity;
+    }
+}
+
+void LogConfiguration::set_if_unset(
+        LogFilter log_filter) noexcept
+{
+    if (!filter[eprosima::utils::VerbosityKind::Error].is_set())
+    {
+        filter[eprosima::utils::VerbosityKind::Error] = log_filter[eprosima::utils::VerbosityKind::Error];
+    }
+
+    if (!filter[eprosima::utils::VerbosityKind::Warning].is_set())
+    {
+        filter[eprosima::utils::VerbosityKind::Warning] = log_filter[eprosima::utils::VerbosityKind::Warning];
+    }
+
+    if (!filter[eprosima::utils::VerbosityKind::Info].is_set())
+    {
+        filter[eprosima::utils::VerbosityKind::Info] = log_filter[eprosima::utils::VerbosityKind::Info];
+    }
+}
+
 std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<VerbosityKind>& kind)

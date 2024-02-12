@@ -39,30 +39,30 @@ bool LogConfiguration::is_valid(
 }
 
 void LogConfiguration::set_if_unset(
-        utils::Fuzzy<VerbosityKind> log_verbosity) noexcept
+        const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept
 {
-    if (!verbosity.is_set())
+    if (log_verbosity.is_set())
     {
         verbosity = log_verbosity;
     }
 }
 
 void LogConfiguration::set_if_unset(
-        LogFilter log_filter) noexcept
+        const LogFilter& log_filter)
 {
-    if (!filter[eprosima::utils::VerbosityKind::Error].is_set())
+    if (log_filter.at(VerbosityKind::Error).is_set())
     {
-        filter[eprosima::utils::VerbosityKind::Error] = log_filter[eprosima::utils::VerbosityKind::Error];
+        filter[VerbosityKind::Error] = log_filter.at(VerbosityKind::Error);
     }
 
-    if (!filter[eprosima::utils::VerbosityKind::Warning].is_set())
+    if (log_filter.at(VerbosityKind::Warning).is_set())
     {
-        filter[eprosima::utils::VerbosityKind::Warning] = log_filter[eprosima::utils::VerbosityKind::Warning];
+        filter[VerbosityKind::Warning] = log_filter.at(VerbosityKind::Warning);
     }
 
-    if (!filter[eprosima::utils::VerbosityKind::Info].is_set())
+    if (log_filter.at(VerbosityKind::Info).is_set())
     {
-        filter[eprosima::utils::VerbosityKind::Info] = log_filter[eprosima::utils::VerbosityKind::Info];
+        filter[VerbosityKind::Info] = log_filter.at(VerbosityKind::Info);
     }
 }
 
@@ -81,7 +81,7 @@ std::ostream& operator <<(
     for (const auto& entry : filter)
     {
         os << "Kind: " << entry.first <<
-            ", Regex: " << entry.second.get_value() << std::endl;
+            ", Regex: " << entry.second.get_value();
     }
 
     return os;

@@ -18,9 +18,6 @@
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/types/Fuzzy.hpp>
 
-#include <fastdds/dds/core/policy/QosPolicies.hpp>
-#include <fastdds/rtps/common/Types.h>
-
 namespace eprosima {
 namespace utils {
 
@@ -55,18 +52,18 @@ struct LogConfiguration
             Formatter& error_msg) const noexcept;
 
     /**
-     * @brief \c set_if_unset method, if verbosity is unset it is set with default values.
+     * @brief Replace verbosity with a given log_verbosity if verbosity is unset.
      */
     CPP_UTILS_DllAPI
     void set_if_unset(
-        utils::Fuzzy<VerbosityKind> log_verbosity) noexcept;
+        const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept;
 
     /**
-     * @brief \c set_if_unset method, if filter is unset it is set with default values.
+     * @brief Replace filter with a given log_filter if filter is unset.
      */
     CPP_UTILS_DllAPI
     void set_if_unset(
-        LogFilter log_filter) noexcept;
+        const LogFilter& log_filter);
 
     /////////////////////////
     // VARIABLES

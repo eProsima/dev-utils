@@ -56,14 +56,14 @@ struct LogConfiguration
      */
     CPP_UTILS_DllAPI
     void set_if_unset(
-        const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept;
+            const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept;
 
     /**
      * @brief Replace filter with a given log_filter if filter is unset.
      */
     CPP_UTILS_DllAPI
     void set_if_unset(
-        const LogFilter& log_filter);
+            const LogFilter& log_filter);
 
     /////////////////////////
     // VARIABLES

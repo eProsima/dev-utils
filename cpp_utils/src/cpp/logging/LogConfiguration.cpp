@@ -79,10 +79,8 @@ std::ostream& operator <<(
         const LogFilter& filter)
 {
     os << "Log Filter: {Kind: Error, Regex: " << filter.at(VerbosityKind::Error) << "}; "
-
-    << "{Kind: Warning, Regex: " << filter.at(VerbosityKind::Warning) << "}; "
-
-    << "{Kind: Info, Regex: " << filter.at(VerbosityKind::Info) << "}";
+       << "{Kind: Warning, Regex: " << filter.at(VerbosityKind::Warning) << "}; "
+       << "{Kind: Info, Regex: " << filter.at(VerbosityKind::Info) << "}";
 
     return os;
 }

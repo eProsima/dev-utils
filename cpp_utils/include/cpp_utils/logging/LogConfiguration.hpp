@@ -18,6 +18,10 @@
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/types/Fuzzy.hpp>
 
+#include <map>
+#include <ostream>
+#include <string>
+
 namespace eprosima {
 namespace utils {
 

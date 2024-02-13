@@ -38,29 +38,29 @@ bool LogConfiguration::is_valid(
     return true;
 }
 
-void LogConfiguration::set_if_unset(
+void LogConfiguration::set(
         const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept
 {
-    if (log_verbosity.is_set())
+    if (verbosity.get_level() <= log_verbosity.get_level())
     {
         verbosity = log_verbosity;
     }
 }
 
-void LogConfiguration::set_if_unset(
+void LogConfiguration::set(
         const LogFilter& log_filter)
 {
-    if (log_filter.at(VerbosityKind::Error).is_set())
+    if (filter[VerbosityKind::Error].get_level() <= log_filter.at(VerbosityKind::Error).get_level())
     {
         filter[VerbosityKind::Error] = log_filter.at(VerbosityKind::Error);
     }
 
-    if (log_filter.at(VerbosityKind::Warning).is_set())
+    if (filter[VerbosityKind::Warning].get_level() <= log_filter.at(VerbosityKind::Warning).get_level())
     {
         filter[VerbosityKind::Warning] = log_filter.at(VerbosityKind::Warning);
     }
 
-    if (log_filter.at(VerbosityKind::Info).is_set())
+    if (filter[VerbosityKind::Info].get_level() <= log_filter.at(VerbosityKind::Info).get_level())
     {
         filter[VerbosityKind::Info] = log_filter.at(VerbosityKind::Info);
     }
@@ -78,9 +78,9 @@ std::ostream& operator <<(
         std::ostream& os,
         const LogFilter& filter)
 {
-    os << "Log Filter: {Kind: Error, Regex: " << filter.at(VerbosityKind::Error) << "}; "
-       << "{Kind: Warning, Regex: " << filter.at(VerbosityKind::Warning) << "}; "
-       << "{Kind: Info, Regex: " << filter.at(VerbosityKind::Info) << "}";
+    os << "Log Filter: {Kind: Error, Regex: " << filter.at(VerbosityKind::Error).get_value() << "}; "
+       << "{Kind: Warning, Regex: " << filter.at(VerbosityKind::Warning).get_value() << "}; "
+       << "{Kind: Info, Regex: " << filter.at(VerbosityKind::Info).get_value() << "}";
 
     return os;
 }

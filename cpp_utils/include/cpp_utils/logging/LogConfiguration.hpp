@@ -56,17 +56,17 @@ struct LogConfiguration
             Formatter& error_msg) const noexcept;
 
     /**
-     * @brief Replace verbosity with a given log_verbosity if verbosity is unset.
+     * @brief Replace verbosity with a given log_verbosity if verbosity has a lower fuzzy level.
      */
     CPP_UTILS_DllAPI
-    void set_if_unset(
+    void set(
             const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept;
 
     /**
-     * @brief Replace filter with a given log_filter if filter is unset.
+     * @brief Replace filter with a given log_filter if filter has a lower fuzzy level.
      */
     CPP_UTILS_DllAPI
-    void set_if_unset(
+    void set(
             const LogFilter& log_filter);
 
     /////////////////////////

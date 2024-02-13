@@ -78,11 +78,11 @@ std::ostream& operator <<(
         std::ostream& os,
         const LogFilter& filter)
 {
-    for (const auto& entry : filter)
-    {
-        os << "Kind: " << entry.first <<
-            ", Regex: " << entry.second.get_value();
-    }
+    os << "Log Filter: {Kind: Error, Regex: " << filter.at(VerbosityKind::Error) << "}; "
+
+    << "{Kind: Warning, Regex: " << filter.at(VerbosityKind::Warning) << "}; "
+
+    << "{Kind: Info, Regex: " << filter.at(VerbosityKind::Info) << "}";
 
     return os;
 }

@@ -41,7 +41,7 @@ class CustomStdLogConsumer : public utils::LogConsumer
 {
 public:
 
-    //! Create new CustomStdLogConsumer with regex filter generated from a string and with maximum verbosity kind.
+    //! Create new CustomStdLogConsumer with a determined Log Configuration.
     CPP_UTILS_DllAPI CustomStdLogConsumer(
             const LogConfiguration& log_configuration);
 
@@ -78,7 +78,7 @@ protected:
     CPP_UTILS_DllAPI virtual std::ostream& get_stream_(
             const Log::Entry& entry);
 
-    //! Regex filter for entry category
+    //! Regex filter for entry category or message.
     LogFilter filter_;
 
     //! Maximum Log Kind that will be printed.

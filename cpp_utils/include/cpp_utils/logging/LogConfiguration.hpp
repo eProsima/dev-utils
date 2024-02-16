@@ -52,7 +52,7 @@ struct LogConfiguration
      * @brief \c is_valid method.
      */
     CPP_UTILS_DllAPI
-    bool is_valid(
+    virtual bool is_valid(
             Formatter& error_msg) const noexcept;
 
     /**

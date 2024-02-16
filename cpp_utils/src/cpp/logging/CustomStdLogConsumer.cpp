@@ -23,9 +23,9 @@ namespace eprosima {
 namespace utils {
 
 CustomStdLogConsumer::CustomStdLogConsumer(
-        const LogConfiguration& log_configuration)
-    : filter_(log_configuration.filter)
-    , verbosity_(log_configuration.verbosity)
+        const LogConfiguration* log_configuration)
+    : filter_(log_configuration->filter)
+    , verbosity_(log_configuration->verbosity)
 {
     // Do nothing
 }

@@ -43,7 +43,7 @@ public:
 
     //! Create new CustomStdLogConsumer with a determined Log Configuration.
     CPP_UTILS_DllAPI CustomStdLogConsumer(
-            const LogConfiguration& log_configuration);
+            const LogConfiguration* log_configuration);
 
     //! Default destructor
     CPP_UTILS_DllAPI ~CustomStdLogConsumer() noexcept = default;

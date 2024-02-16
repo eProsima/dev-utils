@@ -75,6 +75,7 @@ struct LogConfiguration
 
     //! Verbosity kind
     Fuzzy<VerbosityKind> verbosity;
+
     //! Log Filter
     LogFilter filter;
 

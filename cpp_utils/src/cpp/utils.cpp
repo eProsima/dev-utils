@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <iomanip>
 #include <sstream>
+#include <stdexcept>
 
 #include <cpp_utils/exception/PreconditionNotMet.hpp>
 #include <cpp_utils/Log.hpp>
@@ -97,6 +98,47 @@ void to_uppercase(
             {
                 return std::toupper(c);
             });
+}
+
+unsigned long long to_bytes(const std::string& input)
+{
+    static const std::map<std::string, unsigned long long> magnitudes = {
+        {"B", 1},
+        {"KB", 1000},
+        {"MB", 1000 * 1000},
+        {"GB", 1000 * 1000 * 1000},
+        {"TB", 1000LL * 1000 * 1000 * 1000},
+        {"PB", 1000LL * 1000 * 1000 * 1000 * 1000},
+        {"KIB", 1024},
+        {"MIB", 1024 * 1024},
+        {"GIB", 1024 * 1024 * 1024},
+        {"TIB", 1024ULL * 1024 * 1024 * 1024},
+        {"PIB", 1024ULL * 1024 * 1024 * 1024 * 1024}
+    };
+
+    // Find the number and the magnitude
+    std::regex pattern(R"((\d+(?:\.\d+)?)\s*([a-zA-Z]+))");
+    std::smatch matches;
+
+    if (!std::regex_match(input, matches, pattern) || matches.size() != 3)
+    {
+        throw std::invalid_argument("The quantity is not in the expected format. It should be a number followed by a magnitude (e.g. 10MB).");
+    }
+
+    // Extract the number
+    std::string number_str = matches[1].str();
+    double number = std::stod(number_str);
+
+    // Extract the magnitude
+    std::string magnitude_str = matches[2].str();
+    to_uppercase(magnitude_str);
+
+    const auto magnitude = magnitudes.at(magnitude_str);
+
+    // Calculate the number of bytes
+    const unsigned long long bytes = number * magnitude;
+
+    return bytes;
 }
 
 void tsnh(

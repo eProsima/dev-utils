@@ -88,8 +88,21 @@ void to_lowercase(
  *
  * @param [in,out] st : string to modify
  */
-CPP_UTILS_DllAPI void to_uppercase(
+CPP_UTILS_DllAPI
+void to_uppercase(
         std::string& st) noexcept;
+
+/**
+ * @brief Convert a string to a number of bytes.
+ *
+ * The string must be a number followed by a magnitude (e.g. 10MB, 0.5GiB).
+ *
+ * @param input string to convert
+ * @return number of bytes
+ */
+CPP_UTILS_DllAPI
+unsigned long long to_bytes(
+        const std::string& input);
 
 template <typename T, bool Ptr = false>
 std::ostream& element_to_stream(

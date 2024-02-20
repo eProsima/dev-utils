@@ -100,10 +100,10 @@ void to_uppercase(
             });
 }
 
-uint64_t to_bytes(
+std::uint64_t to_bytes(
         const std::string& input)
 {
-    static const std::map<std::string, uint64_t> magnitudes = {
+    static const std::map<std::string, std::uint64_t> magnitudes = {
         {"B", 1},
         {"KB", 1000},
         {"MB", 1000 * 1000},
@@ -138,13 +138,13 @@ uint64_t to_bytes(
     const auto magnitude = magnitudes.at(magnitude_str);
 
     // Check for overflow
-    if (number > std::numeric_limits<uint64_t>::max() / magnitude)
+    if (number > std::numeric_limits<std::uint64_t>::max() / magnitude)
     {
         throw std::invalid_argument("The number is too large to be converted to bytes.");
     }
 
     // Calculate the number of bytes
-    const uint64_t bytes = number * magnitude;
+    const std::uint64_t bytes = number * magnitude;
 
     return bytes;
 }

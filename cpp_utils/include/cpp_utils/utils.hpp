@@ -101,7 +101,7 @@ void to_uppercase(
  * @return number of bytes
  */
 CPP_UTILS_DllAPI
-uint64_t to_bytes(
+std::uint64_t to_bytes(
         const std::string& input);
 
 template <typename T, bool Ptr = false>

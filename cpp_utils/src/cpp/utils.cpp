@@ -100,9 +100,10 @@ void to_uppercase(
             });
 }
 
-unsigned long long to_bytes(const std::string& input)
+uint64_t to_bytes(
+        const std::string& input)
 {
-    static const std::map<std::string, unsigned long long> magnitudes = {
+    static const std::map<std::string, uint64_t> magnitudes = {
         {"B", 1},
         {"KB", 1000},
         {"MB", 1000 * 1000},
@@ -122,7 +123,8 @@ unsigned long long to_bytes(const std::string& input)
 
     if (!std::regex_match(input, matches, pattern) || matches.size() != 3)
     {
-        throw std::invalid_argument("The quantity is not in the expected format. It should be a number followed by a magnitude (e.g. 10MB).");
+        throw std::invalid_argument(
+                  "The quantity is not in the expected format. It should be a number followed by a magnitude (e.g. 10MB).");
     }
 
     // Extract the number
@@ -135,8 +137,14 @@ unsigned long long to_bytes(const std::string& input)
 
     const auto magnitude = magnitudes.at(magnitude_str);
 
+    // Check for overflow
+    if (number > std::numeric_limits<uint64_t>::max() / magnitude)
+    {
+        throw std::invalid_argument("The number is too large to be converted to bytes.");
+    }
+
     // Calculate the number of bytes
-    const unsigned long long bytes = number * magnitude;
+    const uint64_t bytes = number * magnitude;
 
     return bytes;
 }

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <fastrtps/types/TypesBase.h>
+#include <fastdds/dds/xtypes/Types.hpp>
 
 #include <cpp_utils/library/library_dll.h>
 

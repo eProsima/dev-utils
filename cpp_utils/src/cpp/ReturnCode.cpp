@@ -17,40 +17,58 @@
  *
  */
 
-#include <assert.h>
+#include <cassert>
+#include <map>
+#include <string>
+
+#include <fastdds/dds/core/ReturnCode.hpp>
+
 #include <cpp_utils/ReturnCode.hpp>
 
 namespace eprosima {
 namespace utils {
 
-const std::map<ReturnCode, std::string> ReturnCode::to_string_conversion_ =
-{
-    {ReturnCode::RETCODE_OK, "Ok"},
-    {ReturnCode::RETCODE_ERROR, "Error"},
-    {ReturnCode::RETCODE_UNSUPPORTED, "Unsupported"},
-    {ReturnCode::RETCODE_BAD_PARAMETER, "BadParameter"},
-    {ReturnCode::RETCODE_PRECONDITION_NOT_MET, "PreconditionNotMet"},
-    {ReturnCode::RETCODE_OUT_OF_RESOURCES, "OutOfResources"},
-    {ReturnCode::RETCODE_NOT_ENABLED, "NotEnabled"},
-    {ReturnCode::RETCODE_IMMUTABLE_POLICY, "ImmutablePolicy"},
-    {ReturnCode::RETCODE_INCONSISTENT_POLICY, "IncosistentPolicy"},
-    {ReturnCode::RETCODE_ALREADY_DELETED, "AlreadyDeleted"},
-    {ReturnCode::RETCODE_TIMEOUT, "Timeout"},
-    {ReturnCode::RETCODE_NO_DATA, "NoData"},
-    {ReturnCode::RETCODE_ILLEGAL_OPERATION, "IllegalOperation"},
-    {ReturnCode::RETCODE_NOT_ALLOWED_BY_SECURITY, "NotAllowedBySecurity"},
-};
-
 ReturnCode::ReturnCode(
-        const eprosima::fastrtps::types::ReturnCode_t& other)
-    : eprosima::fastrtps::types::ReturnCode_t(other())
+        const fastdds::dds::ReturnCode_t& value)
 {
-    // Do nothing
+    switch (value)
+    {
+        case fastdds::dds::RETCODE_OK:
+            value_ = ReturnCode::OK;
+            break;
+        case fastdds::dds::RETCODE_ERROR:
+            value_ = ReturnCode::ERROR;
+            break;
+        case fastdds::dds::RETCODE_NO_DATA:
+            value_ = ReturnCode::NO_DATA;
+            break;
+        case fastdds::dds::RETCODE_NOT_ENABLED:
+            value_ = ReturnCode::NOT_ENABLED;
+            break;
+        case fastdds::dds::RETCODE_PRECONDITION_NOT_MET:
+            value_ = ReturnCode::PRECONDITION_NOT_MET;
+            break;
+        default:
+            value_ = ReturnCode::UNKNOWN;
+            break;
+    }
 }
 
-bool ReturnCode::operator ()() const noexcept
+std::uint32_t ReturnCode::operator ()() const noexcept
 {
-    return RETCODE_OK == *this;
+    return value_;
+}
+
+bool ReturnCode::operator ==(
+        const ReturnCode& c) const noexcept
+{
+    return value_ == c.value_;
+}
+
+bool ReturnCode::operator !=(
+        const ReturnCode& c) const noexcept
+{
+    return value_ != c.value_;
 }
 
 bool ReturnCode::operator <(
@@ -59,12 +77,28 @@ bool ReturnCode::operator <(
     return (*this)() < other();
 }
 
+bool ReturnCode::operator !() const noexcept
+{
+    return value_ != ReturnCode::OK;
+}
+
 std::ostream& operator <<(
         std::ostream& os,
         const ReturnCode& code)
 {
-    auto it = ReturnCode::to_string_conversion_.find(code);
-    assert(it != ReturnCode::to_string_conversion_.end());
+    static const std::map<ReturnCode, std::string> retcode_to_string
+    {
+        {ReturnCode::OK, "Ok"},
+        {ReturnCode::ERROR, "Error"},
+        {ReturnCode::NO_DATA, "NoData"},
+        {ReturnCode::NOT_ENABLED, "NotEnabled"},
+        {ReturnCode::PRECONDITION_NOT_MET, "PreconditionNotMet"},
+        {ReturnCode::UNKNOWN, "Unknown"}
+    };
+
+    const auto it = retcode_to_string.find(code);
+    assert(it != retcode_to_string.end());
+
     os << "{" << it->second << "}";
     return os;
 }

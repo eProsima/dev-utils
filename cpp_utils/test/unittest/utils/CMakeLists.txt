@@ -29,6 +29,7 @@ set(TEST_LIST
         are_set_of_ptr_equal_int
         to_lowercase
         to_uppercase
+        to_bytes
         tsnh_call
         is_file_accessible
         combined_file_permissions

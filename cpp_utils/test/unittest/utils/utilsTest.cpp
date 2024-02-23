@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <cstdint>
+#include <stdexcept>
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -356,6 +358,90 @@ TEST(utilsTest, to_uppercase)
         std::string str = "";
         to_uppercase(str);
         ASSERT_EQ(str, "");
+    }
+}
+
+/**
+ * Test \c to_bytes call
+ */
+TEST(utilsTest, to_bytes)
+{
+    // VALID
+
+    // Invariant
+    {
+        const std::string bytes_str = "100B";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 100ULL;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Lowercase
+    {
+        const std::string bytes_str = "123kb";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 123ULL * 1000;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Uppercase
+    {
+        const std::string bytes_str = "100MB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 100ULL * 1000 * 1000;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Milibytes
+    {
+        const std::string bytes_str = "82GiB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 82ULL * 1024 * 1024 * 1024;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Large
+    {
+        const std::string bytes_str = "742TB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 742ULL * 1000 * 1000 * 1000 * 1000;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Extra Large
+    {
+        const std::string bytes_str = "51pib";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 51ULL * 1024 * 1024 * 1024 * 1024 * 1024;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+
+    // INVALID
+
+    // Empty
+    {
+        const std::string bytes_str = "";
+        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
+    }
+    // No unit
+    {
+        const std::string bytes_str = "100";
+        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
+    }
+    // No number
+    {
+        const std::string bytes_str = "MB";
+        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
+    }
+    // Invalid unit
+    {
+        const std::string bytes_str = "100G";
+        ASSERT_THROW(to_bytes(bytes_str), std::out_of_range);
+    }
+    // Invalid number
+    {
+        const std::string bytes_str = "100.5MB";
+        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
+    }
+    // Number too large
+    {
+        const std::string bytes_str = "18446744073709551616PiB";
+        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
     }
 }
 

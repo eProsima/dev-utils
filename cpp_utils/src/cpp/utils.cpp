@@ -139,7 +139,8 @@ std::uint64_t to_bytes(
 
     if (units.find(unit_str) == units.end())
     {
-        throw std::invalid_argument("The unit is not valid. The valid units are: B, KB, MB, GB, TB, PB, KiB, MiB, GiB, TiB, PiB.");
+        throw std::invalid_argument(
+                  "The unit is not valid. The valid units are: B, KB, MB, GB, TB, PB, KiB, MiB, GiB, TiB, PiB.");
     }
 
     const auto unit = units.at(unit_str);

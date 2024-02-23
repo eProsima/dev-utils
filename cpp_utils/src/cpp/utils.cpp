@@ -105,7 +105,7 @@ void to_uppercase(
 std::uint64_t to_bytes(
         const std::string& input)
 {
-    static const std::map<std::string, std::uint64_t> magnitudes = {
+    static const std::map<std::string, std::uint64_t> units = {
         {"B", 1},
         {"KB", 1000},
         {"MB", 1000 * 1000},
@@ -119,35 +119,40 @@ std::uint64_t to_bytes(
         {"PIB", 1024ULL * 1024 * 1024 * 1024 * 1024}
     };
 
-    // Find the number and the magnitude
-    std::regex pattern("^((\\d+)\\s*([a-zA-Z]+))$");
+    // Find the number and the unit
+    std::regex pattern("^(\\d+)\\s*([a-zA-Z]+)$");
     std::smatch matches;
 
-    if (!std::regex_match(input, matches, pattern) || matches.size() != 2)
+    if (!std::regex_match(input, matches, pattern) || matches.size() != 3)
     {
         throw std::invalid_argument(
-                  "The quantity is not in the expected format. It should be a number followed by a magnitude (e.g. 10MB).");
+                  "The quantity is not in the expected format. It should be a natural number followed by a unit (e.g. 10MB).");
     }
 
     // Extract the number
     std::string number_str = matches[1].str();
     double number = std::stod(number_str);
 
-    // Extract the magnitude
-    std::string magnitude_str = matches[2].str();
-    to_uppercase(magnitude_str);
+    // Extract the unit
+    std::string unit_str = matches[2].str();
+    to_uppercase(unit_str);
 
-    const auto magnitude = magnitudes.at(magnitude_str);
+    if (units.find(unit_str) == units.end())
+    {
+        throw std::invalid_argument("The unit is not valid. The valid units are: B, KB, MB, GB, TB, PB, KiB, MiB, GiB, TiB, PiB.");
+    }
 
-    // Check whether the product of number * magnitude overflows
-    if (number > std::numeric_limits<std::uint64_t>::max() / magnitude)
+    const auto unit = units.at(unit_str);
+
+    // Check whether the product of number * unit overflows
+    if (number > std::numeric_limits<std::uint64_t>::max() / unit)
     {
         throw std::invalid_argument("The number is too large to be converted to bytes.");
     }
 
     // The explicit cast to uint64_t is safe since the number has already been checked to fit.
     // The product is also safe since the possible overflow has also been checked.
-    const std::uint64_t bytes = static_cast<std::uint64_t>(number) * magnitude;
+    const std::uint64_t bytes = static_cast<std::uint64_t>(number) * unit;
 
     return bytes;
 }

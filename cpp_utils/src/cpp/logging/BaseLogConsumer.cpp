@@ -13,39 +13,25 @@
 // limitations under the License.
 
 /**
- * @file CustomStdLogConsumer.cpp
+ * @file BaseLogConsumer.cpp
  *
  */
 
-#include <cpp_utils/logging/CustomStdLogConsumer.hpp>
+#include <regex>
+
+#include <cpp_utils/logging/BaseLogConsumer.hpp>
 
 namespace eprosima {
 namespace utils {
 
-CustomStdLogConsumer::CustomStdLogConsumer(
+BaseLogConsumer::BaseLogConsumer(
         const LogConfiguration* log_configuration)
     : filter_(log_configuration->filter)
     , verbosity_(log_configuration->verbosity)
 {
-    // Do nothing
 }
 
-void CustomStdLogConsumer::Consume(
-        const Log::Entry& entry)
-{
-    if (accept_entry_(entry))
-    {
-        std::ostream& stream = get_stream_(entry);
-        print_timestamp(stream, entry, true);
-        print_header(stream, entry, true);
-        print_message(stream, entry, true);
-        print_context(stream, entry, true);
-        print_new_line(stream, true);
-        stream.flush();
-    }
-}
-
-bool CustomStdLogConsumer::accept_entry_(
+bool BaseLogConsumer::accept_entry_(
         const Log::Entry& entry)
 {
     // Filter by regex
@@ -58,19 +44,6 @@ bool CustomStdLogConsumer::accept_entry_(
     const bool is_kind_valid = entry.kind <= verbosity_;
 
     return is_kind_valid && is_content_valid;
-}
-
-std::ostream& CustomStdLogConsumer::get_stream_(
-        const Log::Entry& entry)
-{
-    if (entry.kind < VerbosityKind::Warning)
-    {
-        return std::cout;
-    }
-    else
-    {
-        return std::cerr;
-    }
 }
 
 } /* namespace utils */

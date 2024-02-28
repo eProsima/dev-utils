@@ -13,40 +13,33 @@
 // limitations under the License.
 
 /**
- * @file CustomStdLogConsumer.hpp
+ * @file StdLogConsumer.hpp
  */
 
 #pragma once
 
-#include <regex>
+#include <iostream>
 
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/Log.hpp>
-#include <cpp_utils/logging/LogConfiguration.hpp>
+#include <cpp_utils/logging/BaseLogConsumer.hpp>
 
 namespace eprosima {
 namespace utils {
 
 /**
- * Custom Log Consumer with Standard (logical) behaviour.
+ * Std Log Consumer with Standard (logical) behaviour.
  *
- * Registering this consumer in Fast DDS Log prints every log entry that has a higher kind than the threshold
- * given. In case messages are not of Error kind, they are filtered by category to match a regex.
- * Info messages are printed in std::cout while others are sent to std::cerr .
- *
- * @attention This consumer filters the entries that receives, but some other entries could be filtered beforehand
- * by Fast DDS Log. To avoid these, set Log verbosity to Info and do not use Category Filter.
+ * Registering this consumer in Fast DDS's Log prints the log entries accepted by the BaseLogConsumer.
+ * Info messages are printed in std::cout while others are sent to std::cerr.
  */
-class CustomStdLogConsumer : public utils::LogConsumer
+class StdLogConsumer : public BaseLogConsumer
 {
 public:
 
-    //! Create new CustomStdLogConsumer with a determined Log Configuration.
-    CPP_UTILS_DllAPI CustomStdLogConsumer(
+    CPP_UTILS_DllAPI
+    StdLogConsumer(
             const LogConfiguration* log_configuration);
-
-    //! Default destructor
-    CPP_UTILS_DllAPI ~CustomStdLogConsumer() noexcept = default;
 
     /**
      * @brief Implements \c LogConsumer \c Consume method.
@@ -59,14 +52,11 @@ public:
      *
      * @param entry entry to consume
      */
-    CPP_UTILS_DllAPI void Consume(
+    CPP_UTILS_DllAPI
+    void Consume(
             const Log::Entry& entry) override;
 
 protected:
-
-    //! Whether the entry must be accepted depending on kind and category
-    CPP_UTILS_DllAPI virtual bool accept_entry_(
-            const Log::Entry& entry);
 
     /**
      * @brief Get which stream must be used depending on the entry
@@ -75,14 +65,9 @@ protected:
      *
      * @return \c std::out if entry is Info, \c std::cerr otherwise.
      */
-    CPP_UTILS_DllAPI virtual std::ostream& get_stream_(
+    CPP_UTILS_DllAPI
+    virtual std::ostream& get_stream_(
             const Log::Entry& entry);
-
-    //! Regex filter for entry category or message.
-    LogFilter filter_;
-
-    //! Maximum Log Kind that will be printed.
-    VerbosityKind verbosity_;
 };
 
 } /* namespace utils */

@@ -87,4 +87,3 @@ std::ostream& operator <<(
 
 } /* namespace utils */
 } /* namespace eprosima */
-

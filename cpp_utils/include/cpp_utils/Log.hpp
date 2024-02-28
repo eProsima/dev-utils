@@ -119,5 +119,3 @@ using LogConsumer = eprosima::fastdds::dds::LogConsumer;
 
 } /* namespace utils */
 } /* namespace eprosima */
-
-

@@ -25,7 +25,7 @@ namespace eprosima {
 namespace utils {
 
 BaseLogConsumer::BaseLogConsumer(
-        const LogConfiguration* log_configuration)
+        const BaseLogConfiguration* log_configuration)
     : filter_(log_configuration->filter)
     , verbosity_(log_configuration->verbosity)
 {

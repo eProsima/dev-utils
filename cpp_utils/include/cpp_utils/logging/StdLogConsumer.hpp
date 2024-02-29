@@ -22,6 +22,7 @@
 
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/Log.hpp>
+#include <cpp_utils/logging/BaseLogConfiguration.hpp>
 #include <cpp_utils/logging/BaseLogConsumer.hpp>
 
 namespace eprosima {
@@ -39,7 +40,7 @@ public:
 
     CPP_UTILS_DllAPI
     StdLogConsumer(
-            const LogConfiguration* log_configuration);
+            const BaseLogConfiguration* log_configuration);
 
     /**
      * @brief Implements \c LogConsumer \c Consume method.

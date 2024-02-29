@@ -20,7 +20,7 @@
 
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/Log.hpp>
-#include <cpp_utils/logging/LogConfiguration.hpp>
+#include <cpp_utils/logging/BaseLogConfiguration.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -42,7 +42,7 @@ public:
     //! Create new BaseLogConsumer with a determined Log Configuration.
     CPP_UTILS_DllAPI
     BaseLogConsumer(
-            const LogConfiguration* log_configuration);
+            const BaseLogConfiguration* log_configuration);
 
     //! Default destructor
     CPP_UTILS_DllAPI

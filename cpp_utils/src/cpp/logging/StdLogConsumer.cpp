@@ -25,7 +25,7 @@ namespace eprosima {
 namespace utils {
 
 StdLogConsumer::StdLogConsumer(
-        const LogConfiguration* log_configuration)
+        const BaseLogConfiguration* log_configuration)
     : BaseLogConsumer(log_configuration)
 {
 }

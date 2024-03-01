@@ -43,13 +43,14 @@ public:
             const BaseLogConfiguration* log_configuration);
 
     /**
-     * @brief Implements \c LogConsumer \c Consume method.
+     * @brief Implements the \c BaseLogConsumer \c Consume method.
      *
-     * Each entry must be equal or higher the verbosity level \c verbosity_ .
-     * Each entry category must match with regex stored in \c filter_ , except
-     * those entries that are Error will be always printed if \c verbosity_ is not Error.
+     * To be consumed, entries must be accepted by the \c BaseLogConsumer, so:
+     * - Their kind must be higher or equal than the verbosity level.
+     * - Their category or message must match the filter regex.
      *
-     * This method will print the \c entry in \c std::cout with info verbosity and in \c std:cerr otherwise.
+     * Entries with a kind of Error or Warning will be printed in \c std::cerr.
+     * Entries with a kind of Info will be printed in \c std::cout.
      *
      * @param entry entry to consume
      */

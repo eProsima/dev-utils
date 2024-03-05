@@ -50,13 +50,14 @@ void StdLogConsumer::Consume(
 std::ostream& StdLogConsumer::get_stream_(
         const Log::Entry& entry)
 {
-    if (entry.kind < VerbosityKind::Warning)
+    switch (entry.kind)
     {
-        return std::cout;
-    }
-    else
-    {
-        return std::cerr;
+        case Log::Kind::Error:
+        case Log::Kind::Warning:
+            return std::cerr;
+
+        default:
+            return std::cout;
     }
 }
 

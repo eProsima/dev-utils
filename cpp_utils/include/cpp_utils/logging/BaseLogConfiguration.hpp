@@ -79,7 +79,6 @@ struct BaseLogConfiguration
 
     //! Log Filter
     LogFilter filter;
-
 };
 
 /**

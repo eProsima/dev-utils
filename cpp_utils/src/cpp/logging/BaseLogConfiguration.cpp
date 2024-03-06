@@ -13,18 +13,18 @@
 // limitations under the License.
 
 /**
- * @file LogConfiguration.cpp
+ * @file BaseLogConfiguration.cpp
  *
  */
 
-#include <cpp_utils/logging/LogConfiguration.hpp>
+#include <cpp_utils/logging/BaseLogConfiguration.hpp>
 #include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace utils {
 
 
-LogConfiguration::LogConfiguration()
+BaseLogConfiguration::BaseLogConfiguration()
     : verbosity{VerbosityKind::Warning, FuzzyLevelValues::fuzzy_level_default}
 {
     filter[VerbosityKind::Info].set_value("", FuzzyLevelValues::fuzzy_level_default);
@@ -32,13 +32,13 @@ LogConfiguration::LogConfiguration()
     filter[VerbosityKind::Error].set_value("", FuzzyLevelValues::fuzzy_level_default);
 }
 
-bool LogConfiguration::is_valid(
+bool BaseLogConfiguration::is_valid(
         Formatter& error_msg) const noexcept
 {
     return true;
 }
 
-void LogConfiguration::set(
+void BaseLogConfiguration::set(
         const utils::Fuzzy<VerbosityKind>& log_verbosity) noexcept
 {
     if (verbosity.get_level() <= log_verbosity.get_level())
@@ -47,7 +47,7 @@ void LogConfiguration::set(
     }
 }
 
-void LogConfiguration::set(
+void BaseLogConfiguration::set(
         const LogFilter& log_filter)
 {
     if (filter[VerbosityKind::Error].get_level() <= log_filter.at(VerbosityKind::Error).get_level())
@@ -87,4 +87,3 @@ std::ostream& operator <<(
 
 } /* namespace utils */
 } /* namespace eprosima */
-

@@ -47,7 +47,7 @@ public:
      * @brief Construct a LogChecker object.
      *
      * @param threshold minimum log level that will be taken into account when counting logs consumed.
-     * @param expected_severe_logs the number of logs this object expects to consumed.
+     * @param expected_severe_logs the number of logs this object expects to consume.
      * @param max_severe_logs the maximum number of logs this object will allow.
      */
     CPP_UTILS_DllAPI LogChecker(

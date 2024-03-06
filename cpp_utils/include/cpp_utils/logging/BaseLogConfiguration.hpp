@@ -35,14 +35,15 @@ using LogFilter = std::map<VerbosityKind, Fuzzy<std::string>>;
  *  - Verbosity
  *  - Filter
  */
-struct LogConfiguration
+struct BaseLogConfiguration
 {
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////
 
-    //! Default LogConfiguration constructor
-    CPP_UTILS_DllAPI LogConfiguration();
+    //! Default BaseLogConfiguration constructor
+    CPP_UTILS_DllAPI
+    BaseLogConfiguration();
 
     /////////////////////////
     // METHODS
@@ -75,9 +76,9 @@ struct LogConfiguration
 
     //! Verbosity kind
     Fuzzy<VerbosityKind> verbosity;
+
     //! Log Filter
     LogFilter filter;
-
 };
 
 /**

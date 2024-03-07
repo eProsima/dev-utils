@@ -431,7 +431,7 @@ TEST(utilsTest, to_bytes)
     // Invalid unit
     {
         const std::string bytes_str = "100G";
-        ASSERT_THROW(to_bytes(bytes_str), std::out_of_range);
+        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
     }
     // Invalid number
     {

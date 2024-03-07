@@ -146,7 +146,8 @@ std::uint64_t to_bytes(
     const auto unit = units.at(unit_str);
 
     // Check whether the product of number * unit overflows
-    if (number > std::numeric_limits<std::uint64_t>::max() / unit)
+    // @note: The parentheses are necessary to distinguish std::max from the max macro (Windows).
+    if (number > (std::numeric_limits<std::uint64_t>::max)() / unit)
     {
         throw std::invalid_argument("The number is too large to be converted to bytes.");
     }

@@ -144,10 +144,7 @@ jobs:
 # TSAN
 
   tsan:
-    # NOTE: there is a known issue in TSAN 20.04 with std::condition_variable::wait_for
-    # https://github.com/google/sanitizers/issues/1259
-    # Until this is fixed, we use 20.04 for TSAN work
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
       - name: Sync repository
@@ -158,12 +155,17 @@ jobs:
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
         with:
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           cmake_build_type: Release
           dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
+        env:
+          # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
+          # These issues were fixed in GCC 12 so we upgrade to that version.
+          CC: gcc-12
+          CXX: g++-12
         uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@v0
         with:
           packages_names: ${{ env.cpp_packages_names }}

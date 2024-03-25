@@ -8,7 +8,7 @@
 [![Forks](https://img.shields.io/github/forks/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/network/members)
 [![Stars](https://img.shields.io/github/stars/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/stargazers)
 [![test](https://github.com/eProsima/dev-utils/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/dev-utils/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
+[![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/v0.6.0/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
 
 The packages that conform this repository are:
 
@@ -103,7 +103,7 @@ is explained in the following section.
 ```bash
 mkdir -p ~/DDS-Router/src
 cd ~/DDS-Router
-wget https://raw.githubusercontent.com/eProsima/dev-utils/main/dev_utils.repos
+wget https://raw.githubusercontent.com/eProsima/dev-utils/v0.6.0/dev_utils.repos
 vcs import src < dev_utils.repos
 ```
 

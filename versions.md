@@ -20,8 +20,8 @@ This release includes the following **dependencies update**:
 |  | Repository | Old Version | New Version |
 |---|---|---|---|
 | Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
-| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v1.1.0](https://github.com/eProsima/Fast-CDR/releases/tag/v1.1.0) | [v2.1.3](https://github.com/eProsima/Fast-CDR/releases/tag/v2.1.3) |
-| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v2.11.0](https://github.com/eProsima/Fast-DDS/releases/tag/v2.11.0) | [v2.13.1](https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.1.3](https://github.com/eProsima/Fast-CDR/releases/tag/v2.1.3) | [v2.2.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.0) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v2.13.1](https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.1) | [v2.14.0](https://github.com/eProsima/Fast-DDS/releases/tag/v2.14.0) |
 
 ## Version 0.5.0
 
@@ -43,8 +43,8 @@ This release includes the following **dependencies update**:
 |  | Repository | Old Version | New Version |
 |---|---|---|---|
 | Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
-| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.1.3](https://github.com/eProsima/Fast-CDR/releases/tag/v2.1.3) | [v2.2.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.0) |
-| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v2.13.1](https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.1) | [v2.14.0](https://github.com/eProsima/Fast-DDS/releases/tag/v2.14.0) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v1.1.0](https://github.com/eProsima/Fast-CDR/releases/tag/v1.1.0) | [v2.1.3](https://github.com/eProsima/Fast-CDR/releases/tag/v2.1.3) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v2.11.0](https://github.com/eProsima/Fast-DDS/releases/tag/v2.11.0) | [v2.13.1](https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.1) |
 
 ## Version 0.4.0
 

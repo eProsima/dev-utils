@@ -102,8 +102,8 @@ Setting the CMake variable `<library>_MINIMUM_VERSION` will force the `find_pack
 e.g.
 
 ```cmake
-set(MODULE_FIND_PACKAGES fastrtps)
-set(fastrtps_MINIMUM_VERSION "2.8") # This will force to use a version of fastrtps higher or equal 2.8
+set(MODULE_FIND_PACKAGES fastdds)
+set(fastdds_MINIMUM_VERSION "3.0.0") # This will force to use a version of fastdds higher or equal 3.0.0
 ```
 
 ---

@@ -17,7 +17,7 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>fastrtps</depend>
+  <depend>fastdds</depend>
   <depend>cmake_utils</depend>
 
   <doc_depend>doxygen</doc_depend>

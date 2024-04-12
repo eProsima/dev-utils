@@ -125,7 +125,7 @@ handler.close(); // This makes new threads that call wait() to wait until next o
 
 ## Dependencies
 
-* `fastrtps`
+* `fastdds`
 
 Only for Windows:
 
@@ -147,7 +147,7 @@ target_link_libraries(${LIBRARY_TARGET_NAME} eprosima::utils)
 
 <!-- TODO remove Fast DDS from here once and for all -->
 
-This package should not be dependent of Fast DDS `fastrtps` so in future versions this would be changed.
+This package should not be dependent of Fast DDS `fastdds` so in future versions this would be changed.
 This dependant comes from:
 
 * Log module

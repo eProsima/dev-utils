@@ -21,6 +21,7 @@
 # ARGUMENTS:
 # _SOURCE_PATH -> Path to the source files
 # ARGV1 -> Source files to use (not _SOURCE_PATH) (optional)
+# ARGV2 -> Paths for target_include_directories (optional)
 function(compile_tool _SOURCE_PATH)
 
     if (BUILD_TOOL)
@@ -55,6 +56,10 @@ function(compile_tool _SOURCE_PATH)
 
         # Add executable
         add_executable(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
+
+        if (NOT "${ARGV2}" STREQUAL "")
+            target_include_directories(${PROJECT_NAME} PRIVATE ${ARGV2})
+        endif()
 
         # Set name for target
         set_target_properties(

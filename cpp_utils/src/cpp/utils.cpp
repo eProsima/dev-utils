@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <cmath>
 #include <cstdint>
 #include <iomanip>
 #include <regex>
@@ -157,6 +158,62 @@ std::uint64_t to_bytes(
     const std::uint64_t bytes = static_cast<std::uint64_t>(number) * unit;
 
     return bytes;
+}
+
+std::string from_bytes(
+        const std::uint64_t bytes)
+{
+    static const std::map<std::uint64_t, std::string> units = {
+        {1, "B"},
+        {1000, "KB"},
+        {1000 * 1000, "MB"},
+        {1000 * 1000 * 1000, "GB"},
+        {1000ULL * 1000 * 1000 * 1000, "TB"},
+        {1000ULL * 1000 * 1000 * 1000 * 1000, "PB"}
+    };
+
+    // Find the factor and unit
+    const auto it = std::find_if(units.begin(), units.end(),
+            [bytes](const std::pair<std::uint64_t, std::string>& unit)
+            {
+                return bytes / unit.first < 1000;
+            });
+
+    std::uint64_t factor;
+    std::string unit;
+
+    if (it == units.end())
+    {
+        // The number is huge. Use the largest unit.
+        const auto largest_unit = units.rbegin();
+        factor = largest_unit->first;
+        unit = largest_unit->second;
+    }
+    else
+    {
+        factor = it->first;
+        unit = it->second;
+    }
+
+    // Calculate the number
+    const double number_double = static_cast<double>(bytes) / factor;
+    const std::uint64_t number_int = static_cast<std::uint64_t>(number_double);
+
+    // Format the number
+    std::ostringstream oss;
+
+    if (std::fabs(number_double - number_int) < 0.01)
+    {
+        // The decimal part is negligible. Print the number as an integer.
+        oss << number_int;
+    }
+    else
+    {
+        // The decimal part is significant. Print the number as a double with two decimal places.
+        oss << std::fixed << std::setprecision(2) << number_double;
+    }
+
+    return oss.str() + unit;
 }
 
 void tsnh(

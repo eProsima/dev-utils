@@ -96,7 +96,7 @@ void to_uppercase(
 /**
  * @brief Convert a string to a number of bytes.
  *
- * The string must be a number followed by a magnitude (e.g. 10MB, 0.5GiB).
+ * The string must be a number followed by a magnitude (e.g. 10MB, 5GiB).
  *
  * @param input string to convert
  * @return number of bytes
@@ -104,6 +104,21 @@ void to_uppercase(
 CPP_UTILS_DllAPI
 std::uint64_t to_bytes(
         const std::string& input);
+
+/**
+ * @brief Convert a number of bytes to a string.
+ *
+ * Examples:
+ *  - The number 0 will be converted to 0B.
+ *  - The number 1500 will be converted to 1.50KB.
+ *  - The number 555555555 will be converted to 555.56MB.
+ *
+ * @param bytes number to convert
+ * @return \c bytes converted to a string and formatted to the closest magnitude
+ */
+CPP_UTILS_DllAPI
+std::string from_bytes(
+        const std::uint64_t bytes);
 
 template <typename T, bool Ptr = false>
 std::ostream& element_to_stream(

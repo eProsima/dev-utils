@@ -30,6 +30,7 @@ set(TEST_LIST
         to_lowercase
         to_uppercase
         to_bytes
+        from_bytes
         tsnh_call
         is_file_accessible
         combined_file_permissions

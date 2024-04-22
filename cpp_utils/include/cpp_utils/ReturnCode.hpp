@@ -19,6 +19,8 @@
 #pragma once
 
 #include <cstdint>
+#include <map>
+#include <string>
 
 #include <fastdds/dds/core/ReturnCode.hpp>
 

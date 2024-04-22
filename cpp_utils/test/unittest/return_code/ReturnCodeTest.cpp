@@ -28,20 +28,11 @@ TEST(ReturnCodeTest, serializator)
 {
     std::map<ReturnCode, std::string> to_string_conversion =
     {
-        {ReturnCode::RETCODE_OK, "{Ok}"},
-        {ReturnCode::RETCODE_ERROR, "{Error}"},
-        {ReturnCode::RETCODE_UNSUPPORTED, "{Unsupported}"},
-        {ReturnCode::RETCODE_BAD_PARAMETER, "{BadParameter}"},
-        {ReturnCode::RETCODE_PRECONDITION_NOT_MET, "{PreconditionNotMet}"},
-        {ReturnCode::RETCODE_OUT_OF_RESOURCES, "{OutOfResources}"},
-        {ReturnCode::RETCODE_NOT_ENABLED, "{NotEnabled}"},
-        {ReturnCode::RETCODE_IMMUTABLE_POLICY, "{ImmutablePolicy}"},
-        {ReturnCode::RETCODE_INCONSISTENT_POLICY, "{IncosistentPolicy}"},
-        {ReturnCode::RETCODE_ALREADY_DELETED, "{AlreadyDeleted}"},
-        {ReturnCode::RETCODE_TIMEOUT, "{Timeout}"},
-        {ReturnCode::RETCODE_NO_DATA, "{NoData}"},
-        {ReturnCode::RETCODE_ILLEGAL_OPERATION, "{IllegalOperation}"},
-        {ReturnCode::RETCODE_NOT_ALLOWED_BY_SECURITY, "{NotAllowedBySecurity}"},
+        {ReturnCode::OK, "Ok"},
+        {ReturnCode::ERROR, "Error"},
+        {ReturnCode::UNKNOWN, "Unknown"},
+        {ReturnCode::NO_DATA, "NoData"},
+        {ReturnCode::PRECONDITION_NOT_MET, "PreconditionNotMet"},
     };
 
     for (auto it : to_string_conversion)

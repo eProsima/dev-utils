@@ -163,6 +163,11 @@ std::uint64_t to_bytes(
 std::string from_bytes(
         const std::uint64_t bytes)
 {
+    if (bytes == 0)
+    {
+        return "0B";
+    }
+
     static const std::map<std::uint64_t, std::string> units = {
         {1, "B"},
         {1000, "KB"},
@@ -173,31 +178,18 @@ std::string from_bytes(
     };
 
     // Find the factor and unit
-    const auto it = std::find_if(units.begin(), units.end(),
-            [bytes](const std::pair<std::uint64_t, std::string>& unit)
-            {
-                return bytes / unit.first < 1000;
-            });
+    const auto it = std::upper_bound(units.begin(), units.end(), bytes,
+                    [](const std::uint64_t bytes, const std::pair<std::uint64_t, std::string>& unit)
+                    {
+                        return bytes < unit.first;
+                    });
 
-    std::uint64_t factor;
-    std::string unit;
-
-    if (it == units.end())
-    {
-        // The number is huge. Use the largest unit.
-        const auto largest_unit = units.rbegin();
-        factor = largest_unit->first;
-        unit = largest_unit->second;
-    }
-    else
-    {
-        factor = it->first;
-        unit = it->second;
-    }
+    const auto factor = std::prev(it)->first;
+    const auto unit = std::prev(it)->second;
 
     // Calculate the number
-    const double number_double = static_cast<double>(bytes) / factor;
-    const std::uint64_t number_int = static_cast<std::uint64_t>(number_double);
+    const auto number_double = static_cast<double>(bytes) / factor;
+    const auto number_int = static_cast<std::uint64_t>(number_double);
 
     // Format the number
     std::ostringstream oss;

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <fastrtps/utils/DBQueue.h>
+#include "DBQueue.hpp"
 
 #include <cpp_utils/wait/ConsumerWaitHandler.hpp>
 
@@ -71,7 +71,7 @@ protected:
     T get_next_value_() override;
 
     //! \c DBQueue variable that stores the data
-    fastrtps::DBQueue<T> queue_;
+    DBQueue<T> queue_;
 
     //! Protect getting values from the queue so only one thread can do the swap at a time
     std::mutex pop_queue_mutex_;

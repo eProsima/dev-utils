@@ -16,6 +16,9 @@
  * @file DBQueue.hpp
  */
 
+#ifndef DBQUEUE_HPP
+#define DBQUEUE_HPP
+
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -155,3 +158,5 @@ private:
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
+
+#endif // ifndef DBQUEUE_H

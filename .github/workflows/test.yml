@@ -7,8 +7,7 @@ on:
 
       custom_version_build:
         description: >
-          Use the custom version build from eProsima-CI.
-          If set to false, the workflow will run the tests for Fast DDS v2 and v3.
+          Select Fast DDS version build from eProsima-CI.
         required: true
         type: choice
         default: 'custom'
@@ -31,7 +30,7 @@ jobs:
 
   reusable_tests:
     name: reusable_tests
-    uses: eProsima/DDS-Pipe/.github/workflows/reusable-workflow.yml@ci/fastdds-version
+    uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml@ci/fastdds-version
     with:
       custom_version_build: ${{ github.event.inputs.custom_version_build || 'v2' }}
       dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || '_nightly' }}

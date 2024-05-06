@@ -27,15 +27,11 @@ on:
     branches:
       - main
 
-env:
-  default_custom_version_build: 'v2'
-  default_dependencies_artifact_postfix: '_nightly'
-
 jobs:
 
   reusable_tests:
     name: reusable_tests
     uses: eProsima/DDS-Pipe/.github/workflows/reusable-workflow.yml@ci/fastdds-version
     with:
-      custom_version_build: ${{ github.event.inputs.custom_version_build || env.default_custom_version_build }}
-      dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+      custom_version_build: ${{ github.event.inputs.custom_version_build || 'v2' }}
+      dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || '_nightly' }}

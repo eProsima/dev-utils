@@ -140,7 +140,7 @@ jobs:
     # NOTE: there is a known issue in TSAN 20.04 with std::condition_variable::wait_for
     # https://github.com/google/sanitizers/issues/1259
     # Until this is fixed, we use 20.04 for TSAN work
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
       - name: Sync repository
@@ -151,7 +151,7 @@ jobs:
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
         with:
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           cmake_build_type: Release
           custom_version_build: ${{ github.event.inputs.custom_version_build }}
           dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix }}

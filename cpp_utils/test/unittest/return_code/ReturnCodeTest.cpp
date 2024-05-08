@@ -28,11 +28,11 @@ TEST(ReturnCodeTest, serializator)
 {
     std::map<ReturnCode, std::string> to_string_conversion =
     {
-        {ReturnCode::OK, "Ok"},
-        {ReturnCode::ERROR, "Error"},
-        {ReturnCode::UNKNOWN, "Unknown"},
-        {ReturnCode::NO_DATA, "NoData"},
-        {ReturnCode::PRECONDITION_NOT_MET, "PreconditionNotMet"},
+        {ReturnCode::OK, "{Ok}"},
+        {ReturnCode::ERROR, "{Error}"},
+        {ReturnCode::UNKNOWN, "{Unknown}"},
+        {ReturnCode::NO_DATA, "{NoData}"},
+        {ReturnCode::PRECONDITION_NOT_MET, "{PreconditionNotMet}"},
     };
 
     for (auto it : to_string_conversion)

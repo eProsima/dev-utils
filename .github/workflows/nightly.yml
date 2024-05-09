@@ -1,5 +1,5 @@
 # Nightly test workflow for dev-utils
-name: test
+name: nightly
 
 on:
   schedule:

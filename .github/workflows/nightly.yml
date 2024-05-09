@@ -9,14 +9,15 @@ jobs:
 
   reusable_tests_v2:
     name: reusable_tests_v2
-    uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml@ci/fastdds-version
+    uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml
     with:
       custom_version_build: 'v2'
       dependencies_artifact_postfix: '_nightly'
 
-  reusable_tests_v3:
-    name: reusable_tests_v3
-    uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml@ci/fastdds-version
-    with:
-      custom_version_build: 'v3'
-      dependencies_artifact_postfix: '_nightly'
+  # Uncomment this block to run the tests for Fast DDS v3 when dev-utils is updated
+  # reusable_tests_v3:
+  #   name: reusable_tests_v3
+  #   uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml
+  #   with:
+  #     custom_version_build: 'v3'
+  #     dependencies_artifact_postfix: '_nightly'

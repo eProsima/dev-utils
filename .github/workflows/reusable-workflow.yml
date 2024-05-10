@@ -88,11 +88,6 @@ jobs:
         with:
           path: src
 
-      - name: test input version build
-        run: |
-          echo "custom_version_build: ${{ inputs.custom_version_build }}"
-          echo "dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}"
-
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
         with:

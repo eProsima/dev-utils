@@ -410,6 +410,20 @@ TEST(utilsTest, to_bytes)
         const std::uint64_t bytes_expected = 51ULL * 1024 * 1024 * 1024 * 1024 * 1024;
         ASSERT_EQ(bytes, bytes_expected);
     }
+    // Small decimal number
+    {
+        const std::string bytes_str = "1.50KB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 1ULL * 1000 + 500;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Large decimal number
+    {
+        const std::string bytes_str = "23.9999GB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = ((23ULL * 1000 + 999) * 1000 + 900) * 1000;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
 
     // INVALID
 
@@ -431,11 +445,6 @@ TEST(utilsTest, to_bytes)
     // Invalid unit
     {
         const std::string bytes_str = "100G";
-        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
-    }
-    // Invalid number
-    {
-        const std::string bytes_str = "100.5MB";
         ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
     }
     // Number too large

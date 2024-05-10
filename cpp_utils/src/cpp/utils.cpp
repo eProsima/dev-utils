@@ -121,13 +121,13 @@ std::uint64_t to_bytes(
     };
 
     // Find the number and the unit
-    std::regex pattern("^(\\d+)\\s*([a-zA-Z]+)$");
+    std::regex pattern("^(\\d+(\\.\\d+)?)\\s*([a-zA-Z]+)$");
     std::smatch matches;
 
-    if (!std::regex_match(input, matches, pattern) || matches.size() != 3)
+    if (!std::regex_match(input, matches, pattern) || matches.size() != 4)
     {
         throw std::invalid_argument(
-                  "The quantity is not in the expected format. It should be a natural number followed by a unit (e.g. 10MB).");
+                  "The quantity is not in the expected format. It should be a rational number followed by a unit (e.g. 10MB).");
     }
 
     // Extract the number
@@ -135,7 +135,7 @@ std::uint64_t to_bytes(
     double number = std::stod(number_str);
 
     // Extract the unit
-    std::string unit_str = matches[2].str();
+    std::string unit_str = matches[3].str();
     to_uppercase(unit_str);
 
     if (units.find(unit_str) == units.end())
@@ -153,9 +153,8 @@ std::uint64_t to_bytes(
         throw std::invalid_argument("The number is too large to be converted to bytes.");
     }
 
-    // The explicit cast to uint64_t is safe since the number has already been checked to fit.
-    // The product is also safe since the possible overflow has also been checked.
-    const std::uint64_t bytes = static_cast<std::uint64_t>(number) * unit;
+    // The product is safe since the possible overflow has also been checked.
+    const std::uint64_t bytes = number * unit;
 
     return bytes;
 }

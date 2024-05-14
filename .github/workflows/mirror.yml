@@ -1,4 +1,5 @@
-# .github/workflows/mirror.yml
+name: mirror-branch
+
 on:
   push:
     branches:

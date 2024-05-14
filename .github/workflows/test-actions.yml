@@ -1,0 +1,16 @@
+# Tests to run with workflow-dispatch, pull-request and push events
+name: test-ations
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"

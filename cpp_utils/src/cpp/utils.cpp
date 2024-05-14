@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <cmath>
 #include <cstdint>
 #include <iomanip>
 #include <regex>
@@ -120,13 +121,13 @@ std::uint64_t to_bytes(
     };
 
     // Find the number and the unit
-    std::regex pattern("^(\\d+)\\s*([a-zA-Z]+)$");
+    std::regex pattern("^(\\d+(\\.\\d+)?)\\s*([a-zA-Z]+)$");
     std::smatch matches;
 
-    if (!std::regex_match(input, matches, pattern) || matches.size() != 3)
+    if (!std::regex_match(input, matches, pattern) || matches.size() != 4)
     {
         throw std::invalid_argument(
-                  "The quantity is not in the expected format. It should be a natural number followed by a unit (e.g. 10MB).");
+                  "The quantity is not in the expected format. It should be a rational number followed by a unit (e.g. 10MB).");
     }
 
     // Extract the number
@@ -134,7 +135,7 @@ std::uint64_t to_bytes(
     double number = std::stod(number_str);
 
     // Extract the unit
-    std::string unit_str = matches[2].str();
+    std::string unit_str = matches[3].str();
     to_uppercase(unit_str);
 
     if (units.find(unit_str) == units.end())
@@ -152,11 +153,58 @@ std::uint64_t to_bytes(
         throw std::invalid_argument("The number is too large to be converted to bytes.");
     }
 
-    // The explicit cast to uint64_t is safe since the number has already been checked to fit.
-    // The product is also safe since the possible overflow has also been checked.
-    const std::uint64_t bytes = static_cast<std::uint64_t>(number) * unit;
+    // The product is safe since the possible overflow has also been checked.
+    const std::uint64_t bytes = number * unit;
 
     return bytes;
+}
+
+std::string from_bytes(
+        const std::uint64_t bytes)
+{
+    if (bytes == 0)
+    {
+        return "0B";
+    }
+
+    static const std::map<std::uint64_t, std::string> units = {
+        {1, "B"},
+        {1000, "KB"},
+        {1000 * 1000, "MB"},
+        {1000 * 1000 * 1000, "GB"},
+        {1000ULL * 1000 * 1000 * 1000, "TB"},
+        {1000ULL * 1000 * 1000 * 1000 * 1000, "PB"}
+    };
+
+    // Find the factor and unit
+    const auto it = std::upper_bound(units.begin(), units.end(), bytes,
+                    [](const std::uint64_t bytes, const std::pair<std::uint64_t, std::string>& unit)
+                    {
+                        return bytes < unit.first;
+                    });
+
+    const auto factor = std::prev(it)->first;
+    const auto unit = std::prev(it)->second;
+
+    // Calculate the number
+    const auto number_double = static_cast<double>(bytes) / factor;
+    const auto number_int = static_cast<std::uint64_t>(number_double);
+
+    // Format the number
+    std::ostringstream oss;
+
+    if (std::fabs(number_double - number_int) < 0.01)
+    {
+        // The decimal part is negligible. Print the number as an integer.
+        oss << number_int;
+    }
+    else
+    {
+        // The decimal part is significant. Print the number as a double with two decimal places.
+        oss << std::fixed << std::setprecision(2) << number_double;
+    }
+
+    return oss.str() + unit;
 }
 
 void tsnh(

@@ -410,6 +410,20 @@ TEST(utilsTest, to_bytes)
         const std::uint64_t bytes_expected = 51ULL * 1024 * 1024 * 1024 * 1024 * 1024;
         ASSERT_EQ(bytes, bytes_expected);
     }
+    // Small decimal number
+    {
+        const std::string bytes_str = "1.50KB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = 1ULL * 1000 + 500;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
+    // Large decimal number
+    {
+        const std::string bytes_str = "23.9999GB";
+        const std::uint64_t bytes = to_bytes(bytes_str);
+        const std::uint64_t bytes_expected = ((23ULL * 1000 + 999) * 1000 + 900) * 1000;
+        ASSERT_EQ(bytes, bytes_expected);
+    }
 
     // INVALID
 
@@ -433,15 +447,66 @@ TEST(utilsTest, to_bytes)
         const std::string bytes_str = "100G";
         ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
     }
-    // Invalid number
-    {
-        const std::string bytes_str = "100.5MB";
-        ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
-    }
     // Number too large
     {
         const std::string bytes_str = "18446744073709551616PiB";
         ASSERT_THROW(to_bytes(bytes_str), std::invalid_argument);
+    }
+}
+
+/**
+ * Test \c from_bytes call
+ */
+TEST(utilsTest, from_bytes)
+{
+    // Zero
+    {
+        const std::uint64_t bytes = 0ULL;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "0B";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
+    }
+    // Bytes
+    {
+        const std::uint64_t bytes = 100ULL;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "100B";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
+    }
+    // Kilobytes
+    {
+        const std::uint64_t bytes = 555ULL * 1000 + 559;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "555.56KB";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
+    }
+    // Megabytes
+    {
+        const std::uint64_t bytes = (100ULL * 1000 + 104) * 1000;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "100.10MB";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
+    }
+    // Gigabytes
+    {
+        const std::uint64_t bytes = 82ULL * 1000 * 1000 * 1000;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "82GB";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
+    }
+    // Terabytes
+    {
+        const std::uint64_t bytes = 742ULL * 1000 * 1000 * 1000 * 1000;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "742TB";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
+    }
+    // Extra Large
+    {
+        const std::uint64_t bytes = 12345ULL * 1000 * 1000 * 1000 * 1000 * 1000;
+        const std::string bytes_str = from_bytes(bytes);
+        const std::string bytes_str_expected = "12345PB";
+        ASSERT_EQ(bytes_str, bytes_str_expected);
     }
 }
 

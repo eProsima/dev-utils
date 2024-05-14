@@ -9,7 +9,7 @@ jobs:
 
   reusable_tests_v2:
     name: reusable_tests_v2
-    uses: ./.github/workflows/reusable-workflow.yml@0.x
+    uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml@0.x
     with:
       custom_version_build: 'v2'
       dependencies_artifact_postfix: '_nightly'
@@ -17,7 +17,7 @@ jobs:
 
   reusable_tests_v3:
     name: reusable_tests_v3
-    uses: ./.github/workflows/reusable-workflow.yml@main
+    uses: eProsima/dev-utils/.github/workflows/reusable-workflow.yml@main
     with:
       custom_version_build: 'v3'
       dependencies_artifact_postfix: '_nightly'

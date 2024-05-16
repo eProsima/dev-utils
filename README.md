@@ -10,6 +10,13 @@
 [![test](https://github.com/eProsima/dev-utils/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/dev-utils/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
 
+<br><br>
+
+<!-- TODO(rsanchez15): Remove this before releasing v3.0.0 -->
+> [!WARNING]
+> **In preparation for Fast DDS v3.0.0, eProsima/dev-utils' master branch is undergoing major changes entailing API breaks.**
+> **Until Fast DDS v3.0.0 is released, it is strongly advisable to use the latest stable branch, [0.x](https://github.com/eProsima/dev-utils/tree/0.x), which uses Fast DDS 2.14.x**.
+
 The packages that conform this repository are:
 
 * **CMake utils**: `cmake_utils` CMake utilities to build packages.

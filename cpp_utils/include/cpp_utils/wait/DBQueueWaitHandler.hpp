@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "DBQueue.hpp"
+#include <cpp_utils/queue/DBQueue.hpp>
 
 #include <cpp_utils/wait/ConsumerWaitHandler.hpp>
 

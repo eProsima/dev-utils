@@ -36,6 +36,14 @@ ReturnCode::ReturnCode(
             value_ = ReturnCode::OK;
             break;
         case fastdds::dds::RETCODE_ERROR:
+        case fastdds::dds::RETCODE_UNSUPPORTED:
+        case fastdds::dds::RETCODE_BAD_PARAMETER:
+        case fastdds::dds::RETCODE_OUT_OF_RESOURCES:
+        case fastdds::dds::RETCODE_IMMUTABLE_POLICY:
+        case fastdds::dds::RETCODE_INCONSISTENT_POLICY:
+        case fastdds::dds::RETCODE_ALREADY_DELETED:
+        case fastdds::dds::RETCODE_TIMEOUT:
+        case fastdds::dds::RETCODE_ILLEGAL_OPERATION:
             value_ = ReturnCode::ERROR;
             break;
         case fastdds::dds::RETCODE_NO_DATA:

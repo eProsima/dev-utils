@@ -28,7 +28,7 @@ void DBQueueWaitHandler<T>::add_value_(
         T&& value)
 {
     logDebug(UTILS_WAIT_DBQUEUE, "Moving element to DBQueue.");
-    queue_.Push(std::move(value));
+    queue_.push(std::move(value));
 }
 
 template <typename T>
@@ -36,7 +36,7 @@ void DBQueueWaitHandler<T>::add_value_(
         const T& value)
 {
     logDebug(UTILS_WAIT_DBQUEUE, "Copying element to DBQueue.");
-    queue_.Push(value);
+    queue_.push(value);
 }
 
 template <typename T>
@@ -46,21 +46,21 @@ T DBQueueWaitHandler<T>::get_next_value_()
     std::unique_lock<std::mutex> lock(pop_queue_mutex_);
 
     // If front is empty, swap to back queue
-    if (queue_.Empty())
+    if (queue_.empty())
     {
         logDebug(UTILS_WAIT_DBQUEUE, "Swapping DBQueue to get element.");
-        queue_.Swap();
+        queue_.swap();
     }
 
     // If queue is empty, there is a synchronization problem
-    if (queue_.Empty())
+    if (queue_.empty())
     {
         throw utils::InconsistencyException("Empty DBQueue, impossible to get value.");
     }
 
     // TODO: Do it without copy
-    auto value = queue_.Front();
-    queue_.Pop();
+    auto value = queue_.front();
+    queue_.pop();
 
     return value;
 }

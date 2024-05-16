@@ -18,7 +18,11 @@
 
 #pragma once
 
-#include <fastrtps/types/TypesBase.h>
+#include <cstdint>
+#include <map>
+#include <string>
+
+#include <fastdds/dds/core/ReturnCode.hpp>
 
 #include <cpp_utils/library/library_dll.h>
 
@@ -30,36 +34,71 @@ namespace utils {
  *
  * It uses the fastdds ReturnCode_t
  */
-class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
+class ReturnCode
 {
 public:
 
-    //! Inherit Parent class constructors
-    using eprosima::fastrtps::types::ReturnCode_t::ReturnCode_t;
+    enum ReturnCodeValue
+    {
+        OK = 0,
+        ERROR = 1,
+        UNKNOWN = 2,
+        NO_DATA = 3,
+        NOT_ENABLED = 4,
+        PRECONDITION_NOT_MET = 5,
+    };
 
-    CPP_UTILS_DllAPI ReturnCode(
-            const eprosima::fastrtps::types::ReturnCode_t& other);
+    CPP_UTILS_DllAPI
+    ReturnCode()
+        : value_(OK)
+    {
+    }
 
-    //! Specify the operator so OK code could be translated to True.
-    CPP_UTILS_DllAPI bool operator ()() const noexcept;
+    CPP_UTILS_DllAPI
+    ReturnCode(
+            const fastdds::dds::ReturnCode_t& value);
 
-    //! Minor operator
-    CPP_UTILS_DllAPI bool operator <(
+    CPP_UTILS_DllAPI
+    std::uint32_t operator ()() const noexcept;
+
+    CPP_UTILS_DllAPI
+    bool operator ==(
+            const ReturnCode& c) const noexcept;
+
+    CPP_UTILS_DllAPI
+    bool operator !=(
+            const ReturnCode& c) const noexcept;
+
+    CPP_UTILS_DllAPI
+    bool operator <(
             const ReturnCode& other) const noexcept;
+
+    CPP_UTILS_DllAPI
+    bool operator !() const noexcept;
+
+    CPP_UTILS_DllAPI
+    explicit operator bool() = delete;
 
 protected:
 
     //! Link every ReturnCode available with a string to deserialize
     static const std::map<ReturnCode, std::string> to_string_conversion_;
 
+    //! \c ReturnCode value
+    std::uint32_t value_;
+
+
     // operator << needs access to the object
-    CPP_UTILS_DllAPI friend std::ostream& operator <<(
+    CPP_UTILS_DllAPI
+    friend std::ostream& operator <<(
             std::ostream& os,
             const ReturnCode& code);
+
 };
 
 //! \c ReturnCode to stream serializator
-CPP_UTILS_DllAPI std::ostream& operator <<(
+CPP_UTILS_DllAPI
+std::ostream& operator <<(
         std::ostream& os,
         const ReturnCode& code);
 

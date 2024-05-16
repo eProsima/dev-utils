@@ -55,7 +55,8 @@ public:
     }
 
     CPP_UTILS_DllAPI
-    ReturnCode(const fastdds::dds::ReturnCode_t& value);
+    ReturnCode(
+            const fastdds::dds::ReturnCode_t& value);
 
     CPP_UTILS_DllAPI
     std::uint32_t operator ()() const noexcept;
@@ -70,7 +71,7 @@ public:
 
     CPP_UTILS_DllAPI
     bool operator <(
-        const ReturnCode& other) const noexcept;
+            const ReturnCode& other) const noexcept;
 
     CPP_UTILS_DllAPI
     bool operator !() const noexcept;

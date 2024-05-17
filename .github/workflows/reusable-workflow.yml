@@ -94,6 +94,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
@@ -125,6 +126,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
@@ -156,6 +158,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
@@ -184,6 +187,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
@@ -214,6 +218,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
@@ -244,6 +249,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies

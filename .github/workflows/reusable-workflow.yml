@@ -56,6 +56,13 @@ on:
         type: string
         default: '_nightly'
 
+      ref:
+        description: >
+          The branch or tag name to checkout.
+        required: true
+        type: string
+        default: 'main'
+
 env:
   code_packages_names: 'cmake_utils cpp_utils py_utils'
   cpp_packages_names: 'cmake_utils cpp_utils'

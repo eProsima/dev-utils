@@ -113,6 +113,7 @@ jobs:
           workspace_dependencies: './install'
           ctest_args: --label-exclude "xfail"
           colcon_meta_file: ./src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+          test_report_artifact: test_report${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}_${{ matrix.os }}_${{ matrix.cmake_build_type }}
 
 
 #####################################################################
@@ -138,10 +139,14 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         with:
           packages_names: ${{ env.cpp_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xasan"
           workspace_dependencies: './install'
+          cmake_build_type: Debug
+          test_report_artifact: test_report_asan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 
 #####################################################################
@@ -170,10 +175,14 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         with:
           packages_names: ${{ env.cpp_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xtsan"
           workspace_dependencies: './install'
+          cmake_build_type: Debug
+          test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 
 #####################################################################
@@ -234,6 +243,7 @@ jobs:
         with:
           packages_names: ${{ env.cpp_packages_names }}
           workspace_dependencies: './install'
+          test_report_artifact: test_report_coverage${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
           codecov_fix_file_path: ./src/codecov.yml
 
@@ -261,11 +271,15 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test_flaky@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         with:
           packages_names: ${{ env.code_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON
+          cmake_build_type: Release
           workspace_dependencies: './install'
-
+          ctest_args: --label-regex "xfail"
+          colcon_meta_file: ./src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+          test_report_artifact: test_report_flaky${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 #####################################################################
 # UNCRUSTIFY

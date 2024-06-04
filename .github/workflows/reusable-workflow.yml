@@ -153,9 +153,6 @@ jobs:
 # TSAN
 
   tsan:
-    # NOTE: there is a known issue in TSAN 20.04 with std::condition_variable::wait_for
-    # https://github.com/google/sanitizers/issues/1259
-    # Until this is fixed, we use 20.04 for TSAN work
     runs-on: ubuntu-22.04
     steps:
 

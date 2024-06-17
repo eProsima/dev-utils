@@ -120,7 +120,7 @@ std::string qos_policy_mask_to_string(
 
     std::string policy_mask_str;
 
-    for (std::uint32_t id_int = QosPolicyId_t::INVALID_QOS_POLICY_ID; id_int < QosPolicyId_t::NEXT_QOS_POLICY_ID;
+    for (std::uint32_t id_int = QosPolicyId_t::USERDATA_QOS_POLICY_ID; id_int < QosPolicyId_t::NEXT_QOS_POLICY_ID;
             id_int++)
     {
         const auto qos_policy_id = static_cast<QosPolicyId_t>(id_int);

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 
 #include <cpp_utils/qos/qos_utils.hpp>
-#include <cpp_utils/testing/gtest_aux.hpp>
 
 using namespace eprosima;
 using namespace eprosima::fastdds::dds;
@@ -188,7 +188,6 @@ TEST(qos_utils_test, qos_policy_id_to_string)
     }
 
     // Lifespan
-
     {
         const auto id = QosPolicyId_t::LIFESPAN_QOS_POLICY_ID;
         const auto id_str = utils::qos_policy_id_to_string(id);
@@ -205,7 +204,6 @@ TEST(qos_utils_test, qos_policy_id_to_string)
     }
 
     // Data representation
-
     {
         const auto id = QosPolicyId_t::DATAREPRESENTATION_QOS_POLICY_ID;
         const auto id_str = utils::qos_policy_id_to_string(id);
@@ -318,7 +316,6 @@ TEST(qos_utils_test, qos_policy_id_to_string)
     }
 
     // Invalid
-
     {
         const auto id = QosPolicyId_t::INVALID_QOS_POLICY_ID;
         const auto id_str = utils::qos_policy_id_to_string(id);
@@ -341,7 +338,6 @@ TEST(qos_utils_test, qos_policy_mask_to_string)
     }
 
     // One policy
-
     {
         PolicyMask mask;
         mask.set(QosPolicyId_t::USERDATA_QOS_POLICY_ID);

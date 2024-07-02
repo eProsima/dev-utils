@@ -119,6 +119,7 @@ std::string qos_policy_mask_to_string(
     }
 
     std::string policy_mask_str;
+    bool first_id_in_mask = true;
 
     for (std::uint32_t id_int = QosPolicyId_t::INVALID_QOS_POLICY_ID; id_int < QosPolicyId_t::NEXT_QOS_POLICY_ID;
             id_int++)
@@ -127,13 +128,17 @@ std::string qos_policy_mask_to_string(
 
         if (qos_policy_mask.test(qos_policy_id))
         {
-            policy_mask_str += ", " + qos_policy_id_to_string(qos_policy_id);
-        }
-    }
+            if (first_id_in_mask)
+            {
+                first_id_in_mask = false;
+            }
+            else
+            {
+                policy_mask_str += ", ";
+            }
 
-    if (!policy_mask_str.empty())
-    {
-        policy_mask_str.erase(0, 2);
+            policy_mask_str += qos_policy_id_to_string(qos_policy_id);
+        }
     }
 
     return policy_mask_str;

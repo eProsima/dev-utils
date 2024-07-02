@@ -5,9 +5,6 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Forthcoming
 
-This release includes the following features in `cpp-utils` project:
-* Add functions to convert QosPolicy's ids and masks to string.
-
 ## Version 0.6.0
 
 This release includes the following features in `cmake-utils` project:

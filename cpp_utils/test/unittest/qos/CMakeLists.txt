@@ -30,8 +30,7 @@ set(TEST_LIST
 
 set(TEST_EXTRA_LIBRARIES
         fastcdr
-        fastdds
-        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+        fastrtps
     )
 
 add_unittest_executable(

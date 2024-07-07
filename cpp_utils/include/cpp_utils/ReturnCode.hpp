@@ -40,17 +40,17 @@ public:
 
     enum ReturnCodeValue
     {
-        OK = 0,
-        ERROR = 1,
-        UNKNOWN = 2,
-        NO_DATA = 3,
-        NOT_ENABLED = 4,
-        PRECONDITION_NOT_MET = 5,
+        RETCODE_OK = 0,
+        RETCODE_ERROR = 1,
+        RETCODE_UNKNOWN = 2,
+        RETCODE_NO_DATA = 3,
+        RETCODE_NOT_ENABLED = 4,
+        RETCODE_PRECONDITION_NOT_MET = 5,
     };
 
     CPP_UTILS_DllAPI
     ReturnCode()
-        : value_(OK)
+        : value_(RETCODE_OK)
     {
     }
 

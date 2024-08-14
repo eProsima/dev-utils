@@ -33,7 +33,7 @@ ReturnCode::ReturnCode(
     switch (value)
     {
         case fastdds::dds::RETCODE_OK:
-            value_ = ReturnCode::OK;
+            value_ = ReturnCode::RETCODE_OK;
             break;
         case fastdds::dds::RETCODE_ERROR:
         case fastdds::dds::RETCODE_UNSUPPORTED:
@@ -44,19 +44,19 @@ ReturnCode::ReturnCode(
         case fastdds::dds::RETCODE_ALREADY_DELETED:
         case fastdds::dds::RETCODE_TIMEOUT:
         case fastdds::dds::RETCODE_ILLEGAL_OPERATION:
-            value_ = ReturnCode::ERROR;
+            value_ = ReturnCode::RETCODE_ERROR;
             break;
         case fastdds::dds::RETCODE_NO_DATA:
-            value_ = ReturnCode::NO_DATA;
+            value_ = ReturnCode::RETCODE_NO_DATA;
             break;
         case fastdds::dds::RETCODE_NOT_ENABLED:
-            value_ = ReturnCode::NOT_ENABLED;
+            value_ = ReturnCode::RETCODE_NOT_ENABLED;
             break;
         case fastdds::dds::RETCODE_PRECONDITION_NOT_MET:
-            value_ = ReturnCode::PRECONDITION_NOT_MET;
+            value_ = ReturnCode::RETCODE_PRECONDITION_NOT_MET;
             break;
         default:
-            value_ = ReturnCode::UNKNOWN;
+            value_ = ReturnCode::RETCODE_UNKNOWN;
             break;
     }
 }
@@ -86,16 +86,17 @@ bool ReturnCode::operator <(
 
 bool ReturnCode::operator !() const noexcept
 {
-    return value_ != ReturnCode::OK;
+    return value_ != ReturnCode::RETCODE_OK;
 }
 
 const std::map<ReturnCode, std::string> ReturnCode::to_string_conversion_ =
 {
-    {ReturnCode::OK, "Ok"},
-    {ReturnCode::ERROR, "Error"},
-    {ReturnCode::UNKNOWN, "Unknown"},
-    {ReturnCode::NO_DATA, "NoData"},
-    {ReturnCode::PRECONDITION_NOT_MET, "PreconditionNotMet"},
+    {ReturnCode::RETCODE_OK, "Ok"},
+    {ReturnCode::RETCODE_ERROR, "Error"},
+    {ReturnCode::RETCODE_UNKNOWN, "Unknown"},
+    {ReturnCode::RETCODE_NO_DATA, "NoData"},
+    {ReturnCode::RETCODE_NOT_ENABLED, "NotEnabled"},
+    {ReturnCode::RETCODE_PRECONDITION_NOT_MET, "PreconditionNotMet"},
 };
 
 std::ostream& operator <<(

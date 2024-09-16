@@ -5,8 +5,34 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Forthcoming
 
+## Version 1.0.0
+
+This release includes the following **Features**:
+* Add support for Fast DDS v3.
+
 This release includes the following features in `cpp-utils` project:
+* Refactor `ReturnCode` to prevent incompatibilities.
 * Add functions to convert QosPolicy's ids and masks to string.
+* Add function to convert a number of bytes into a formatted string.
+
+This release includes the following features in `cmake-utils` project:
+* Extend `compile_tool` function to accept additional directories to use when compiling the tool.
+
+This release includes the following **CI improvements**:
+* Upgrade to Ubuntu Noble (24.04).
+* Remove Ubuntu Focal (20.04) from the CI.
+* Update GCC version for Thread Sanitizer job.
+* Set test report names for each action.
+* Add support for builds with both Fast DDS v2 and v3.
+* Empty XTSAN tests list to run all tests with Thread Sanitizer.
+
+This release includes the following **dependencies update**:
+
+|  | Repository | Old Version | New Version |
+|---|---|---|---|
+| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.2.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.0) | [v2.2.4](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.4) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v2.14.0](https://github.com/eProsima/Fast-DDS/releases/tag/v2.14.0) | [v3.0.1](https://github.com/eProsima/Fast-DDS/releases/tag/v3.0.1) |
 
 ## Version 0.6.0
 

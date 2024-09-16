@@ -8,7 +8,7 @@
 [![Forks](https://img.shields.io/github/forks/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/network/members)
 [![Stars](https://img.shields.io/github/stars/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/stargazers)
 [![test](https://github.com/eProsima/dev-utils/actions/workflows/nightly.yml/badge.svg)](https://github.com/eProsima/dev-utils/actions/workflows/nightly.yml)
-[![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
+[![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/v1.0.0/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
 
 <br><br>
 

@@ -35,7 +35,27 @@ bool BaseLogConsumer::accept_entry_(
         const Log::Entry& entry)
 {
     // Filter by regex
-    std::regex filter_regex(filter_[entry.kind].get_value());
+    std::regex filter_regex;
+
+    switch (entry.kind)
+    {
+        case Log::Kind::Error:
+            filter_regex = std::regex(filter_.error.get_value());
+            break;
+
+        case Log::Kind::Warning:
+            filter_regex = std::regex(filter_.warning.get_value());
+            break;
+
+        case Log::Kind::Info:
+            filter_regex = std::regex(filter_.info.get_value());
+            break;
+
+        default:
+            // If the kind is unknown, reject the log entry
+            return false;
+    }
+
     const bool is_category_valid = std::regex_search(entry.context.category, filter_regex);
     const bool is_message_valid = std::regex_search(entry.message, filter_regex);
     const bool is_content_valid = is_category_valid || is_message_valid;

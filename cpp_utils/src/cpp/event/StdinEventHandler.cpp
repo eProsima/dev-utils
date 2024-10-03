@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <termios.h>
 #include <thread>
+#include <unistd.h>
 
-#include <cpp_utils/Log.hpp>
 #include <cpp_utils/event/StdinEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -44,26 +46,112 @@ void StdinEventHandler::read_one_more_line()
     ++activation_times_;
 }
 
+void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
+{
+    static struct termios oldt, newt;
+    if (enable)
+    {
+        // Save actial configuration in 'oldt'
+        tcgetattr(STDIN_FILENO, &oldt);
+
+        // Copy actual configuration in 'newt'
+        newt = oldt;
+
+        // Modify line mode flags
+        // - ICANON: Desactivate canonic mode (process each character)
+        // - ECHO: Desactivate echo (does not print what the user writes on terminal)
+        newt.c_lflag &= ~(ICANON | ECHO);
+
+        // Apply new configuration
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    }
+    else
+    {
+        // Restore original terminal configuration
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    }
+}
+
 void StdinEventHandler::stdin_listener_thread_routine_() noexcept
 {
+    set_terminal_mode_(true);
+
     auto awake_reason = activation_times_.wait_and_decrement();
+
     while (awake_reason == AwakeReason::condition_met)
     {
         std::string read_str;
+        char c;
 
-        // Read lines or separated by spaces
-        if (read_lines_)
+        while (true)
         {
-            getline(source_, read_str);
+            c = getchar(); // Read first character
+            if (c == '\033')
+            {
+                getchar(); // Ignore next character '['
+                switch (getchar())
+                {
+                    case 'A':
+                    {
+                        std::string prev_command = history_handler_.get_previous_command();
+                        if (!prev_command.empty())
+                        {
+                            read_str = prev_command;
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                        }
+
+                        break;
+                    }
+
+                    case 'B':
+                    {
+                        std::string next_command = history_handler_.get_next_command();
+                        if (!next_command.empty())
+                        {
+                            read_str = next_command;
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                        }
+                        else
+                        {
+                            read_str = "";
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[1;36m>>\033[0m " << std::flush;
+                        }
+
+                        break;
+                    }
+                }
+            }
+            else if (c == '\n')
+            {
+                std::cout << std::endl;
+                event_occurred_(read_str);
+                history_handler_.add_command(read_str);
+                read_str = "";
+                break;
+            }
+            else if (c == '\b' || c == 127)
+            {
+                if (!read_str.empty())
+                {
+                    read_str.pop_back();
+                    std::cout << "\b \b";
+                }
+            }
+            else
+            {
+                read_str += c;
+                std::cout << c;
+                std::cout.flush();
+            }
         }
-        else
-        {
-            source_ >> read_str;
-        }
-        event_occurred_(read_str);
 
         awake_reason = activation_times_.wait_and_decrement();
     }
+
+    set_terminal_mode_(false);
 }
 
 void StdinEventHandler::callback_set_nts_() noexcept

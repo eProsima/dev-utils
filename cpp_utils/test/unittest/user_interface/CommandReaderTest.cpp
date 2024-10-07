@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <queue>
+#include <unistd.h>
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -60,6 +61,36 @@ eProsima_ENUMERATION_BUILDER(
     }
     );
 
+namespace stdin {
+
+void simulate_stdin(
+        const std::queue<std::string>& input_queue)
+{
+    // Create a pipe to simulate input
+    int pipe_fds[2];
+    if (pipe(pipe_fds) == -1) {
+        std::cerr << "Pipe failed!" << std::endl;
+    }
+
+    // Write simulated input to the pipe (write to pipe_fds[1])
+    for (auto input = input_queue; !input.empty(); input.pop())
+    {
+        const std::string& str = input.front();
+        const char* simulated_input = str.c_str();
+
+        write(pipe_fds[1], simulated_input, str.length());
+
+        write(pipe_fds[1], "\n", 1);
+    }
+
+    close(pipe_fds[1]);  // Close the writing end of the pipe
+
+    // Redirect stdin to read from the pipe (read from pipe_fds[0])
+    dup2(pipe_fds[0], STDIN_FILENO);
+    close(pipe_fds[0]);  // Close the reading end of the pipe after redirecting
+}
+
+} /* namespace stdin */
 } /* namespace test */
 
 using namespace eprosima::utils;
@@ -78,15 +109,16 @@ TEST(CommandReaderTest, trivial_create)
  */
 TEST(CommandReaderTest, read_lines_enum_1)
 {
-    std::stringstream source;
-    source << "value_1" << "\n";
-    source << "value_1 arg" << "\n";
-    source << "value_2 more than 1 arg" << "\n";
+    std::queue<std::string> expected_result;
+    expected_result.push("value_1");
+    expected_result.push("value_1 arg");
+    expected_result.push("value_2 more than 1 arg");
+
+    test::stdin::simulate_stdin(expected_result);
 
     auto builder = test::create_builder();
     CommandReader<test::Enum1> reader(
-        builder,
-        source);
+        builder);
 
     {
         Command<test::Enum1> command_result;
@@ -123,13 +155,14 @@ TEST(CommandReaderTest, read_lines_enum_1)
  */
 TEST(CommandReaderTest, read_lines_enum_1_negative)
 {
-    std::stringstream source;
-    source << "value_3" << "\n";
+    std::queue<std::string> expected_result;
+    expected_result.push("value_3");
+
+    test::stdin::simulate_stdin(expected_result);
 
     auto builder = test::create_builder();
     CommandReader<test::Enum1> reader(
-        builder,
-        source);
+        builder);
 
     {
         Command<test::Enum1> command_result;
@@ -142,13 +175,14 @@ TEST(CommandReaderTest, read_lines_enum_1_negative)
  */
 TEST(CommandReaderTest, read_lines_enum_2_singleton)
 {
-    std::stringstream source;
-    source << "andtheend" << "\n";
-    source << "1 args" << "\n";
+    std::queue<std::string> expected_result;
+    expected_result.push("andtheend");
+    expected_result.push("1 args");
+
+    test::stdin::simulate_stdin(expected_result);
 
     CommandReader<test::Enum2> reader(
-        *test::Enum2_Builder::get_shared_instance(),
-        source);
+        *test::Enum2_Builder::get_shared_instance());
 
     {
         Command<test::Enum2> command_result;

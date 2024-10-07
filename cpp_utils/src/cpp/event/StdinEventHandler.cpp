@@ -77,7 +77,6 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
     set_terminal_mode_(true);
 
     auto awake_reason = activation_times_.wait_and_decrement();
-
     while (awake_reason == AwakeReason::condition_met)
     {
         std::string read_str;

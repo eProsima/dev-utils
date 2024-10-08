@@ -12,9 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <termios.h>
 #include <thread>
-#include <unistd.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+    #define NOMINMAX
+    #include <windows.h>
+#else
+    #include <termios.h>
+    #include <unistd.h>
+#endif
 
 #include <cpp_utils/event/StdinEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
@@ -48,10 +54,35 @@ void StdinEventHandler::read_one_more_line()
 
 void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
 {
+#if defined(_WIN32) || defined(_WIN64)
+    static DWORD old_mode;
+    static HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+
+    if (enable)
+    {
+        // Save actual configuration in 'old_mode'
+        GetConsoleMode(hStdin, &old_mode);
+
+        // Modify line mode flags
+        // - ENABLE_ECHO_INPUT: Desactivate echo (does not print what the user writes on terminal)
+        // - ENABLE_LINE_INPUT: Desactivate line mode (process each character)
+        DWORD new_mode = old_mode;
+        new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+        SetConsoleMode(hStdin, new_mode);
+        std::cout << "New console mode set" << std::endl;
+    }
+    else
+    {
+        // Restore original terminal configuration
+        SetConsoleMode(hStdin, old_mode);
+    }
+
+#else
+
     static struct termios oldt, newt;
     if (enable)
     {
-        // Save actial configuration in 'oldt'
+        // Save actual configuration in 'oldt'
         tcgetattr(STDIN_FILENO, &oldt);
 
         // Copy actual configuration in 'newt'
@@ -70,6 +101,7 @@ void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
         // Restore original terminal configuration
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     }
+#endif
 }
 
 void StdinEventHandler::stdin_listener_thread_routine_() noexcept
@@ -85,12 +117,22 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
         while (true)
         {
             c = getchar(); // Read first character
+
+#if defined(_WIN32) || defined(_WIN64)
+            if (c == 0 || c == 224)  // Special key prefix for arrow keys on Windows
+            {
+                c = getchar(); // Get next character to determine arrow key
+                switch (c)
+                {
+                    case 72:  // Arrow up
+#else
             if (c == '\033')
             {
                 getchar(); // Ignore next character '['
                 switch (getchar())
                 {
                     case 'A':
+#endif
                     {
                         std::string prev_command = history_handler_.get_previous_command();
                         if (!prev_command.empty())
@@ -103,7 +145,11 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                         break;
                     }
 
-                    case 'B':
+#if defined(_WIN32) || defined(_WIN64)
+                    case 80:  // Arrow down
+#else
+                    case 'B':  // Arrow down
+#endif
                     {
                         std::string next_command = history_handler_.get_next_command();
                         if (!next_command.empty())
@@ -123,7 +169,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                     }
                 }
             }
-            else if (c == '\n')
+            else if (c == '\n' || c == '\r')
             {
                 std::cout << std::endl;
                 event_occurred_(read_str);

@@ -112,6 +112,9 @@ public:
             const TaskId& task_id,
             Task&& task);
 
+    CPP_UTILS_DllAPI void remove_slot(
+            const TaskId& task_id);
+
     /**
      * @brief Wait until all queued tasks are executed.
      *

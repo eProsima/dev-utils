@@ -18,6 +18,12 @@ The packages that conform this repository are:
 * **C++ utils**: `cpp_utils` C++ classes and functions for common use.
 * **Dev utils**: `dev_utils` Tools and applications to help in code development.
 
+## Commercial support
+
+Looking for commercial support? Write us to info@eprosima.com
+
+Find more about us at [eProsima’s webpage](https://eprosima.com/).
+
 ## Documentation
 
 There is no public documentation for this repository.
@@ -135,7 +141,3 @@ can be run with the following command:
 ```bash
 colcon test --event-handler=console_direct+
 ```
-
-## Getting Help
-
-If you need support you can reach us by mail at `support@eProsima.com` or by phone at `+34 91 804 34 48`.

@@ -597,6 +597,24 @@ private:
 
 #endif // __unix__
 
+#if !defined(__unix__) && !defined (_WIN32) && !defined (__linux__)
+
+    using FolderInfo = void*;
+
+    void* _directory = { nullptr };
+
+    inline FolderInfo get_directory(
+            const T& path)
+    {
+        return FolderInfo{};
+    }
+
+    inline void monitor_directory()
+    {
+    }
+
+#endif // if !defined(__unix__) && !defined (_WIN32) && !defined (__linux__)
+
     void callback_thread()
     {
         while (_destory == false)

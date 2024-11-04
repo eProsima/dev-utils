@@ -97,7 +97,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ${{ matrix.os }}
           cmake_build_type: ${{ matrix.cmake_build_type }}
@@ -130,7 +130,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -163,7 +163,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -201,7 +201,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -232,7 +232,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -264,7 +264,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release

@@ -2,6 +2,8 @@
 name: nightly-dev-utils
 
 on:
+  workflow_dispatch:
+
   schedule:
     - cron: '0 5 * * *'
 

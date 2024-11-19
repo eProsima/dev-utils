@@ -14,19 +14,17 @@
 
 #pragma once
 
+#include <ostream>
+
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/Log.hpp>
+#include <cpp_utils/logging/LogFilter.hpp>
 #include <cpp_utils/types/Fuzzy.hpp>
-
-#include <map>
-#include <ostream>
-#include <string>
 
 namespace eprosima {
 namespace utils {
 
 using VerbosityKind = Log::Kind;
-using LogFilter = std::map<VerbosityKind, Fuzzy<std::string>>;
 
 /**
  * The collection of settings related to Logging.
@@ -88,14 +86,6 @@ CPP_UTILS_DllAPI
 std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<VerbosityKind>& kind);
-
-/**
- * @brief \c LogFilter to stream serialization
- */
-CPP_UTILS_DllAPI
-std::ostream& operator <<(
-        std::ostream& os,
-        const LogFilter& filter);
 
 } /* namespace utils */
 } /* namespace eprosima */

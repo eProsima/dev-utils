@@ -19,6 +19,7 @@
 #include <thread>
 
 #include <cpp_utils/event/EventHandler.hpp>
+#include <cpp_utils/history/CommandHistoryHandler.hpp>
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/wait/CounterWaitHandler.hpp>
@@ -84,6 +85,13 @@ public:
 protected:
 
     /**
+     * @brief TODO
+     */
+    CPP_UTILS_DllAPI
+    void set_terminal_mode_(
+            bool enable) noexcept;
+
+    /**
      * @brief Internal thread to read from \c source_ .
      *
      * This thread waits first to this object to give it permission to start waiting for data in \c source_ by
@@ -119,6 +127,8 @@ protected:
 
     //! Counter that contains the number of times the thread is allowed to start waiting for data from source_.
     CounterWaitHandler activation_times_;
+
+    history::CommandHistoryHandler history_handler_;
 
     /**
      * @brief istream source from where to read.

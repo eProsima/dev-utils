@@ -14,9 +14,17 @@
 
 #include <thread>
 
-#include <cpp_utils/Log.hpp>
+#if defined(_WIN32) || defined(_WIN64)
+    #define NOMINMAX
+    #include <windows.h>
+#else
+    #include <termios.h>
+    #include <unistd.h>
+#endif
+
 #include <cpp_utils/event/StdinEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace utils {
@@ -44,26 +52,151 @@ void StdinEventHandler::read_one_more_line()
     ++activation_times_;
 }
 
+void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
+{
+#if defined(_WIN32) || defined(_WIN64)
+    static DWORD old_mode;
+    static HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+
+    if (enable)
+    {
+        // Save actual configuration in 'old_mode'
+        GetConsoleMode(hStdin, &old_mode);
+
+        // Modify line mode flags
+        // - ENABLE_ECHO_INPUT: Desactivate echo (does not print what the user writes on terminal)
+        // - ENABLE_LINE_INPUT: Desactivate line mode (process each character)
+        DWORD new_mode = old_mode;
+        new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+        SetConsoleMode(hStdin, new_mode);
+        std::cout << "New console mode set" << std::endl;
+    }
+    else
+    {
+        // Restore original terminal configuration
+        SetConsoleMode(hStdin, old_mode);
+    }
+
+#else
+
+    static struct termios oldt, newt;
+    if (enable)
+    {
+        // Save actual configuration in 'oldt'
+        tcgetattr(STDIN_FILENO, &oldt);
+
+        // Copy actual configuration in 'newt'
+        newt = oldt;
+
+        // Modify line mode flags
+        // - ICANON: Desactivate canonic mode (process each character)
+        // - ECHO: Desactivate echo (does not print what the user writes on terminal)
+        newt.c_lflag &= ~(ICANON | ECHO);
+
+        // Apply new configuration
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    }
+    else
+    {
+        // Restore original terminal configuration
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    }
+#endif
+}
+
 void StdinEventHandler::stdin_listener_thread_routine_() noexcept
 {
+    set_terminal_mode_(true);
+
     auto awake_reason = activation_times_.wait_and_decrement();
     while (awake_reason == AwakeReason::condition_met)
     {
         std::string read_str;
+        char c;
 
-        // Read lines or separated by spaces
-        if (read_lines_)
+        while (true)
         {
-            getline(source_, read_str);
+            c = getchar(); // Read first character
+
+#if defined(_WIN32) || defined(_WIN64)
+            if (c == 0 || c == 224)  // Special key prefix for arrow keys on Windows
+            {
+                c = getchar(); // Get next character to determine arrow key
+                switch (c)
+                {
+                    case 72:  // Arrow up
+#else
+            if (c == '\033')
+            {
+                getchar(); // Ignore next character '['
+                switch (getchar())
+                {
+                    case 'A':
+#endif
+                    {
+                        std::string prev_command = history_handler_.get_previous_command();
+                        if (!prev_command.empty())
+                        {
+                            read_str = prev_command;
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                        }
+
+                        break;
+                    }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 80:  // Arrow down
+#else
+                    case 'B':  // Arrow down
+#endif
+                    {
+                        std::string next_command = history_handler_.get_next_command();
+                        if (!next_command.empty())
+                        {
+                            read_str = next_command;
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                        }
+                        else
+                        {
+                            read_str = "";
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[1;36m>>\033[0m " << std::flush;
+                        }
+
+                        break;
+                    }
+                }
+            }
+            else if (c == '\n' || c == '\r')
+            {
+                std::cout << std::endl;
+                event_occurred_(read_str);
+                history_handler_.add_command(read_str);
+                read_str = "";
+                break;
+            }
+            else if (c == '\b' || c == 127)
+            {
+                if (!read_str.empty())
+                {
+                    read_str.pop_back();
+                    std::cout << "\b \b";
+                }
+            }
+            else
+            {
+                read_str += c;
+                std::cout << c;
+                std::cout.flush();
+            }
         }
-        else
-        {
-            source_ >> read_str;
-        }
-        event_occurred_(read_str);
 
         awake_reason = activation_times_.wait_and_decrement();
     }
+
+    set_terminal_mode_(false);
 }
 
 void StdinEventHandler::callback_set_nts_() noexcept

@@ -13,13 +13,25 @@
 # limitations under the License.
 
 """
-Test to import every module in the library to check everything is ok.
+This file contains system utils.
 """
 
-import py_utils.debugging.debug_utils  # noqa: F401
-import py_utils.logging.log_utils  # noqa: F401
-import py_utils.system.system_utils  # noqa: F401
-import py_utils.time.Timer  # noqa: F401
-import py_utils.wait.WaitHandler  # noqa: F401
-import py_utils.wait.BooleanWaitHandler  # noqa: F401
-import py_utils.wait.IntWaitHandler  # noqa: F401
+import os
+
+
+def is_linux() -> bool:
+    """
+    @brief Check if the script is running in a Linux environment.
+
+    @return: True if the script is running in a Linux environment, False otherwise.
+    """
+    return os.name == 'posix'
+
+
+def is_windows() -> bool:
+    """
+    @brief Check if the script is running in a Windows environment.
+
+    @return: True if the script is running in a Windows environment, False otherwise.
+    """
+    return os.name == 'nt'

@@ -91,7 +91,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@hotfix/upgrade-setuptools
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -106,11 +106,12 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@hotfix/upgrade-setuptools
         with:
           packages_names: ${{ env.code_packages_names }}
           cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
-          workspace_dependencies: './install'
+          workspace: ${{ github.workspace }}
+          workspace_dependencies: ${{ github.workspace }}/install
           ctest_args: --label-exclude "xfail"
           colcon_meta_file: ./src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
           test_report_artifact: test_report${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}_${{ matrix.os }}_${{ matrix.cmake_build_type }}
@@ -124,7 +125,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@hotfix/upgrade-setuptools
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -139,12 +140,13 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@hotfix/upgrade-setuptools
         with:
           packages_names: ${{ env.cpp_packages_names }}
           cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
           ctest_args: --label-exclude "xfail|xasan"
-          workspace_dependencies: './install'
+          workspace: ${{ github.workspace }}
+          workspace_dependencies: ${{ github.workspace }}/install
           cmake_build_type: Debug
           test_report_artifact: test_report_asan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
@@ -157,7 +159,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@hotfix/upgrade-setuptools
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -172,7 +174,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@hotfix/upgrade-setuptools
         env:
           # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
           # These issues were fixed in GCC 12 so we upgrade to that version.
@@ -182,7 +184,8 @@ jobs:
           packages_names: ${{ env.cpp_packages_names }}
           cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
           ctest_args: --label-exclude "xfail|xtsan"
-          workspace_dependencies: './install'
+          workspace: ${{ github.workspace }}
+          workspace_dependencies: ${{ github.workspace }}/install
           cmake_build_type: Debug
           test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
@@ -195,7 +198,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@hotfix/upgrade-setuptools
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -210,10 +213,11 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/clang_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/clang_build_test@hotfix/upgrade-setuptools
         with:
           packages_names: ${{ env.cpp_packages_names }}
-          workspace_dependencies: './install'
+          workspace: ${{ github.workspace }}
+          workspace_dependencies: ${{ github.workspace }}/install
 
 
 #####################################################################
@@ -226,7 +230,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@hotfix/upgrade-setuptools
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -241,10 +245,11 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@v0
+        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@hotfix/upgrade-setuptools
         with:
           packages_names: ${{ env.cpp_packages_names }}
-          workspace_dependencies: './install'
+          workspace: ${{ github.workspace }}
+          workspace_dependencies: ${{ github.workspace }}/install
           test_report_artifact: test_report_coverage${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
           codecov_fix_file_path: ./src/codecov.yml
@@ -258,7 +263,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@hotfix/upgrade-setuptools
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -273,12 +278,13 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@hotfix/upgrade-setuptools
         with:
           packages_names: ${{ env.code_packages_names }}
           cmake_args: -DBUILD_TESTS=ON
           cmake_build_type: Release
-          workspace_dependencies: './install'
+          workspace: ${{ github.workspace }}
+          workspace_dependencies: ${{ github.workspace }}/install
           ctest_args: --label-regex "xfail"
           colcon_meta_file: ./src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
           test_report_artifact: test_report_flaky${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
@@ -291,7 +297,7 @@ jobs:
     steps:
 
       - name: Uncrustify
-        uses: eProsima/eProsima-CI/ubuntu/uncrustify@v0
+        uses: eProsima/eProsima-CI/ubuntu/uncrustify@hotfix/upgrade-setuptools
 
 
 #####################################################################
@@ -302,4 +308,4 @@ jobs:
     steps:
 
       - name: Python Linter
-        uses: eProsima/eProsima-CI/ubuntu/python_linter@v0
+        uses: eProsima/eProsima-CI/ubuntu/python_linter@hotfix/upgrade-setuptools

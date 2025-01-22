@@ -1,7 +1,7 @@
 # Reusable workflow to run the following jobs:
 #
 #   - multiplatform-tests
-#     - [ ubuntu-22.04 | ubuntu-20.04 | windows-2019 | windows-2022 ]
+#     - [ ubuntu-22.04 | ubuntu-24.04 | windows-2019 | windows-2022 ]
 #     - [ Debug | Release ]
 #     - execute tests in different versions of ubuntu with different build types
 #
@@ -56,6 +56,13 @@ on:
         type: string
         default: '_nightly'
 
+      ref:
+        description: >
+          The branch or tag name to checkout.
+        required: true
+        type: string
+        default: 'main'
+
 env:
   code_packages_names: 'cmake_utils cpp_utils py_utils'
   cpp_packages_names: 'cmake_utils cpp_utils'
@@ -76,8 +83,8 @@ jobs:
           - Release
           - Debug
         os:
-          - ubuntu-20.04
           - ubuntu-22.04
+          - ubuntu-24.04
           - windows-2019
           - windows-2022
 
@@ -87,9 +94,10 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ${{ matrix.os }}
           cmake_build_type: ${{ matrix.cmake_build_type }}
@@ -105,6 +113,7 @@ jobs:
           workspace_dependencies: './install'
           ctest_args: --label-exclude "xfail"
           colcon_meta_file: ./src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+          test_report_artifact: test_report${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}_${{ matrix.os }}_${{ matrix.cmake_build_type }}
 
 
 #####################################################################
@@ -118,9 +127,10 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -129,19 +139,20 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         with:
           packages_names: ${{ env.cpp_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xasan"
           workspace_dependencies: './install'
+          cmake_build_type: Debug
+          test_report_artifact: test_report_asan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 
 #####################################################################
 # TSAN
 
   tsan:
-    # NOTE: there is a known issue in TSAN 20.04 with std::condition_variable::wait_for
-    # https://github.com/google/sanitizers/issues/1259
-    # Until this is fixed, we use 20.04 for TSAN work
     runs-on: ubuntu-22.04
     steps:
 
@@ -149,9 +160,10 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -160,10 +172,19 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        env:
+          # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
+          # These issues were fixed in GCC 12 so we upgrade to that version.
+          CC: gcc-12
+          CXX: g++-12
         with:
           packages_names: ${{ env.cpp_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xtsan"
           workspace_dependencies: './install'
+          cmake_build_type: Debug
+          test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 
 #####################################################################
@@ -177,9 +198,10 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -207,9 +229,10 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -222,6 +245,7 @@ jobs:
         with:
           packages_names: ${{ env.cpp_packages_names }}
           workspace_dependencies: './install'
+          test_report_artifact: test_report_coverage${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
           codecov_fix_file_path: ./src/codecov.yml
 
@@ -237,9 +261,10 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: src
+          ref: ${{ inputs.ref }}
 
       - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
+        uses: eProsima/dev-utils/.github/actions/project_dependencies@main
         with:
           os: ubuntu-22.04
           cmake_build_type: Release
@@ -248,11 +273,15 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test_flaky@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         with:
           packages_names: ${{ env.code_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON
+          cmake_build_type: Release
           workspace_dependencies: './install'
-
+          ctest_args: --label-regex "xfail"
+          colcon_meta_file: ./src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+          test_report_artifact: test_report_flaky${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 #####################################################################
 # UNCRUSTIFY

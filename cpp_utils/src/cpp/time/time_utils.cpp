@@ -36,17 +36,25 @@ namespace utils {
 
 Timestamp now() noexcept
 {
-    return std::chrono::system_clock::now();
+    return Timeclock::now();
 }
 
 Timestamp the_end_of_time() noexcept
 {
-    return std::chrono::time_point<std::chrono::system_clock>::max();
+    #if defined(_WIN32) // In Windows std::gmtime does not support negative values nor values greater than 2^32
+    return Timeclock::from_time_t(std::numeric_limits<long>::max());
+    #else
+    return Timestamp::max();
+    #endif // if defined(_WIN32)
 }
 
 Timestamp the_beginning_of_time() noexcept
 {
-    return std::chrono::time_point<std::chrono::system_clock>::min();
+    #if defined(_WIN32) // In Windows std::gmtime does not support negative values nor values greater than 2^32
+    return Timeclock::from_time_t(0);
+    #else
+    return Timestamp::min();
+    #endif // if defined(_WIN32)
 }
 
 Timestamp date_to_timestamp(
@@ -66,7 +74,7 @@ Timestamp date_to_timestamp(
     tm.tm_mon = static_cast<int>(month) - 1;
     tm.tm_year = static_cast<int>(year) - 1900;
 
-    return std::chrono::system_clock::from_time_t(timegm(&tm));
+    return Timeclock::from_time_t(timegm(&tm));
 }
 
 Timestamp time_to_timestamp(
@@ -86,7 +94,7 @@ Timestamp time_to_timestamp(
     tm.tm_min = static_cast<int>(minute);
     tm.tm_hour = static_cast<int>(hour);
 
-    return std::chrono::system_clock::from_time_t(timegm(&tm));
+    return Timeclock::from_time_t(timegm(&tm));
 }
 
 std::string timestamp_to_string(
@@ -95,8 +103,12 @@ std::string timestamp_to_string(
         bool local_time /* = false */)
 {
     std::ostringstream ss;
-    const std::chrono::high_resolution_clock::time_point::duration duration = timestamp.time_since_epoch();
-    const time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+    time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(timestamp.time_since_epoch()).count();
+
+    #if defined(_WIN32) // In Windows std::gmtime does not support negative values nor values greater than 2^32
+    time_t max_value = std::numeric_limits<long>::max();
+    duration_seconds = std::max((time_t) 0, std::min(max_value, duration_seconds));
+    #endif // if defined(_WIN32)
 
     std::tm* tm = nullptr;
     if (local_time)
@@ -153,7 +165,7 @@ Timestamp string_to_timestamp(
     {
         utc_time = timegm(&tm);
     }
-    return std::chrono::system_clock::from_time_t(utc_time);
+    return Timeclock::from_time_t(utc_time);
 }
 
 std::chrono::milliseconds duration_to_ms(

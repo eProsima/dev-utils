@@ -97,7 +97,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         Timestamp old_time = date_to_timestamp(1970u, 7u, 20u, 6u, 39u, 42u);
         std::string old_time_str = timestamp_to_string(old_time);
 
-        std::ostringstream expected_string_os;  
+        std::ostringstream expected_string_os;
         expected_string_os
             << 1970
             << "-" << "07"
@@ -138,7 +138,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "-" << "12"
             << "-" << "44";
         #endif  // _EPROSIMA_WINDOWS_PLATFORM
-        
+
 
         // Test timestamp_to_string
         ASSERT_EQ(beginning_time_str, expected_string_os.str());
@@ -195,7 +195,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "-" << "47"
             << "-" << "16";
         #endif  // _EPROSIMA_WINDOWS_PLATFORM
-        
+
 
         // Test timestamp_to_string
         ASSERT_EQ(end_time_str, expected_string_os.str());

@@ -97,7 +97,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         Timestamp old_time = date_to_timestamp(1970u, 7u, 20u, 6u, 39u, 42u);
         std::string old_time_str = timestamp_to_string(old_time);
 
-        std::ostringstream expected_string_os;
+        std::ostringstream expected_string_os;  
         expected_string_os
             << 1970
             << "-" << "07"
@@ -121,6 +121,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         std::string beginning_time_str = timestamp_to_string(beginning_time);
 
         std::ostringstream expected_string_os;
+        #if _EPROSIMA_WINDOWS_PLATFORM
         expected_string_os
             << 1970
             << "-" << "01"
@@ -128,6 +129,16 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "00"
             << "-" << "00"
             << "-" << "00";
+        #else //1677-09-21_00-12-44
+        expected_string_os
+            << 1677
+            << "-" << "09"
+            << "-" << "21"
+            << "_" << "00"
+            << "-" << "12"
+            << "-" << "44";
+        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+        
 
         // Test timestamp_to_string
         ASSERT_EQ(beginning_time_str, expected_string_os.str());
@@ -167,6 +178,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         std::string end_time_str = timestamp_to_string(end_time);
 
         std::ostringstream expected_string_os;
+        #if _EPROSIMA_WINDOWS_PLATFORM
         expected_string_os
             << 2038
             << "-" << "01"
@@ -174,6 +186,16 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "03"
             << "-" << "14"
             << "-" << "07";
+        #else // 2262-04-11 23:47:16
+        expected_string_os
+            << 2262
+            << "-" << "04"
+            << "-" << 11
+            << "_" << "23"
+            << "-" << "47"
+            << "-" << "16";
+        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+        
 
         // Test timestamp_to_string
         ASSERT_EQ(end_time_str, expected_string_os.str());

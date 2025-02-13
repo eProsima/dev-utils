@@ -30,9 +30,13 @@ namespace utils {
 using Duration_ms = uint32_t;
 
 /**
- * Type used to represent time points
+ * Type used to fix the clock to the system clock
  */
 using Timeclock = std::chrono::system_clock;
+
+/**
+ * Type used to represent time points
+ */
 using Timestamp = std::chrono::time_point<Timeclock>;
 
 /**

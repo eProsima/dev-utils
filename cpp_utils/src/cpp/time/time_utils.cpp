@@ -41,20 +41,12 @@ Timestamp now() noexcept
 
 Timestamp the_end_of_time() noexcept
 {
-    #if _EPROSIMA_WINDOWS_PLATFORM // In Windows std::gmtime does not support negative values nor values greater than 2^32
-    return Timeclock::from_time_t(std::numeric_limits<long>::max());
-    #else
     return Timestamp::max();
-    #endif // if _EPROSIMA_WINDOWS_PLATFORM
 }
 
 Timestamp the_beginning_of_time() noexcept
 {
-    #if _EPROSIMA_WINDOWS_PLATFORM // In Windows std::gmtime does not support negative values nor values greater than 2^32
-    return Timeclock::from_time_t(0);
-    #else
     return Timestamp::min();
-    #endif // if _EPROSIMA_WINDOWS_PLATFORM
 }
 
 Timestamp date_to_timestamp(
@@ -106,8 +98,14 @@ std::string timestamp_to_string(
     time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(timestamp.time_since_epoch()).count();
 
     #if _EPROSIMA_WINDOWS_PLATFORM // In Windows std::gmtime does not support negative values nor values greater than 2^32
-    time_t max_value = std::numeric_limits<long>::max();
-    duration_seconds = std::max((time_t) 0, std::min(max_value, duration_seconds));
+    time_t max_value = std::numeric_limits<int32_t>::max();
+    if (0 > duration_seconds || duration_seconds > max_value)
+    {
+        EPROSIMA_LOG_WARNING(TIME_UTILS,
+                "Timestamp value: " << duration_seconds << " is out of range for Windows, clamping to 0 and " <<
+                max_value);
+        duration_seconds = std::max((time_t) 0, std::min(max_value, duration_seconds));
+    }
     #endif // if _EPROSIMA_WINDOWS_PLATFORM
 
     std::tm* tm = nullptr;

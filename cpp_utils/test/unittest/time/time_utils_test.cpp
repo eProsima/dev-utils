@@ -31,11 +31,12 @@ using namespace eprosima::utils;
  * - now
  * - now with alternative format
  * - old time
+ * - date before 1970
  * - the beginning of time
  * - future time
+ * - date after 2038
  * - the end of time
  * - some time today
- * - wrong date and time
  */
 TEST(time_utils_test, timestamp_to_string_to_timestamp)
 {
@@ -115,6 +116,39 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         ASSERT_EQ(timestamp_to_string(old_time_from_str), expected_string_os.str());
     }
 
+    // date before 1970
+    {
+        Timestamp old_time = date_to_timestamp(1959u, 7u, 20u, 6u, 39u, 42u);
+        std::string old_time_str = timestamp_to_string(old_time);
+
+        std::ostringstream expected_string_os;
+        #if _EPROSIMA_WINDOWS_PLATFORM
+        expected_string_os
+            << 1970
+            << "-" << "01"
+            << "-" << "01"
+            << "_" << "00"
+            << "-" << "00"
+            << "-" << "00";
+        #else
+        expected_string_os
+            << 1959
+            << "-" << "07"
+            << "-" << 20
+            << "_" << "06"
+            << "-" << 39
+            << "-" << 42;
+        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+
+        // Test timestamp_to_string
+        ASSERT_EQ(old_time_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp old_time_from_str = string_to_timestamp(old_time_str);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(old_time_from_str), expected_string_os.str());
+    }
+
     // the begininng of time
     {
         Timestamp beginning_time = the_beginning_of_time();
@@ -162,6 +196,39 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "00"
             << "-" << "00"
             << "-" << "00";
+
+        // Test timestamp_to_string
+        ASSERT_EQ(future_time_str, expected_string_os.str());
+
+        // Test string_to_timestamp
+        Timestamp future_time_from_str = string_to_timestamp(future_time_str);
+        // NOTE: cannot directly compare timestamps because some precision is lost during ts->str conversion
+        ASSERT_EQ(timestamp_to_string(future_time_from_str), expected_string_os.str());
+    }
+
+    // date after 2038
+    {
+        Timestamp future_time = date_to_timestamp(2049u, 5u, 22u);
+        std::string future_time_str = timestamp_to_string(future_time);
+
+        std::ostringstream expected_string_os;
+        #if _EPROSIMA_WINDOWS_PLATFORM
+        expected_string_os
+            << 2038
+            << "-" << "01"
+            << "-" << 19
+            << "_" << "03"
+            << "-" << "14"
+            << "-" << "07";
+        #else
+        expected_string_os
+            << 2049
+            << "-" << "05"
+            << "-" << 22
+            << "_" << "00"
+            << "-" << "00"
+            << "-" << "00";
+        #endif  // _EPROSIMA_WINDOWS_PLATFORM
 
         // Test timestamp_to_string
         ASSERT_EQ(future_time_str, expected_string_os.str());

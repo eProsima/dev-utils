@@ -130,7 +130,9 @@ std::string demangle_if_ros_type(
     if (dds_type_string[dds_type_string.size() - 1] != '_')
     {
         // not a ROS type
-        return dds_type_string;
+        std::string aux = dds_type_string;
+        replace_all(aux, "::", "/");
+        return aux;
     }
 
     std::string substring = "dds_::";
@@ -138,7 +140,9 @@ std::string demangle_if_ros_type(
     if (substring_position == std::string::npos)
     {
         // not a ROS type
-        return dds_type_string;
+        std::string aux = dds_type_string;
+        replace_all(aux, "::", "/");
+        return aux;
     }
 
     std::string type_namespace = dds_type_string.substr(0, substring_position);

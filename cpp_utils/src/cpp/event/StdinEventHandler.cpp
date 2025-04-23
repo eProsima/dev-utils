@@ -17,6 +17,7 @@
 #if defined(_WIN32) || defined(_WIN64)
     #define NOMINMAX
     #include <windows.h>
+    #include <conio.h>
 #else
     #include <termios.h>
     #include <unistd.h>
@@ -55,7 +56,7 @@ void StdinEventHandler::read_one_more_line()
 void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
 {
 #if defined(_WIN32) || defined(_WIN64)
-    static DWORD old_mode;
+    static DWORD old_mode = 0;
     static HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
     if (enable)
@@ -112,27 +113,25 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
     while (awake_reason == AwakeReason::condition_met)
     {
         std::string read_str;
-        char c;
+        #if defined(_WIN32) || defined(_WIN64)
+        HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+
+        INPUT_RECORD irInBuf[128];
+        DWORD cNumRead;
 
         while (true)
         {
-            c = getchar(); // Read first character
+            ReadConsoleInput(hStdin, irInBuf, 128, &cNumRead);
+            for (DWORD i = 0; i < cNumRead; ++i)
+            {
+                if (irInBuf[i].EventType != KEY_EVENT || !irInBuf[i].Event.KeyEvent.bKeyDown)
+                    continue;
 
-#if defined(_WIN32) || defined(_WIN64)
-            if (c == 0 || c == 224)  // Special key prefix for arrow keys on Windows
-            {
-                c = getchar(); // Get next character to determine arrow key
-                switch (c)
+                auto key = irInBuf[i].Event.KeyEvent;
+
+                switch (key.wVirtualKeyCode)
                 {
-                    case 72:  // Arrow up
-#else
-            if (c == '\033')
-            {
-                getchar(); // Ignore next character '['
-                switch (getchar())
-                {
-                    case 'A':
-#endif
+                    case VK_UP:
                     {
                         std::string prev_command = history_handler_.get_previous_command();
                         if (!prev_command.empty())
@@ -141,30 +140,91 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             std::cout << "\r\033[K";
                             std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
                         }
-
                         break;
                     }
-
-#if defined(_WIN32) || defined(_WIN64)
-                    case 80:  // Arrow down
-#else
-                    case 'B':  // Arrow down
-#endif
+                    case VK_DOWN:
                     {
                         std::string next_command = history_handler_.get_next_command();
+                        std::cout << "\r\033[K";
                         if (!next_command.empty())
                         {
                             read_str = next_command;
-                            std::cout << "\r\033[K";
                             std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
                         }
                         else
                         {
-                            read_str = "";
-                            std::cout << "\r\033[K";
+                            read_str.clear();
                             std::cout << "\033[1;36m>>\033[0m " << std::flush;
                         }
+                        break;
+                    }
+                    case VK_BACK:
+                    {
+                        if (!read_str.empty())
+                        {
+                            read_str.pop_back();
+                            std::cout << "\b \b" << std::flush;
+                        }
+                        break;
+                    }
+                    case VK_RETURN:
+                    {
+                        std::cout << std::endl;
+                        event_occurred_(read_str);
+                        history_handler_.add_command(read_str);
+                        read_str.clear();
+                        goto next_loop; // exit inner loop
+                    }
+                    default:
+                    {
+                        WCHAR ch = key.uChar.UnicodeChar;
+                        if (ch >= 32 && ch < 127) // Printable ASCII
+                        {
+                            read_str += static_cast<char>(ch);
+                            std::cout << static_cast<char>(ch) << std::flush;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+next_loop:
 
+#else
+        char c;
+        while (true)
+        {
+            c = getchar();
+            if (c == '\033')
+            {
+                getchar(); // skip '['
+                switch (getchar())
+                {
+                    case 'A':
+                    {
+                        std::string prev_command = history_handler_.get_previous_command();
+                        if (!prev_command.empty())
+                        {
+                            read_str = prev_command;
+                            std::cout << "\r\033[K";
+                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                        }
+                        break;
+                    }
+                    case 'B':
+                    {
+                        std::string next_command = history_handler_.get_next_command();
+                        std::cout << "\r\033[K";
+                        if (!next_command.empty())
+                        {
+                            read_str = next_command;
+                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                        }
+                        else
+                        {
+                            read_str.clear();
+                            std::cout << "\033[1;36m>>\033[0m " << std::flush;
+                        }
                         break;
                     }
                 }
@@ -174,7 +234,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                 std::cout << std::endl;
                 event_occurred_(read_str);
                 history_handler_.add_command(read_str);
-                read_str = "";
+                read_str.clear();
                 break;
             }
             else if (c == '\b' || c == 127)
@@ -182,17 +242,16 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                 if (!read_str.empty())
                 {
                     read_str.pop_back();
-                    std::cout << "\b \b";
+                    std::cout << "\b \b" << std::flush;
                 }
             }
             else
             {
                 read_str += c;
-                std::cout << c;
-                std::cout.flush();
+                std::cout << c << std::flush;
             }
         }
-
+#endif
         awake_reason = activation_times_.wait_and_decrement();
     }
 

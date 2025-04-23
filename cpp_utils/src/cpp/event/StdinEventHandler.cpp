@@ -17,6 +17,7 @@
 #if defined(_WIN32) || defined(_WIN64)
     #define NOMINMAX
     #include <windows.h>
+    #include <conio.h>
 #else
     #include <termios.h>
     #include <unistd.h>
@@ -112,20 +113,22 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
     while (awake_reason == AwakeReason::condition_met)
     {
         std::string read_str;
-        char c;
 
         while (true)
         {
-            c = getchar(); // Read first character
 
 #if defined(_WIN32) || defined(_WIN64)
+            int c;
+            c = _getch(); // Read first character
             if (c == 0 || c == 224)  // Special key prefix for arrow keys on Windows
             {
-                c = getchar(); // Get next character to determine arrow key
+                c = _getch(); // Get next character to determine arrow key
                 switch (c)
                 {
                     case 72:  // Arrow up
 #else
+            char c;
+            c = getchar(); // Read first character
             if (c == '\033')
             {
                 getchar(); // Ignore next character '['
@@ -187,8 +190,9 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
             }
             else
             {
-                read_str += c;
-                std::cout << c;
+                char ch = static_cast<char>(c);
+                read_str += ch;
+                std::cout << ch;
                 std::cout.flush();
             }
         }

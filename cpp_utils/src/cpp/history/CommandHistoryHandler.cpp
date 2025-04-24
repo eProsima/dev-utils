@@ -23,7 +23,8 @@ CommandHistoryHandler::CommandHistoryHandler()
 {
 }
 
-void CommandHistoryHandler::add_command(const std::string& command)
+void CommandHistoryHandler::add_command(
+        const std::string& command)
 {
     if (!command.empty())
     {

@@ -19,7 +19,7 @@
     #include <windows.h>
 #else
     #include <unistd.h>
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -53,7 +53,8 @@ void simulate_stdin(
     HANDLE pipe_read, pipe_write;
 
     // Create a pipe
-    if (!CreatePipe(&pipe_read, &pipe_write, nullptr, 0)) {
+    if (!CreatePipe(&pipe_read, &pipe_write, nullptr, 0))
+    {
         std::cerr << "Pipe creation failed!" << std::endl;
         return;
     }
@@ -79,7 +80,8 @@ void simulate_stdin(
 
 #else
     int pipe_fds[2];
-    if (pipe(pipe_fds) == -1) {
+    if (pipe(pipe_fds) == -1)
+    {
         std::cerr << "Pipe failed!" << std::endl;
         return;
     }
@@ -102,7 +104,7 @@ void simulate_stdin(
     // Redirect stdin to read from the pipe
     dup2(pipe_fds[0], STDIN_FILENO);
     close(pipe_fds[0]);  // Close the reading end of the pipe after redirecting
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
 }
 
 /**

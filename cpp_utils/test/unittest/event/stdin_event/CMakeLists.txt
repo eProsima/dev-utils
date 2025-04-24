@@ -21,11 +21,15 @@ all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
         trivial_create_handler
+    )
+
+if(NOT WIN32)
+    list(APPEND TEST_LIST
         read_lines_start
         read_spaces_start
         read_lines_running
     )
-
+endif()
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastdds

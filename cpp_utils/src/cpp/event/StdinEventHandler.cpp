@@ -21,7 +21,7 @@
 #else
     #include <termios.h>
     #include <unistd.h>
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
 
 #include <cpp_utils/event/StdinEventHandler.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
@@ -53,7 +53,8 @@ void StdinEventHandler::read_one_more_line()
     ++activation_times_;
 }
 
-void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
+void StdinEventHandler::set_terminal_mode_(
+        bool enable) noexcept
 {
 #if defined(_WIN32) || defined(_WIN64)
     static DWORD old_mode;
@@ -102,7 +103,7 @@ void StdinEventHandler::set_terminal_mode_(bool enable) noexcept
         // Restore original terminal configuration
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     }
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
 }
 
 void StdinEventHandler::stdin_listener_thread_routine_() noexcept
@@ -135,7 +136,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                 switch (getchar())
                 {
                     case 'A':
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
                     {
                         std::string prev_command = history_handler_.get_previous_command();
                         if (!prev_command.empty())
@@ -152,7 +153,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                     case 80:  // Arrow down
 #else
                     case 'B':  // Arrow down
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
                     {
                         std::string next_command = history_handler_.get_next_command();
                         if (!next_command.empty())

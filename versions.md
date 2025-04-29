@@ -5,6 +5,22 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Forthcoming
 
+## Version 1.2.0
+
+This release includes the following **Improvements**:
+* Update commercial support section in project README
+
+This release includes the following **CI improvements**:
+* Use correct action for downloading dependencies
+
+This release includes the following **dependencies update**:
+
+|  | Repository | Old Version | New Version |
+|---|---|---|---|
+| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.2.5](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.5) | [v2.3.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v3.1.0](https://github.com/eProsima/Fast-DDS/releases/tag/v3.1.0) | [v3.2.2](https://github.com/eProsima/Fast-DDS/releases/tag/v3.2.2) |
+
 ## Version 1.1.0
 
 This release includes the following **dependencies update**:

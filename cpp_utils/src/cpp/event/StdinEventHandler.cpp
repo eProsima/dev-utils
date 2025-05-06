@@ -19,6 +19,7 @@
     #include <windows.h>
     #include <conio.h>
 #else
+    #include <sys/ioctl.h>
     #include <termios.h>
     #include <unistd.h>
 #endif // if defined(_WIN32) || defined(_WIN64)
@@ -30,6 +31,37 @@
 namespace eprosima {
 namespace utils {
 namespace event {
+
+int get_terminal_width()
+{
+    #if defined(_WIN32) || defined(_WIN64)
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+        return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    #else
+        struct winsize w;
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+        return w.ws_col;
+    #endif // if defined(_WIN32) || defined(_WIN64)
+}
+
+int compute_lines_needed(const std::string& prompt, const std::string& cmd, int term_width)
+{
+    int total_length = static_cast<int>(prompt.size() + cmd.size());
+    return (total_length + term_width - 1) / term_width;
+}
+
+void clear_lines(int line_count)
+{
+    for (int i = 0; i < line_count; ++i)
+    {
+        std::cout << "\033[2K\r"; // Clear current line
+        if (i < line_count - 1)
+        {
+            std::cout << "\033[1A"; // Move up (not after last line)
+        }
+    }
+}
 
 StdinEventHandler::StdinEventHandler(
         std::function<void(std::string)> callback,
@@ -141,9 +173,15 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                         std::string prev_command = history_handler_.get_previous_command();
                         if (!prev_command.empty())
                         {
+                            std::string prompt = ">> ";
+                            int term_width = get_terminal_width();
+                            int lines = compute_lines_needed(prompt, read_str, term_width);
+                            clear_lines(lines);
                             read_str = prev_command;
-                            std::cout << "\r\033[K";
-                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                            //std::cout << "\r\033[K";
+                            std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
+                         
+                            //std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
                         }
 
                         break;
@@ -158,15 +196,28 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                         std::string next_command = history_handler_.get_next_command();
                         if (!next_command.empty())
                         {
+                            std::string prompt = ">> ";
+                            int term_width = get_terminal_width();
+                            int lines = compute_lines_needed(prompt, read_str, term_width);
+                            clear_lines(lines);
                             read_str = next_command;
-                            std::cout << "\r\033[K";
-                            std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                            // std::cout << "\r\033[K";
+                            // std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
+                            std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
                         }
                         else
                         {
+                            std::string prompt = ">> ";
+                            int term_width = get_terminal_width();
+                            int lines = compute_lines_needed(prompt, read_str, term_width);
+                            clear_lines(lines);
+                                                    
                             read_str = "";
-                            std::cout << "\r\033[K";
-                            std::cout << "\033[1;36m>>\033[0m " << std::flush;
+                            std::cout << "\033[38;5;82m" << prompt << "\033[0m" << std::flush;
+
+                            // read_str = "";
+                            // std::cout << "\r\033[K";
+                            // std::cout << "\033[1;36m>>\033[0m " << std::flush;
                         }
 
                         break;
@@ -177,7 +228,12 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
             {
                 std::cout << std::endl;
                 event_occurred_(read_str);
-                history_handler_.add_command(read_str);
+
+                if (!is_ignoring_input() && !read_str.empty())
+                {
+                    history_handler_.add_command(read_str);
+                }
+                
                 read_str = "";
                 break;
             }
@@ -214,6 +270,16 @@ void StdinEventHandler::callback_unset_nts_() noexcept
 {
     activation_times_.disable();
     stdin_listener_thread_.join();
+}
+
+void StdinEventHandler::set_ignore_input(bool ignore) noexcept
+{
+    ignore_input_.store(ignore, std::memory_order_relaxed);
+}
+
+bool StdinEventHandler::is_ignoring_input() const noexcept
+{
+    return ignore_input_.load(std::memory_order_relaxed);
 }
 
 } /* namespace event */

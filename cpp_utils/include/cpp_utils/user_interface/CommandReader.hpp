@@ -110,6 +110,7 @@ protected:
     event::DBQueueWaitHandler<std::string> commands_read_;
 
 public:
+
     event::StdinEventHandler& stdin_handler()
     {
         return stdin_handler_;

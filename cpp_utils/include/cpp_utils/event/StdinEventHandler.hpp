@@ -81,15 +81,16 @@ public:
      */
     CPP_UTILS_DllAPI
     void read_one_more_line();
-    
+
     /**
      * @brief Temporarily ignore input (disables history addition).
      *
      * Should be called before an interactive command starts and re-enabled after it finishes.
      */
     CPP_UTILS_DllAPI
-    void set_ignore_input(bool ignore) noexcept;
-        
+    void set_ignore_input(
+            bool ignore) noexcept;
+
     /**
      * @brief Check whether input is currently being ignored.
      */
@@ -157,6 +158,7 @@ protected:
     const bool read_lines_;
 
 private:
+
     //! Whether to ignore input (e.g. during interactive commands like echo)
     std::atomic<bool> ignore_input_{false};
 

@@ -100,7 +100,12 @@ public:
 protected:
 
     /**
-     * @brief TODO
+     * @brief This function configures the terminal to enable or disable raw input mode.
+     * When `enable` is `true`, it disables line buffering and input echo
+     * so that input can be processed character-by-character without displaying typed characters,
+     * useful for real-time command-line interaction, such as handling arrow keys or passwords.
+     * When `enable` is `false`, it restores the original terminal settings
+     * to avoid leaving the terminal in an unusable state.
      */
     CPP_UTILS_DllAPI
     void set_terminal_mode_(

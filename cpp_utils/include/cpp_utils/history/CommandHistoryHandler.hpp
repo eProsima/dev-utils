@@ -28,7 +28,9 @@ class CommandHistoryHandler
 public:
 
     /**
-     * @brief TODO
+     * @brief This constructor initializes a CommandHistoryHandler instance,
+     * setting current_index_ to -1 to indicate that no command in the history is currently selected.
+     * This is used to manage user input history.
      */
     CPP_UTILS_DllAPI
     CommandHistoryHandler();

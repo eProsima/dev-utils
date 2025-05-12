@@ -288,10 +288,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             clear_lines(lines);
                             read_str = prev_command;
                             cursor_index = read_str.size();
-                            //std::cout << "\r\033[K";
                             std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
-
-                            //std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
                         }
 
                         break;
@@ -312,8 +309,6 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             clear_lines(lines);
                             read_str = next_command;
                             cursor_index = read_str.size();
-                            // std::cout << "\r\033[K";
-                            // std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
                             std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
                         }
                         else
@@ -326,10 +321,6 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             read_str = "";
                             cursor_index = 0;
                             std::cout << "\033[38;5;82m" << prompt << "\033[0m" << std::flush;
-
-                            // read_str = "";
-                            // std::cout << "\r\033[K";
-                            // std::cout << "\033[1;36m>>\033[0m " << std::flush;
                         }
 
                         break;

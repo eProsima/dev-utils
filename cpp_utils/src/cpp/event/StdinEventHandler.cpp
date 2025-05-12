@@ -63,6 +63,93 @@ void clear_lines(int line_count)
     }
 }
 
+void update_line(
+    const std::string& prompt,
+    std::string& line,
+    size_t& cursor_index,
+    std::function<void(std::string&, size_t&)> line_modifier)
+{
+    int term_width = get_terminal_width();
+    if (term_width <= 0) term_width = 80;
+
+    // Save the old line and cursor index before modifying 
+    std::string old_line = line;
+    size_t old_cursor_index = cursor_index;
+
+    // Apply the line modifier function
+    line_modifier(line, cursor_index);
+
+    // If the content does not change, only move the cursor
+    if (line == old_line)
+    {
+        int old_abs_cursor = static_cast<int>(prompt.size() + old_cursor_index);
+        int new_abs_cursor = static_cast<int>(prompt.size() + cursor_index);
+
+        int old_cursor_line = old_abs_cursor / term_width;
+        int new_cursor_line = new_abs_cursor / term_width;
+
+        int line_diff = new_cursor_line - old_cursor_line;
+
+        if (line_diff > 0)
+        {
+            for (int i = 0; i < line_diff; ++i)
+                std::cout << "\033[1B"; // move down
+        }
+        else if (line_diff < 0)
+        {
+            for (int i = 0; i < -line_diff; ++i)
+                std::cout << "\033[1A"; // move up
+        }
+
+        std::cout << "\r";
+        int new_cursor_col = new_abs_cursor % term_width;
+        if (new_cursor_col > 0)
+            std::cout << "\033[" << new_cursor_col << "C";
+
+        std::cout.flush();
+        return;
+    }
+
+    // Remove the old line
+    std::string full_line_before = prompt + old_line;
+    int old_lines = (static_cast<int>(full_line_before.size()) + term_width - 1) / term_width;
+
+    // Move to the line where the cursor was
+    // Calculate the absolute cursor position
+    // and the line number where it was 
+    int old_abs_cursor = static_cast<int>(prompt.size() + old_cursor_index);
+    int old_cursor_line = old_abs_cursor / term_width;
+    int lines_to_go_down = old_lines - 1 - old_cursor_line;
+    for (int i = 0; i < lines_to_go_down; ++i)
+        std::cout << "\033[1B";
+
+    for (int i = 0; i < old_lines; ++i)
+    {
+        std::cout << "\033[2K\r";
+        if (i < old_lines - 1)
+            std::cout << "\033[1A";
+    }
+
+    // Print the new line
+    std::cout << "\033[38;5;82m" << prompt << "\033[0m" << line << std::flush;
+
+    // Position the cursor
+    int abs_cursor = static_cast<int>(prompt.size() + cursor_index);
+    int total_lines = (static_cast<int>(prompt.size() + line.size()) + term_width - 1) / term_width;
+    int cursor_line = abs_cursor / term_width;
+    int cursor_col = abs_cursor % term_width;
+
+    int lines_to_move_up = total_lines - 1 - cursor_line;
+    for (int i = 0; i < lines_to_move_up; ++i)
+        std::cout << "\033[1A";
+
+    std::cout << "\r";
+    if (cursor_col > 0)
+        std::cout << "\033[" << cursor_col << "C";
+
+    std::cout.flush();
+}
+
 StdinEventHandler::StdinEventHandler(
         std::function<void(std::string)> callback,
         const bool read_lines /* = true */,
@@ -146,6 +233,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
     while (awake_reason == AwakeReason::condition_met)
     {
         std::string read_str;
+        size_t cursor_index = 0;
 
         while (true)
         {
@@ -178,6 +266,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             int lines = compute_lines_needed(prompt, read_str, term_width);
                             clear_lines(lines);
                             read_str = prev_command;
+                            cursor_index = read_str.size();
                             //std::cout << "\r\033[K";
                             std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
                          
@@ -201,6 +290,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             int lines = compute_lines_needed(prompt, read_str, term_width);
                             clear_lines(lines);
                             read_str = next_command;
+                            cursor_index = read_str.size();
                             // std::cout << "\r\033[K";
                             // std::cout << "\033[38;5;82m>>\033[0m " << read_str << std::flush;
                             std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
@@ -213,6 +303,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             clear_lines(lines);
                                                     
                             read_str = "";
+                            cursor_index = 0;
                             std::cout << "\033[38;5;82m" << prompt << "\033[0m" << std::flush;
 
                             // read_str = "";
@@ -222,6 +313,44 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
 
                         break;
                     }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 75:  // Arrow LEFT
+#else
+                    case 'D':  // Arrow LEFT
+#endif
+                    {
+                        if (cursor_index > 0)
+                        {
+                            update_line(">> ", read_str, cursor_index,
+                                [](std::string&, size_t& index)
+                                {
+                                    if (index > 0)
+                                    {
+                                        --index;
+                                    }
+                                });   
+                        }
+                        break;
+                    }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 77:  // Arrow RIGHT
+#else
+                    case 'C':  // Arrow RIGHT
+#endif
+                    {
+                        update_line(">> ", read_str, cursor_index,
+                            [](std::string& line, size_t& index)
+                            {
+                                if (index < line.size())
+                                {
+                                    ++index;
+                                }
+                            });                        
+                        break;
+                    }
+
                 }
             }
             else if (c == '\n' || c == '\r')
@@ -235,22 +364,35 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                 }
                 
                 read_str = "";
+                cursor_index = 0;
                 break;
             }
             else if (c == '\b' || c == 127)
             {
-                if (!read_str.empty())
+                if (cursor_index > 0)
                 {
-                    read_str.pop_back();
-                    std::cout << "\b \b";
+                    update_line(">> ", read_str, cursor_index,
+                        [](std::string& line, size_t& index)
+                        {
+                            if (index > 0)
+                            {
+                                line.erase(line.begin() + index - 1);
+                                --index;
+                            }
+                        });
+                    
                 }
             }
             else
             {
                 char ch = static_cast<char>(c);
-                read_str += ch;
-                std::cout << ch;
-                std::cout.flush();
+                update_line(">> ", read_str, cursor_index,
+                    [ch](std::string& line, size_t& index)
+                    {
+                        line.insert(line.begin() + index, ch);
+                        ++index;
+                    });
+                
             }
         }
 

@@ -100,7 +100,7 @@ void enable_ansi_colors() noexcept
 
     mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hStdout, mode);
-#endif
+#endif // if defined(_WIN32) || defined(_WIN64)
 }
 
 void to_lowercase(

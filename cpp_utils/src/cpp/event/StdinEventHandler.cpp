@@ -200,9 +200,6 @@ void StdinEventHandler::set_terminal_mode_(
     static DWORD old_mode;
     static HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
-    static DWORD old_out_mode;
-    static HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
     if (enable)
     {
         // Save current input mode
@@ -212,19 +209,11 @@ void StdinEventHandler::set_terminal_mode_(
         DWORD new_mode = old_mode;
         new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
         SetConsoleMode(hStdin, new_mode);
-
-        // Enable ANSI escape code processing on output
-        GetConsoleMode(hStdout, &old_out_mode);
-        DWORD out_mode = old_out_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        SetConsoleMode(hStdout, out_mode);
-
-        std::cout << "New console mode set (with ANSI enabled)" << std::endl;
     }
     else
     {
         // Restore input and output modes
         SetConsoleMode(hStdin, old_mode);
-        SetConsoleMode(hStdout, old_out_mode);
     }
 
 #else

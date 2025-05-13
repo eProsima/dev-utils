@@ -83,6 +83,14 @@ void to_lowercase(
         std::string& st) noexcept;
 
 /**
+ * @brief Enables ANSI escape sequence support for colored output in Windows terminals.
+ *
+ * Has no effect on other platforms.
+ */
+CPP_UTILS_DllAPI
+void enable_ansi_colors() noexcept;
+
+/**
  * @brief Convert every alphabetic char in string to upper case
  *
  * @attention This function modifies the object given

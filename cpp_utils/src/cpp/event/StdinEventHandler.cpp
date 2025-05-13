@@ -196,27 +196,35 @@ void StdinEventHandler::read_one_more_line()
 void StdinEventHandler::set_terminal_mode_(
         bool enable) noexcept
 {
-#if defined(_WIN32) || defined(_WIN64)
+    #if defined(_WIN32) || defined(_WIN64)
     static DWORD old_mode;
     static HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
+    static DWORD old_out_mode;
+    static HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+
     if (enable)
     {
-        // Save actual configuration in 'old_mode'
+        // Save current input mode
         GetConsoleMode(hStdin, &old_mode);
 
-        // Modify line mode flags
-        // - ENABLE_ECHO_INPUT: Desactivate echo (does not print what the user writes on terminal)
-        // - ENABLE_LINE_INPUT: Desactivate line mode (process each character)
+        // Disable echo and line input
         DWORD new_mode = old_mode;
         new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
         SetConsoleMode(hStdin, new_mode);
-        std::cout << "New console mode set" << std::endl;
+
+        // Enable ANSI escape code processing on output
+        GetConsoleMode(hStdout, &old_out_mode);
+        DWORD out_mode = old_out_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        SetConsoleMode(hStdout, out_mode);
+
+        std::cout << "New console mode set (with ANSI enabled)" << std::endl;
     }
     else
     {
-        // Restore original terminal configuration
+        // Restore input and output modes
         SetConsoleMode(hStdin, old_mode);
+        SetConsoleMode(hStdout, old_out_mode);
     }
 
 #else

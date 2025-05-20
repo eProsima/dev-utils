@@ -169,9 +169,6 @@ private:
 
 };
 
-CPP_UTILS_DllAPI extern std::string* global_input_line;
-CPP_UTILS_DllAPI extern size_t* global_cursor_index;
-CPP_UTILS_DllAPI extern std::function<void()> g_sigint_callback;
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */

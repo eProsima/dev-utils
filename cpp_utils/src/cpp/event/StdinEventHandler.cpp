@@ -32,6 +32,11 @@ namespace eprosima {
 namespace utils {
 namespace event {
 
+ std::string* global_input_line = nullptr;
+ size_t* global_cursor_index = nullptr;
+
+ std::function<void()> g_sigint_callback = nullptr;
+
 int get_terminal_width()
 {
     #if defined(_WIN32) || defined(_WIN64)
@@ -253,6 +258,8 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
         std::string read_str;
         size_t cursor_index = 0;
 
+        global_input_line = &read_str;
+        global_cursor_index = &cursor_index;
         while (true)
         {
 
@@ -414,13 +421,33 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
 void StdinEventHandler::callback_set_nts_() noexcept
 {
     activation_times_.enable();
+    g_sigint_callback = [this]()
+    {
+    
+    std::cout << std::endl;
+    event_occurred_("");
+
+    if (global_input_line)
+    {
+        global_input_line->clear();
+    }
+
+    if (global_cursor_index)
+    {
+        *global_cursor_index = 0;
+    }
+
+    };
+    
     stdin_listener_thread_ = std::thread(&StdinEventHandler::stdin_listener_thread_routine_, this);
 }
 
 void StdinEventHandler::callback_unset_nts_() noexcept
 {
+    g_sigint_callback = nullptr;
     activation_times_.disable();
     stdin_listener_thread_.join();
+
 }
 
 void StdinEventHandler::set_ignore_input(

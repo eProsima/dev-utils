@@ -431,7 +431,6 @@ void StdinEventHandler::callback_unset_nts_() noexcept
 {
     activation_times_.disable();
     stdin_listener_thread_.join();
-
 }
 
 void StdinEventHandler::set_ignore_input(

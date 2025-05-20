@@ -214,11 +214,13 @@ void StdinEventHandler::set_terminal_mode_(
         DWORD new_mode = old_mode;
         new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
         SetConsoleMode(hStdin, new_mode);
+        SetConsoleCtrlHandler(NULL, TRUE);
     }
     else
     {
         // Restore input and output modes
         SetConsoleMode(hStdin, old_mode);
+        SetConsoleCtrlHandler(NULL, FALSE);
     }
 
 #else
@@ -235,7 +237,7 @@ void StdinEventHandler::set_terminal_mode_(
         // Modify line mode flags
         // - ICANON: Desactivate canonic mode (process each character)
         // - ECHO: Desactivate echo (does not print what the user writes on terminal)
-        newt.c_lflag &= ~(ICANON | ECHO);
+        newt.c_lflag &= ~(ICANON | ECHO | ISIG);
 
         // Apply new configuration
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
@@ -399,6 +401,14 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
 
                 }
             }
+            else if (c == '\x03') // Ctrl+C
+            {
+                std::cout << std::endl;
+                event_occurred_("");
+                read_str = "";
+                cursor_index = 0;
+                break;
+            }
             else
             {
                 char ch = static_cast<char>(c);
@@ -421,30 +431,30 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
 void StdinEventHandler::callback_set_nts_() noexcept
 {
     activation_times_.enable();
-    g_sigint_callback = [this]()
-    {
-    
-    std::cout << std::endl;
-    event_occurred_("");
-
-    if (global_input_line)
-    {
-        global_input_line->clear();
-    }
-
-    if (global_cursor_index)
-    {
-        *global_cursor_index = 0;
-    }
-
-    };
+    // g_sigint_callback = [this]()
+    // {
+    // 
+    // std::cout << std::endl;
+    // event_occurred_("");
+// 
+    // if (global_input_line)
+    // {
+        // global_input_line->clear();
+    // }
+// 
+    // if (global_cursor_index)
+    // {
+        // *global_cursor_index = 0;
+    // }
+// 
+    // };
     
     stdin_listener_thread_ = std::thread(&StdinEventHandler::stdin_listener_thread_routine_, this);
 }
 
 void StdinEventHandler::callback_unset_nts_() noexcept
 {
-    g_sigint_callback = nullptr;
+    //g_sigint_callback = nullptr;
     activation_times_.disable();
     stdin_listener_thread_.join();
 

@@ -232,6 +232,7 @@ void StdinEventHandler::set_terminal_mode_(
         // Modify line mode flags
         // - ICANON: Desactivate canonic mode (process each character)
         // - ECHO: Desactivate echo (does not print what the user writes on terminal)
+        // - ISIG: Deactivate signals (Ctrl+C, Ctrl+Z)
         newt.c_lflag &= ~(ICANON | ECHO | ISIG);
 
         // Apply new configuration

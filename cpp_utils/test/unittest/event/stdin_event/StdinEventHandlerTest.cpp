@@ -14,6 +14,12 @@
 
 #include <iostream>
 #include <queue>
+#if defined(_WIN32) || defined(_WIN64)
+    #define NOMINMAX
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif // if defined(_WIN32) || defined(_WIN64)
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -39,24 +45,80 @@ TEST(StdinEventHandlerTest, trivial_create_handler)
     // Let handler to be destroyed by itself
 }
 
+void simulate_stdin(
+        const std::queue<std::string>& input_queue)
+{
+#if defined(_WIN32) || defined(_WIN64)
+    // Handles for the pipe
+    HANDLE pipe_read, pipe_write;
+
+    // Create a pipe
+    if (!CreatePipe(&pipe_read, &pipe_write, nullptr, 0))
+    {
+        std::cerr << "Pipe creation failed!" << std::endl;
+        return;
+    }
+
+    // Write simulated input to the pipe
+    for (auto input = input_queue; !input.empty(); input.pop())
+    {
+        const std::string& str = input.front();
+        DWORD written;
+
+        // Write the string to the pipe
+        WriteFile(pipe_write, str.c_str(), str.length(), &written, nullptr);
+
+        // Write a newline character to simulate pressing enter
+        WriteFile(pipe_write, "\n", 1, &written, nullptr);
+    }
+
+    // Close the writing end of the pipe
+    CloseHandle(pipe_write);
+
+    // Redirect stdin to read from the pipe
+    SetStdHandle(STD_INPUT_HANDLE, pipe_read);
+
+#else
+    int pipe_fds[2];
+    if (pipe(pipe_fds) == -1)
+    {
+        std::cerr << "Pipe failed!" << std::endl;
+        return;
+    }
+
+    // Write simulated input to the pipe (write to pipe_fds[1])
+    for (auto input = input_queue; !input.empty(); input.pop())
+    {
+        const std::string& str = input.front();
+        const char* simulated_input = str.c_str();
+
+        write(pipe_fds[1], simulated_input, str.length());
+
+        // Write newline character to simulate pressing enter
+        write(pipe_fds[1], "\n", 1);
+    }
+
+    // Close the writing end of the pipe
+    close(pipe_fds[1]);
+
+    // Redirect stdin to read from the pipe
+    dup2(pipe_fds[0], STDIN_FILENO);
+    close(pipe_fds[0]);  // Close the reading end of the pipe after redirecting
+#endif // if defined(_WIN32) || defined(_WIN64)
+}
+
 /**
- * @brief Read from custom source 2 lines
+ * @brief Read from custom source 1 line
  */
 TEST(StdinEventHandlerTest, read_lines_start)
 {
-    // Wait till call ++ 2 times
-    CounterWaitHandler counter(1, 0, true);
-
-    std::string str1("some_easy_line");
-    std::string str2("Another extra large line to read from our beloved new Event Handler.");
+    // Wait till call ++ 1 time
+    CounterWaitHandler counter(0, 0, true);
 
     std::queue<std::string> expected_result;
-    expected_result.push(str1);
-    expected_result.push(str2);
+    expected_result.push("Hello");
 
-    std::stringstream source;
-    source << str1 << "\n";
-    source << str2 << "\n";
+    simulate_stdin(expected_result);
 
     std::mutex mutex_;
 
@@ -70,8 +132,7 @@ TEST(StdinEventHandlerTest, read_lines_start)
             ++counter;
         },
         true,
-        2,
-        source);
+        1);
 
     // Wait for all messages received
     counter.wait_and_decrement();
@@ -87,16 +148,14 @@ TEST(StdinEventHandlerTest, read_spaces_start)
     // Wait till call ++ 5 times
     CounterWaitHandler counter(4, 0, true);
 
-    std::string str1("This will be read separately.");
-
+    std::string input("This will be read separately.");
     std::queue<std::string> expected_result;
-    for (auto& res : eprosima::utils::split_string(str1, " "))
+    for (auto& res : eprosima::utils::split_string(input, " "))
     {
         expected_result.push(res);
     }
 
-    std::stringstream source;
-    source << str1 << " ";
+    simulate_stdin(expected_result);
 
     std::mutex mutex_;
 
@@ -110,8 +169,7 @@ TEST(StdinEventHandlerTest, read_spaces_start)
             ++counter;
         },
         false,
-        expected_result.size(),
-        source);
+        expected_result.size());
 
     // Wait for all messages received
     counter.wait_and_decrement();
@@ -133,9 +191,7 @@ TEST(StdinEventHandlerTest, read_lines_running)
     expected_result.push(str1);
     expected_result.push(str2);
 
-    std::stringstream source;
-    source << str1 << "\n";
-    source << str2 << "\n";
+    simulate_stdin(expected_result);
 
     std::mutex mutex_;
 
@@ -149,8 +205,7 @@ TEST(StdinEventHandlerTest, read_lines_running)
             ++counter;
         },
         true,
-        0,
-        source);
+        0);
 
     // Check nothing is read
     ASSERT_EQ(expected_result.size(), 2u);

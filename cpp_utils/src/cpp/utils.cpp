@@ -83,6 +83,26 @@ bool match_pattern(
 #endif // defined(_WIN32)
 }
 
+void enable_ansi_colors() noexcept
+{
+#if defined(_WIN32) || defined(_WIN64)
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hStdout == INVALID_HANDLE_VALUE)
+    {
+        return;
+    }
+
+    DWORD mode = 0;
+    if (!GetConsoleMode(hStdout, &mode))
+    {
+        return;
+    }
+
+    mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hStdout, mode);
+#endif // if defined(_WIN32) || defined(_WIN64)
+}
+
 void to_lowercase(
         std::string& st) noexcept
 {

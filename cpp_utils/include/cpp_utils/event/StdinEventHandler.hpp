@@ -19,6 +19,7 @@
 #include <thread>
 
 #include <cpp_utils/event/EventHandler.hpp>
+#include <cpp_utils/history/CommandHistoryHandler.hpp>
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/wait/CounterWaitHandler.hpp>
@@ -81,7 +82,34 @@ public:
     CPP_UTILS_DllAPI
     void read_one_more_line();
 
+    /**
+     * @brief Temporarily ignore input (disables history addition).
+     *
+     * Should be called before an interactive command starts and re-enabled after it finishes.
+     */
+    CPP_UTILS_DllAPI
+    void set_ignore_input(
+            bool ignore) noexcept;
+
+    /**
+     * @brief Check whether input is currently being ignored.
+     */
+    CPP_UTILS_DllAPI
+    bool is_ignoring_input() const noexcept;
+
 protected:
+
+    /**
+     * @brief This function configures the terminal to enable or disable raw input mode.
+     * When `enable` is `true`, it disables line buffering and input echo
+     * so that input can be processed character-by-character without displaying typed characters,
+     * useful for real-time command-line interaction, such as handling arrow keys or passwords.
+     * When `enable` is `false`, it restores the original terminal settings
+     * to avoid leaving the terminal in an unusable state.
+     */
+    CPP_UTILS_DllAPI
+    void set_terminal_mode_(
+            bool enable) noexcept;
 
     /**
      * @brief Internal thread to read from \c source_ .
@@ -120,6 +148,8 @@ protected:
     //! Counter that contains the number of times the thread is allowed to start waiting for data from source_.
     CounterWaitHandler activation_times_;
 
+    history::CommandHistoryHandler history_handler_;
+
     /**
      * @brief istream source from where to read.
      *
@@ -131,6 +161,12 @@ protected:
 
     //! Whether to read whole lines or stop reading in a space.
     const bool read_lines_;
+
+private:
+
+    //! Whether to ignore input (e.g. during interactive commands like echo)
+    std::atomic<bool> ignore_input_{false};
+
 };
 
 } /* namespace event */

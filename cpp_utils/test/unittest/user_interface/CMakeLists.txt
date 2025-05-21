@@ -21,10 +21,15 @@ all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
         trivial_create
+    )
+
+if (NOT WIN32)
+    list(APPEND TEST_LIST
         read_lines_enum_1
         read_lines_enum_1_negative
         read_lines_enum_2_singleton
     )
+endif()
 
 set(TEST_EXTRA_LIBRARIES
         fastcdr

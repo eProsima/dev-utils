@@ -108,6 +108,14 @@ protected:
      * value available at a time. But it is the only implementation of ConsumerWaitHandler so far.
      */
     event::DBQueueWaitHandler<std::string> commands_read_;
+
+public:
+
+    event::StdinEventHandler& stdin_handler()
+    {
+        return stdin_handler_;
+    }
+
 };
 
 } /* namespace utils */

@@ -209,11 +209,13 @@ void StdinEventHandler::set_terminal_mode_(
         DWORD new_mode = old_mode;
         new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
         SetConsoleMode(hStdin, new_mode);
+        SetConsoleCtrlHandler(NULL, TRUE);
     }
     else
     {
         // Restore input and output modes
         SetConsoleMode(hStdin, old_mode);
+        SetConsoleCtrlHandler(NULL, FALSE);
     }
 
 #else
@@ -230,7 +232,8 @@ void StdinEventHandler::set_terminal_mode_(
         // Modify line mode flags
         // - ICANON: Desactivate canonic mode (process each character)
         // - ECHO: Desactivate echo (does not print what the user writes on terminal)
-        newt.c_lflag &= ~(ICANON | ECHO);
+        // - ISIG: Deactivate signals (Ctrl+C, Ctrl+Z)
+        newt.c_lflag &= ~(ICANON | ECHO | ISIG);
 
         // Apply new configuration
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
@@ -391,6 +394,14 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                             });
 
                 }
+            }
+            else if (c == '\x03') // Ctrl+C
+            {
+                std::cout << std::endl;
+                event_occurred_("");
+                read_str = "";
+                cursor_index = 0;
+                break;
             }
             else
             {

@@ -87,5 +87,11 @@ namespace utils {
 #define _EPROSIMA_WINDOWS_PLATFORM 1
 #endif // if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(WIN64) || defined(_WIN64) || defined(__WIN64) || defined(_MSC_VER)
 
+#if defined(WIN64) || defined(_WIN64) || defined(__WIN64) || defined(_WIN64) || defined(__x86_64__) || defined(__ppc64__) || defined(__aarch64__)
+#define _PLATFORM_64BIT 1
+#else
+#define _PLATFORM_32BIT 1
+#endif
+
 } /* namespace utils */
 } /* namespace eprosima */

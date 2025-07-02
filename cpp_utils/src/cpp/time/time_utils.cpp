@@ -24,6 +24,7 @@
 #include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/exception/PreconditionNotMet.hpp>
+#include <cpp_utils/exception/ValueNotAllowedException.hpp>
 #include <cpp_utils/Log.hpp>
 
 // These functions has different names in windows
@@ -66,7 +67,7 @@ Timestamp date_to_timestamp(
     tm.tm_mon = static_cast<int>(month) - 1;
     tm.tm_year = static_cast<int>(year) - 1900;
 
-    return Timeclock::from_time_t(timegm(&tm));
+    return Timeclock::from_time_t(normalize(timegm(&tm)));
 }
 
 Timestamp time_to_timestamp(
@@ -77,9 +78,7 @@ Timestamp time_to_timestamp(
     std::tm tm;
 
     // Initialise with current timestamp to set date
-    auto current_ts = now();
-    std::chrono::high_resolution_clock::time_point::duration duration = current_ts.time_since_epoch();
-    time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+    time_t duration_seconds = normalize(Timeclock::to_time_t(now()));
     tm = *std::gmtime(&duration_seconds);
 
     tm.tm_sec = static_cast<int>(second);
@@ -95,18 +94,7 @@ std::string timestamp_to_string(
         bool local_time /* = false */)
 {
     std::ostringstream ss;
-    time_t duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(timestamp.time_since_epoch()).count();
-
-    #if _EPROSIMA_WINDOWS_PLATFORM // In Windows std::gmtime does not support negative values nor values greater than 2^32
-    time_t max_value = std::numeric_limits<int32_t>::max();
-    if (0 > duration_seconds || duration_seconds > max_value)
-    {
-        EPROSIMA_LOG_WARNING(TIME_UTILS,
-                "Timestamp value: " << duration_seconds << " is out of range for Windows, clamping to 0 and " <<
-                max_value);
-        duration_seconds = std::max((time_t) 0, std::min(max_value, duration_seconds));
-    }
-    #endif // if _EPROSIMA_WINDOWS_PLATFORM
+    time_t duration_seconds = normalize(Timeclock::to_time_t(timestamp));
 
     std::tm* tm = nullptr;
     if (local_time)
@@ -163,6 +151,13 @@ Timestamp string_to_timestamp(
     {
         utc_time = timegm(&tm);
     }
+
+    if ((time_t)-1 == utc_time)
+    {
+        throw ValueNotAllowedException(
+            STR_ENTRY << "Failed to convert string to timestamp");
+    }
+
     return Timeclock::from_time_t(utc_time);
 }
 
@@ -176,6 +171,30 @@ void sleep_for(
         const Duration_ms& sleep_time) noexcept
 {
     std::this_thread::sleep_for(duration_to_ms(sleep_time));
+}
+
+time_t normalize(
+        const time_t& time) noexcept
+{
+    time_t normalized_time = time;
+#if _EPROSIMA_WINDOWS_PLATFORM // In Windows std::gmtime does not support negative values
+    time_t max_value;
+
+#if _PLATFORM_64BIT
+    max_value = 32535215999; // In WIN64, max value is 3000-12-31_23-59-59
+#else
+    max_value = std::numeric_limits<int32_t>::max(); // In WIN32, values greater than 2^32 are not supported
+#endif // if PLATFORM_64BIT
+
+    if (0 > time || time > max_value)
+    {
+        EPROSIMA_LOG_WARNING(TIME_UTILS,
+                "Timestamp value: " << time << " is out of range for Windows, clamping to 0 and " <<
+                max_value);
+        normalized_time = std::max((time_t) 0, std::min(max_value, time));
+    }
+#endif // if _EPROSIMA_WINDOWS_PLATFORM
+    return normalized_time;
 }
 
 } /* namespace utils */

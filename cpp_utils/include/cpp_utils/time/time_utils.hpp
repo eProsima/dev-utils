@@ -103,5 +103,17 @@ CPP_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
 CPP_UTILS_DllAPI void sleep_for(
         const Duration_ms& sleep_time) noexcept;
 
+/**
+ * @brief Makes sure that the time is clamped into a valid range.
+ * This is useful for keeping time values within the ranges
+ * depending on the platform.
+ *
+ * @param time time to normalize.
+ *
+ * @return normalized time value.
+ */
+CPP_UTILS_DllAPI time_t normalize(
+        const time_t& time) noexcept;
+
 } /* namespace utils */
 } /* namespace eprosima */

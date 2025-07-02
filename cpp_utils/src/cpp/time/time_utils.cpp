@@ -155,7 +155,7 @@ Timestamp string_to_timestamp(
     if ((time_t)-1 == utc_time)
     {
         throw ValueNotAllowedException(
-            STR_ENTRY << "Failed to convert string to timestamp");
+                  STR_ENTRY << "Failed to convert string to timestamp");
     }
 
     return Timeclock::from_time_t(utc_time);

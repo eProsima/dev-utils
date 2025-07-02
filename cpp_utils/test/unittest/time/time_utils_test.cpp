@@ -122,7 +122,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         std::string old_time_str = timestamp_to_string(old_time);
 
         std::ostringstream expected_string_os;
-        #if _EPROSIMA_WINDOWS_PLATFORM
+#if _EPROSIMA_WINDOWS_PLATFORM
         expected_string_os
             << 1970
             << "-" << "01"
@@ -130,7 +130,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "00"
             << "-" << "00"
             << "-" << "00";
-        #else
+#else
         expected_string_os
             << 1959
             << "-" << "07"
@@ -138,7 +138,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "06"
             << "-" << 39
             << "-" << 42;
-        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+#endif  // _EPROSIMA_WINDOWS_PLATFORM
 
         // Test timestamp_to_string
         ASSERT_EQ(old_time_str, expected_string_os.str());
@@ -155,7 +155,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         std::string beginning_time_str = timestamp_to_string(beginning_time);
 
         std::ostringstream expected_string_os;
-        #if _EPROSIMA_WINDOWS_PLATFORM
+#if _EPROSIMA_WINDOWS_PLATFORM
         expected_string_os
             << 1970
             << "-" << "01"
@@ -163,7 +163,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "00"
             << "-" << "00"
             << "-" << "00";
-        #else //1677-09-21_00-12-44
+#else //1677-09-21_00-12-44
         expected_string_os
             << 1677
             << "-" << "09"
@@ -171,7 +171,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "00"
             << "-" << "12"
             << "-" << "44";
-        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+#endif  // _EPROSIMA_WINDOWS_PLATFORM
 
 
         // Test timestamp_to_string
@@ -212,7 +212,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         std::string future_time_str = timestamp_to_string(future_time);
 
         std::ostringstream expected_string_os;
-        #if _EPROSIMA_WINDOWS_PLATFORM
+#if _EPROSIMA_WINDOWS_PLATFORM && PLATFORM_32BIT
         expected_string_os
             << 2038
             << "-" << "01"
@@ -220,7 +220,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "03"
             << "-" << "14"
             << "-" << "07";
-        #else
+#else
         expected_string_os
             << 2049
             << "-" << "05"
@@ -228,7 +228,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "00"
             << "-" << "00"
             << "-" << "00";
-        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+#endif  // _EPROSIMA_WINDOWS_PLATFORM
 
         // Test timestamp_to_string
         ASSERT_EQ(future_time_str, expected_string_os.str());
@@ -245,7 +245,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
         std::string end_time_str = timestamp_to_string(end_time);
 
         std::ostringstream expected_string_os;
-        #if _EPROSIMA_WINDOWS_PLATFORM
+#if _EPROSIMA_WINDOWS_PLATFORM && _PLATFORM_32BIT
         expected_string_os
             << 2038
             << "-" << "01"
@@ -253,7 +253,15 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "03"
             << "-" << "14"
             << "-" << "07";
-        #else // 2262-04-11 23:47:16
+#elif _EPROSIMA_WINDOWS_PLATFORM && _PLATFORM_64BIT
+        expected_string_os
+            << 3000
+            << "-" << "12"
+            << "-" << 31
+            << "_" << "23"
+            << "-" << "59"
+            << "-" << "59";
+#else // 2262-04-11 23:47:16
         expected_string_os
             << 2262
             << "-" << "04"
@@ -261,7 +269,7 @@ TEST(time_utils_test, timestamp_to_string_to_timestamp)
             << "_" << "23"
             << "-" << "47"
             << "-" << "16";
-        #endif  // _EPROSIMA_WINDOWS_PLATFORM
+#endif  // _EPROSIMA_WINDOWS_PLATFORM
 
 
         // Test timestamp_to_string

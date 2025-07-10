@@ -255,7 +255,9 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
     {
         std::string read_str;
         size_t cursor_index = 0;
+#if defined(_WIN32) || defined(_WIN64)
         bool use_getchar = GetFileType(GetStdHandle(STD_INPUT_HANDLE)) == FILE_TYPE_PIPE;
+#endif // if defined(_WIN32) || defined(_WIN64)
         while (true)
         {
 

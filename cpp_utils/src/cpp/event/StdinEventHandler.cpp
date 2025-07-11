@@ -268,7 +268,7 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
             // Use _getch() for console input to avoid echoing characters
             if (use_getchar)
             {
-            c = getchar();
+                c = getchar();
             }
             else
             {

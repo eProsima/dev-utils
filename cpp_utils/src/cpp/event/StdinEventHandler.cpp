@@ -255,13 +255,25 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
     {
         std::string read_str;
         size_t cursor_index = 0;
-
+#if defined(_WIN32) || defined(_WIN64)
+        bool use_getchar = GetFileType(GetStdHandle(STD_INPUT_HANDLE)) == FILE_TYPE_PIPE;
+#endif // if defined(_WIN32) || defined(_WIN64)
         while (true)
         {
 
 #if defined(_WIN32) || defined(_WIN64)
             int c;
-            c = _getch(); // Read first character
+            // Read first character
+            // Use getchar() for pipes to avoid blocking
+            // Use _getch() for console input to avoid echoing characters
+            if (use_getchar)
+            {
+                c = getchar();
+            }
+            else
+            {
+                c = _getch();
+            }
             if (c == 0 || c == 224)  // Special key prefix for arrow keys on Windows
             {
                 c = _getch(); // Get next character to determine arrow key

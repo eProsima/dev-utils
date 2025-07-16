@@ -30,9 +30,14 @@ namespace utils {
 using Duration_ms = uint32_t;
 
 /**
+ * Type used to fix the clock to the system clock
+ */
+using Timeclock = std::chrono::system_clock;
+
+/**
  * Type used to represent time points
  */
-using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
+using Timestamp = std::chrono::time_point<Timeclock>;
 
 /**
  * @brief Now time
@@ -97,6 +102,18 @@ CPP_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
 
 CPP_UTILS_DllAPI void sleep_for(
         const Duration_ms& sleep_time) noexcept;
+
+/**
+ * @brief Makes sure that the time is clamped into a valid range.
+ * This is useful for keeping time values within the ranges
+ * depending on the platform.
+ *
+ * @param time time to normalize.
+ *
+ * @return normalized time value.
+ */
+CPP_UTILS_DllAPI time_t normalize(
+        const time_t& time) noexcept;
 
 } /* namespace utils */
 } /* namespace eprosima */

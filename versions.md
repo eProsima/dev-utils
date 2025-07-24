@@ -5,6 +5,25 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Forthcoming
 
+## Version 1.3.0
+
+This release includes the following **Improvements**:
+* Add Arrow Up/Down feature to navigate Command History and Left/Right Arrow to edit command
+* Do not use CTRL+C to close the app, only use quit/exit
+* Switch between getchar() and _getch() in windows when input is injected
+* Fix time utils time_t 64 bits in windows
+
+This release includes the following **CI improvements**:
+*  Remove deprecated windows-2019 runner
+
+This release includes the following **dependencies update**:
+
+|  | Repository | Old Version | New Version |
+|---|---|---|---|
+| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.3.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0) | [v2.3.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v3.2.2](https://github.com/eProsima/Fast-DDS/releases/tag/v3.2.2) | [v3.3.0](https://github.com/eProsima/Fast-DDS/releases/tag/v3.3.0) |
+
 ## Version 1.2.0
 
 This release includes the following **Improvements**:

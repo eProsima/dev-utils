@@ -6,12 +6,12 @@ repositories:
     fastcdr:
         type: git
         url: https://github.com/eProsima/Fast-CDR.git
-        version: 2.3.0
+        version: v2.3.0
     fastdds:
         type: git
         url: https://github.com/eProsima/Fast-DDS.git
-        version: 3.3.0
+        version: v3.3.0
     dev_utils:
         type: git
         url: https://github.com/eProsima/dev-utils.git
-        version: 1.3.0
+        version: v1.3.0

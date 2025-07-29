@@ -1,9 +1,8 @@
-# Nightly test workflow for dev-utils
-name: nightly-dev-utils
+# Nightly test workflow for Dev Utils
+name: nightly-ubuntu-ci
 
 on:
   workflow_dispatch:
-
   schedule:
     - cron: '0 5 * * *'
 
@@ -11,16 +10,16 @@ jobs:
 
   reusable_tests_v2:
     name: reusable_tests_v2
-    uses: ./.github/workflows/reusable-workflow.yml
+    uses: ./.github/workflows/reusable-ubuntu-ci.yml
     with:
       custom_version_build: 'v2'
       dependencies_artifact_postfix: '_nightly'
-      ref: '0.x'
+      ref: '2.x'
     secrets: inherit
 
   reusable_tests_v3:
     name: reusable_tests_v3
-    uses: ./.github/workflows/reusable-workflow.yml
+    uses: ./.github/workflows/reusable-ubuntu-ci.yml
     with:
       custom_version_build: 'v3'
       dependencies_artifact_postfix: '_nightly'

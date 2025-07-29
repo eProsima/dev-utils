@@ -1,10 +1,14 @@
-name: dependencies_ubuntu
+name: dev_utils_dependencies_ubuntu
 description: Common first step for all jobs. Checkout repository, download dependencies and install required packages.
 
 inputs:
 
   os:
     description: Specify runs-on machine to download specific artifact
+    required: true
+
+  cmake_build_type:
+    description: Specify cmake_build_type option to download specific artifact
     required: true
 
   custom_version_build:
@@ -14,10 +18,6 @@ inputs:
     required: true
     default: 'custom'
 
-  cmake_build_type:
-    description: Specify cmake_build_type option to download specific artifact
-    required: true
-
   dependencies_artifact_postfix:
     description: Specify artifact postfix in case it wants to use a manual one
     required: false
@@ -26,7 +26,7 @@ inputs:
   target_workspace:
     description: Specify directory to download dependencies
     required: false
-    default: './install'
+    default: ${{ github.workspace }}/install
 
   # This must be passed as an argument because actions do not access to workflow secrets:
   # Unrecognized named-value: 'secrets'. https://github.com/orgs/community/discussions/27054
@@ -45,6 +45,10 @@ runs:
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
+    - name: Install yaml cpp dependency
+      uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
+      with:
+        cmake_build_type: ${{ inputs.cmake_build_type }}
 
     # Fast DDS artifact
     - name: Download dependencies artifact

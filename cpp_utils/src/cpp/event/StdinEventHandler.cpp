@@ -28,6 +28,25 @@
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <cpp_utils/Log.hpp>
 
+namespace {
+#if defined(_WIN32) || defined(_WIN64)
+inline bool consume_tilde_if_present()
+{
+    // Windows special keys don’t have a trailing '~'
+    return true;
+}
+
+#else
+inline bool consume_tilde_if_present()
+{
+    // POSIX: ESC [ <num> ~ → read and verify '~'
+    int t = getchar();
+    return t == '~';
+}
+
+#endif // if defined(_WIN32) || defined(_WIN64)
+} // namespace
+
 namespace eprosima {
 namespace utils {
 namespace event {
@@ -375,6 +394,122 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                         break;
                     }
 
+#if defined(_WIN32) || defined(_WIN64)
+                    case 82:  // Insert
+#else
+                    case '2':  // Insert: ESC [ 2 ~
+#endif // if defined(_WIN32) || defined(_WIN64)
+                    {
+                        int c3 = getchar(); (void)c3; // swallow trailing '~'
+                        // Minimal behavior: do nothing
+                        break;
+                    }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 83:  // Supr
+#else
+                    case '3':  // Supr: ESC [ 3 ~
+#endif // if defined(_WIN32) || defined(_WIN64)
+                    {
+                        if (consume_tilde_if_present())
+                        {
+                            // delete-forward (char at cursor), if any
+                            if (cursor_index < read_str.size())
+                            {
+                                update_line(">> ", read_str, cursor_index,
+                                        [](std::string& line, size_t& index)
+                                        {
+                                            if (index < line.size())
+                                            {
+                                                line.erase(line.begin() + index);
+                                            }
+                                        });
+                            }
+                        }
+                        // do nothing.
+                        break;
+                    }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 73:  // Page Up
+#else
+                    case '5':  // Page Up: ESC [ 5 ~  (history prev)
+#endif // if defined(_WIN32) || defined(_WIN64)
+                    {
+                        if (consume_tilde_if_present())
+                        {
+                            std::string prev = history_handler_.get_previous_command();
+                            if (!prev.empty())
+                            {
+                                std::string prompt = ">> ";
+                                int term_width = get_terminal_width();
+                                int lines = compute_lines_needed(prompt, read_str, term_width);
+                                clear_lines(lines);
+                                read_str = prev;
+                                cursor_index = read_str.size();
+                                std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
+                            }
+                        }
+                        break;
+                    }
+
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 81:  // Page Down
+#else
+                    case '6':  // Page Down: ESC [ 6 ~  (history next)
+#endif // if defined(_WIN32) || defined(_WIN64)
+                    {
+                        if (consume_tilde_if_present())
+                        {
+                            std::string next = history_handler_.get_next_command();
+                            std::string prompt = ">> ";
+                            int term_width = get_terminal_width();
+                            int lines = compute_lines_needed(prompt, read_str, term_width);
+                            clear_lines(lines);
+                            if (!next.empty())
+                            {
+                                read_str = next;
+                                cursor_index = read_str.size();
+                                std::cout << "\033[38;5;82m" << prompt << "\033[0m" << read_str << std::flush;
+                            }
+                            else
+                            {
+                                read_str.clear();
+                                cursor_index = 0;
+                                std::cout << "\033[38;5;82m" << prompt << "\033[0m" << std::flush;
+                            }
+                        }
+                        break;
+                    }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 71:  // Home
+#else
+                    case 'H':  // Home: ESC [ H
+#endif // if defined(_WIN32) || defined(_WIN64)
+                    {
+                        update_line(">> ", read_str, cursor_index,
+                                [](std::string&, size_t& index)
+                                {
+                                    index = 0;
+                                });
+                        break;
+                    }
+
+#if defined(_WIN32) || defined(_WIN64)
+                    case 79:  // End
+#else
+                    case 'F':  // End: ESC [ F
+#endif // if defined(_WIN32) || defined(_WIN64)
+                    {
+                        update_line(">> ", read_str, cursor_index,
+                                [](std::string& line, size_t& index)
+                                {
+                                    index = line.size();
+                                });
+                        break;
+                    }
                 }
             }
             else if (c == '\n' || c == '\r')

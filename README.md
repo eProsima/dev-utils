@@ -7,9 +7,6 @@
 [![Issues](https://img.shields.io/github/issues/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/issues)
 [![Forks](https://img.shields.io/github/forks/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/network/members)
 [![Stars](https://img.shields.io/github/stars/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/stargazers)
-[![Windows CI](https://github.com/eProsima/dev-utils/actions/workflows/nightly-windows-ci.yml/badge.svg)](https://github.com/eProsima/DDS-Record-Replay/actions/workflows/nightly-windows-ci.yml)
-[![Ubuntu CI](https://github.com/eProsima/dev-utils/actions/workflows/nightly-ubuntu-ci.yml/badge.svg)](https://github.com/eProsima/DDS-Record-Replay/actions/workflows/nightly-ubuntu-ci.yml)
-[![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
 
 <br><br>
 
@@ -112,7 +109,7 @@ is explained in the following section.
 ```bash
 mkdir -p ~/DDS-Router/src
 cd ~/DDS-Router
-wget https://raw.githubusercontent.com/eProsima/dev-utils/main/dev_utils.repos
+wget https://raw.githubusercontent.com/eProsima/dev-utils/v1.4.0/dev_utils.repos
 vcs import src < dev_utils.repos
 ```
 

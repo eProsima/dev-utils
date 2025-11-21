@@ -19,8 +19,8 @@ This release includes the following **dependencies update**:
 |  | Repository | Old Version | New Version |
 |---|---|---|---|
 | Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
-| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.3.4](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.4) | [v2.3.4](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.4) |
-| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v3.4.1](https://github.com/eProsima/Fast-DDS/releases/tag/v3.4.1) | [v3.4.1](https://github.com/eProsima/Fast-DDS/releases/tag/v3.4.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.3.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0) | [v2.3.4](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.4) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v3.3.0](https://github.com/eProsima/Fast-DDS/releases/tag/v3.3.0) | [v3.4.1](https://github.com/eProsima/Fast-DDS/releases/tag/v3.4.1) |
 
 ## Version 1.3.0
 

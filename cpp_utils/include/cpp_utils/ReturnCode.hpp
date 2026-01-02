@@ -81,8 +81,8 @@ public:
 
 protected:
 
-    //! Link every ReturnCode available with a string to deserialize
-    static const std::map<ReturnCode, std::string> to_string_conversion_;
+    //! Link every ReturnCodeValue available with a string to deserialize
+    static const std::map<ReturnCodeValue, std::string> to_string_conversion_;
 
     //! \c ReturnCode value
     std::uint32_t value_;

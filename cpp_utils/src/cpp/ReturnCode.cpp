@@ -89,7 +89,7 @@ bool ReturnCode::operator !() const noexcept
     return value_ != ReturnCode::RETCODE_OK;
 }
 
-const std::map<ReturnCode, std::string> ReturnCode::to_string_conversion_ =
+const std::map<ReturnCode::ReturnCodeValue, std::string> ReturnCode::to_string_conversion_ =
 {
     {ReturnCode::RETCODE_OK, "Ok"},
     {ReturnCode::RETCODE_ERROR, "Error"},
@@ -103,7 +103,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const ReturnCode& code)
 {
-    auto it = ReturnCode::to_string_conversion_.find(code);
+    auto it = ReturnCode::to_string_conversion_.find(static_cast<ReturnCode::ReturnCodeValue>((code())));
     assert(it != ReturnCode::to_string_conversion_.end());
     os << "{" << it->second << "}";
     return os;

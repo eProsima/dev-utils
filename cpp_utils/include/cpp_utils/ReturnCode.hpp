@@ -59,6 +59,10 @@ public:
             const fastdds::dds::ReturnCode_t& value);
 
     CPP_UTILS_DllAPI
+    ReturnCode(
+            const ReturnCodeValue& value);
+
+    CPP_UTILS_DllAPI
     std::uint32_t operator ()() const noexcept;
 
     CPP_UTILS_DllAPI

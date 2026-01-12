@@ -61,6 +61,12 @@ ReturnCode::ReturnCode(
     }
 }
 
+ReturnCode::ReturnCode(
+        const ReturnCode::ReturnCodeValue& value)
+{
+    value_ = value;
+}
+
 std::uint32_t ReturnCode::operator ()() const noexcept
 {
     return value_;

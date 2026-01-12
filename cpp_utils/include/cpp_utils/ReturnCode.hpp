@@ -74,14 +74,6 @@ public:
             const ReturnCode& c) const noexcept;
 
     CPP_UTILS_DllAPI
-    bool operator ==(
-            const ReturnCodeValue& c) const noexcept;
-
-    CPP_UTILS_DllAPI
-    bool operator !=(
-            const ReturnCodeValue& c) const noexcept;
-
-    CPP_UTILS_DllAPI
     bool operator <(
             const ReturnCode& other) const noexcept;
 

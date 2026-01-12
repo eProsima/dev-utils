@@ -84,18 +84,6 @@ bool ReturnCode::operator !=(
     return value_ != c.value_;
 }
 
-bool ReturnCode::operator ==(
-        const ReturnCodeValue& c) const noexcept
-{
-    return value_ == c;
-}
-
-bool ReturnCode::operator !=(
-        const ReturnCodeValue& c) const noexcept
-{
-    return value_ != c;
-}
-
 bool ReturnCode::operator <(
         const ReturnCode& other) const noexcept
 {

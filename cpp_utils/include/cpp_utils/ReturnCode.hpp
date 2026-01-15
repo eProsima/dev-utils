@@ -88,9 +88,8 @@ protected:
     //! Link every ReturnCodeValue available with a string to deserialize
     static const std::map<ReturnCodeValue, std::string> to_string_conversion_;
 
-    //! \c ReturnCode value
-    std::uint32_t value_;
-
+    //! \c ReturnCodeValue
+    ReturnCodeValue value_;
 
     // operator << needs access to the object
     CPP_UTILS_DllAPI

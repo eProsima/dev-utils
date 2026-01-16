@@ -94,6 +94,9 @@ protected:
     void read_command_callback_(
             std::string command_read);
 
+    std::vector<std::string> join_quoted_strings(
+            const std::vector<std::string>& input);
+
     //! Builder to transform string into a command enum value.
     EnumBuilder<CommandEnum> builder_;
 

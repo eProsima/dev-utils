@@ -21,6 +21,7 @@
 #include <cpp_utils/library/library_dll.h>
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/logging/BaseLogConfiguration.hpp>
+#include <cpp_utils/logging/LogFilter.hpp>
 
 namespace eprosima {
 namespace utils {

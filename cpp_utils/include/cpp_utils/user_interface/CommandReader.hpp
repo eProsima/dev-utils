@@ -26,7 +26,7 @@ namespace utils {
  *
  * @tparam CommandEnum enumeration that represent the different commands available.
  */
-template <typename CommandEnum>
+template<typename CommandEnum>
 struct Command
 {
     //! Command in the way of a enumeration class.
@@ -48,7 +48,7 @@ struct Command
  *
  * @note This class relies on \c StdinEventHandler to read from stdin and in \c EnumBuilder to interpret command.
  */
-template <typename CommandEnum>
+template<typename CommandEnum>
 class CommandReader
 {
 public:
@@ -121,7 +121,7 @@ public:
 
 };
 
-} /* namespace utils */
+}     /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file

@@ -72,9 +72,9 @@ std::vector<std::string> CommandReader<CommandEnum>::join_quoted_strings(
             }
 
             // Check if the last character in the joined string is
-            // a closed quote (") or not. If it is a closed quote
-            //  remove it from the string (value = 2)
-            //  otherwise keep all the string (value = 1)
+            // a closing quote (") or not. If it is a closing quote
+            // remove it from the string (value = 2)
+            // otherwise keep all the string (value = 1)
             int tmp = joined[joined.size() - 1] == '"' ? 2 : 1;
             result.push_back(joined.substr(1, joined.size() - tmp));
         }

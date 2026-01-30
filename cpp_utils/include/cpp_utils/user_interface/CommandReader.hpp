@@ -121,7 +121,7 @@ public:
 
 };
 
-}     /* namespace utils */
+} /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file

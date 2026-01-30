@@ -71,7 +71,12 @@ std::vector<std::string> CommandReader<CommandEnum>::join_quoted_strings(
                 joined += " " + input[++i];
             }
 
-            result.push_back(joined.substr(1, joined.size() - 2));
+            // Check if the last character in the joined string is
+            // a closed quote (") or not. If it is a closed quote
+            //  remove it from the string (value = 2)
+            //  otherwise keep all the string (value = 1)
+            int tmp = joined[joined.size() - 1] == '"' ? 2 : 1;
+            result.push_back(joined.substr(1, joined.size() - tmp));
         }
         else
         {
@@ -89,7 +94,7 @@ void CommandReader<CommandEnum>::read_command_callback_(
     commands_read_.produce(command_read);
 }
 
-}     /* namespace utils */
+} /* namespace utils */
 } /* namespace eprosima */
 
 // Include implementation template file

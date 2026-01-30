@@ -26,7 +26,7 @@ namespace utils {
  *
  * @tparam CommandEnum enumeration that represent the different commands available.
  */
-template <typename CommandEnum>
+template<typename CommandEnum>
 struct Command
 {
     //! Command in the way of a enumeration class.
@@ -48,7 +48,7 @@ struct Command
  *
  * @note This class relies on \c StdinEventHandler to read from stdin and in \c EnumBuilder to interpret command.
  */
-template <typename CommandEnum>
+template<typename CommandEnum>
 class CommandReader
 {
 public:
@@ -93,6 +93,9 @@ protected:
      */
     void read_command_callback_(
             std::string command_read);
+
+    std::vector<std::string> join_quoted_strings(
+            const std::vector<std::string>& input);
 
     //! Builder to transform string into a command enum value.
     EnumBuilder<CommandEnum> builder_;

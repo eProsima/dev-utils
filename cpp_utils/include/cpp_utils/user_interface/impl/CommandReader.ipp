@@ -19,7 +19,7 @@
 namespace eprosima {
 namespace utils {
 
-template <typename CommandEnum>
+template<typename CommandEnum>
 CommandReader<CommandEnum>::CommandReader(
         const EnumBuilder<CommandEnum>& builder,
         std::istream& source /* = std::cin */)
@@ -37,7 +37,7 @@ CommandReader<CommandEnum>::CommandReader(
     // Do nothing
 }
 
-template <typename CommandEnum>
+template<typename CommandEnum>
 bool CommandReader<CommandEnum>::read_next_command(
         Command<CommandEnum>& command)
 {
@@ -45,14 +45,49 @@ bool CommandReader<CommandEnum>::read_next_command(
     std::string full_command = commands_read_.consume();
 
     // Divide command
-    command.arguments = utils::split_string(full_command, " ");
-
+    command.arguments = join_quoted_strings(utils::split_string(full_command, " "));
     // Check if command exists
     // The args are already set in command, and the enum value will be set string_to_enumeration
     return builder_.string_to_enumeration(command.arguments[0], command.command);
 }
 
-template <typename CommandEnum>
+template<typename CommandEnum>
+std::vector<std::string> CommandReader<CommandEnum>::join_quoted_strings(
+        const std::vector<std::string>& input)
+{
+    std::vector<std::string> result;
+
+    for (size_t i = 0; i < input.size(); ++i)
+    {
+        // Check if string starts with a quote
+        if (!input[i].empty() && input[i].front() == '"')
+        {
+            std::string joined = input[i];
+
+            // Keep joining until we find a string ending with a quote
+            while (i + 1 < input.size() &&
+                    (joined.empty() || joined.back() != '"'))
+            {
+                joined += " " + input[++i];
+            }
+
+            // Check if the last character in the joined string is
+            // a closing quote (") or not. If it is a closing quote
+            // remove it from the string (value = 2)
+            // otherwise keep all the string (value = 1)
+            int tmp = joined[joined.size() - 1] == '"' ? 2 : 1;
+            result.push_back(joined.substr(1, joined.size() - tmp));
+        }
+        else
+        {
+            result.push_back(input[i]);
+        }
+    }
+
+    return result;
+}
+
+template<typename CommandEnum>
 void CommandReader<CommandEnum>::read_command_callback_(
         std::string command_read)
 {

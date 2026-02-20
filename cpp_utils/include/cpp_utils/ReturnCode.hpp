@@ -70,8 +70,16 @@ public:
             const ReturnCode& c) const noexcept;
 
     CPP_UTILS_DllAPI
+    bool operator ==(
+            const ReturnCodeValue& c) const noexcept;
+
+    CPP_UTILS_DllAPI
     bool operator !=(
             const ReturnCode& c) const noexcept;
+
+    CPP_UTILS_DllAPI
+    bool operator !=(
+            const ReturnCodeValue& c) const noexcept;
 
     CPP_UTILS_DllAPI
     bool operator <(
@@ -97,7 +105,27 @@ protected:
             std::ostream& os,
             const ReturnCode& code);
 
+    CPP_UTILS_DllAPI
+    friend bool operator ==(
+            const ReturnCodeValue& lhs,
+            const ReturnCode& rhs) noexcept;
+
+    CPP_UTILS_DllAPI
+    friend bool operator !=(
+            const ReturnCodeValue& lhs,
+            const ReturnCode& rhs) noexcept;
+
 };
+
+CPP_UTILS_DllAPI
+bool operator ==(
+        const ReturnCode::ReturnCodeValue& lhs,
+        const ReturnCode& rhs) noexcept;
+
+CPP_UTILS_DllAPI
+bool operator !=(
+        const ReturnCode::ReturnCodeValue& lhs,
+        const ReturnCode& rhs) noexcept;
 
 //! \c ReturnCode to stream serializator
 CPP_UTILS_DllAPI

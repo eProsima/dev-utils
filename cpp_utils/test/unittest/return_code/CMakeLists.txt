@@ -21,6 +21,8 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         serializator
+        compare_against_return_code_value_rhs
+        compare_against_return_code_value_lhs
     )
 
 set(TEST_EXTRA_LIBRARIES

@@ -50,7 +50,7 @@ TEST(ReturnCodeTest, compare_against_return_code_value_rhs)
 {
     // Right side of the comparation
 
-    ReturnCode from_fastdds(fastdds::dds::RETCODE_NO_DATA);
+    ReturnCode from_fastdds(eprosima::fastdds::dds::RETCODE_NO_DATA);
 
     ASSERT_TRUE(from_fastdds == ReturnCode::RETCODE_NO_DATA);
     ASSERT_FALSE(from_fastdds == ReturnCode::RETCODE_ERROR);

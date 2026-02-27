@@ -61,6 +61,12 @@ ReturnCode::ReturnCode(
     }
 }
 
+ReturnCode::ReturnCode(
+        const ReturnCode::ReturnCodeValue& value)
+{
+    value_ = value;
+}
+
 std::uint32_t ReturnCode::operator ()() const noexcept
 {
     return value_;
@@ -72,10 +78,22 @@ bool ReturnCode::operator ==(
     return value_ == c.value_;
 }
 
+bool ReturnCode::operator ==(
+        const ReturnCode::ReturnCodeValue& c) const noexcept
+{
+    return value_ == c;
+}
+
 bool ReturnCode::operator !=(
         const ReturnCode& c) const noexcept
 {
     return value_ != c.value_;
+}
+
+bool ReturnCode::operator !=(
+        const ReturnCode::ReturnCodeValue& c) const noexcept
+{
+    return value_ != c;
 }
 
 bool ReturnCode::operator <(
@@ -87,6 +105,20 @@ bool ReturnCode::operator <(
 bool ReturnCode::operator !() const noexcept
 {
     return value_ != ReturnCode::RETCODE_OK;
+}
+
+bool operator ==(
+        const ReturnCode::ReturnCodeValue& lhs,
+        const ReturnCode& rhs) noexcept
+{
+    return rhs == lhs;
+}
+
+bool operator !=(
+        const ReturnCode::ReturnCodeValue& lhs,
+        const ReturnCode& rhs) noexcept
+{
+    return rhs != lhs;
 }
 
 const std::map<ReturnCode::ReturnCodeValue, std::string> ReturnCode::to_string_conversion_ =

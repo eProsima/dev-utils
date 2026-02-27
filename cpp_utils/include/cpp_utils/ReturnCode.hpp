@@ -59,6 +59,10 @@ public:
             const fastdds::dds::ReturnCode_t& value);
 
     CPP_UTILS_DllAPI
+    ReturnCode(
+            const ReturnCodeValue& value);
+
+    CPP_UTILS_DllAPI
     std::uint32_t operator ()() const noexcept;
 
     CPP_UTILS_DllAPI
@@ -66,8 +70,16 @@ public:
             const ReturnCode& c) const noexcept;
 
     CPP_UTILS_DllAPI
+    bool operator ==(
+            const ReturnCodeValue& c) const noexcept;
+
+    CPP_UTILS_DllAPI
     bool operator !=(
             const ReturnCode& c) const noexcept;
+
+    CPP_UTILS_DllAPI
+    bool operator !=(
+            const ReturnCodeValue& c) const noexcept;
 
     CPP_UTILS_DllAPI
     bool operator <(
@@ -84,9 +96,8 @@ protected:
     //! Link every ReturnCodeValue available with a string to deserialize
     static const std::map<ReturnCodeValue, std::string> to_string_conversion_;
 
-    //! \c ReturnCode value
-    std::uint32_t value_;
-
+    //! \c ReturnCodeValue
+    ReturnCodeValue value_;
 
     // operator << needs access to the object
     CPP_UTILS_DllAPI
@@ -94,7 +105,27 @@ protected:
             std::ostream& os,
             const ReturnCode& code);
 
+    CPP_UTILS_DllAPI
+    friend bool operator ==(
+            const ReturnCodeValue& lhs,
+            const ReturnCode& rhs) noexcept;
+
+    CPP_UTILS_DllAPI
+    friend bool operator !=(
+            const ReturnCodeValue& lhs,
+            const ReturnCode& rhs) noexcept;
+
 };
+
+CPP_UTILS_DllAPI
+bool operator ==(
+        const ReturnCode::ReturnCodeValue& lhs,
+        const ReturnCode& rhs) noexcept;
+
+CPP_UTILS_DllAPI
+bool operator !=(
+        const ReturnCode::ReturnCodeValue& lhs,
+        const ReturnCode& rhs) noexcept;
 
 //! \c ReturnCode to stream serializator
 CPP_UTILS_DllAPI

@@ -20,6 +20,7 @@
 #include <iomanip>
 #include <thread>
 #include <sstream>
+#include <cstdio>
 
 #include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/time/time_utils.hpp>
@@ -108,7 +109,55 @@ std::string timestamp_to_string(
 
     if (tm)
     {
-        ss << std::put_time(tm, format.c_str());
+        // Replace %Z with a cross-platform "UTC+HH" / "UTC+HH:MM" offset string.
+        // Standard %Z is platform-dependent: on Windows it outputs full localized names,
+        // while on Linux it outputs short abbreviations.
+        std::string processed_format;
+        processed_format.reserve(format.size() + 16);
+        for (std::size_t i = 0; i < format.size(); ++i)
+        {
+            if (format[i] == '%' && i + 1 < format.size() && format[i + 1] == 'Z')
+            {
+                long offset_sec = 0;
+                if (local_time)
+                {
+#if _EPROSIMA_WINDOWS_PLATFORM
+                    // _timezone: seconds west of UTC for standard time (negative when east of UTC)
+                    offset_sec = -(long)_timezone;
+                    if (tm->tm_isdst > 0)
+                    {
+                        // _dstbias: adjustment in seconds when DST is active (typically -3600)
+                        offset_sec -= (long)_dstbias;
+                    }
+#else
+                    // tm_gmtoff: seconds east of UTC, set by localtime()
+                    offset_sec = tm->tm_gmtoff;
+#endif // _EPROSIMA_WINDOWS_PLATFORM
+                }
+
+                const char sign = (offset_sec >= 0) ? '+' : '-';
+                const long abs_offset = (offset_sec >= 0) ? offset_sec : -offset_sec;
+                const long hours = abs_offset / 3600;
+                const long minutes = (abs_offset % 3600) / 60;
+
+                char buf[16];
+                if (minutes != 0)
+                {
+                    snprintf(buf, sizeof(buf), "UTC%c%02ld:%02ld", sign, hours, minutes);
+                }
+                else
+                {
+                    snprintf(buf, sizeof(buf), "UTC%c%02ld", sign, hours);
+                }
+                processed_format += buf;
+                ++i;
+            }
+            else
+            {
+                processed_format += format[i];
+            }
+        }
+        ss << std::put_time(tm, processed_format.c_str());
     }
     else
     {

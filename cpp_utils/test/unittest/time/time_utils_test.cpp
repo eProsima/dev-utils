@@ -377,11 +377,7 @@ TEST(time_utils_test, timestamp_to_string_format)
     // time zone
     {
         // String for Time Zone is different in Windows or Linux
-#if _EPROSIMA_WINDOWS_PLATFORM
-        std::string expected_str = "Coordinated Universal Time";
-#else
-        std::string expected_str = "GMT";
-#endif  // _EPROSIMA_WINDOWS_PLATFORM
+        std::string expected_str = "UTC+00";
 
         std::string date_str = timestamp_to_string(date, "%Z");
         ASSERT_EQ(date_str, expected_str);

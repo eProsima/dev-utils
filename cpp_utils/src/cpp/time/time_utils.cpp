@@ -178,8 +178,8 @@ Timestamp string_to_timestamp(
     if (ss.fail())
     {
         throw PreconditionNotMet(
-                  STR_ENTRY << "Format <" << format << "> to convert string to Timestamp is not valid for timestamp " << timestamp <<
-                      ".");
+                  STR_ENTRY << "Format <" << format << "> to convert string to Timestamp is not valid for timestamp "
+                            << timestamp << ".");
     }
 
     std::time_t utc_time;
@@ -238,8 +238,9 @@ time_t normalize(
     if (0 > time || time > max_value)
     {
         EPROSIMA_LOG_WARNING(TIME_UTILS,
-                "Timestamp value: " << time << " is out of range for Windows, clamping to 0 and " <<
-                max_value);
+                "Timestamp value: "
+                << time << " is out of range for Windows, clamping to 0 and "
+                << max_value);
         normalized_time = std::max((time_t) 0, std::min(max_value, time));
     }
 #endif // if _EPROSIMA_WINDOWS_PLATFORM

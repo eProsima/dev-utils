@@ -20,7 +20,6 @@
 #include <iomanip>
 #include <thread>
 #include <sstream>
-#include <cstdio>
 
 #include <cpp_utils/macros/macros.hpp>
 #include <cpp_utils/time/time_utils.hpp>
@@ -35,6 +34,61 @@
 
 namespace eprosima {
 namespace utils {
+
+static std::string utc_offset_string(
+        const std::tm& tm,
+        bool local_time)
+{
+    if (!local_time)
+    {
+        return "UTC+00";
+    }
+
+    std::ostringstream os;
+    os << std::put_time(&tm, "%z");
+    const std::string z = os.str();
+
+    if (z.empty() || (z[0] != '+' && z[0] != '-'))
+    {
+        return "UTC+00";
+    }
+
+    std::string hh;
+    std::string mm = "00";
+
+    // +HH
+    if (z.size() == 3)
+    {
+        hh = z.substr(1, 2);
+    }
+    // +HHMM
+    else if (z.size() == 5)
+    {
+        hh = z.substr(1, 2);
+        mm = z.substr(3, 2);
+    }
+    // +HH:MM
+    else if (z.size() == 6 && z[3] == ':')
+    {
+        hh = z.substr(1, 2);
+        mm = z.substr(4, 2);
+    }
+    else
+    {
+        return "UTC+00";
+    }
+
+    std::string ret = "UTC";
+    ret += z[0];
+    ret += hh;
+    if (mm != "00")
+    {
+        ret += ":";
+        ret += mm;
+    }
+
+    return ret;
+}
 
 Timestamp now() noexcept
 {
@@ -118,38 +172,7 @@ std::string timestamp_to_string(
         {
             if (format[i] == '%' && i + 1 < format.size() && format[i + 1] == 'Z')
             {
-                long offset_sec = 0;
-                if (local_time)
-                {
-#if _EPROSIMA_WINDOWS_PLATFORM
-                    // _timezone: seconds west of UTC for standard time (negative when east of UTC)
-                    offset_sec = -(long)_timezone;
-                    if (tm->tm_isdst > 0)
-                    {
-                        // _dstbias: adjustment in seconds when DST is active (typically -3600)
-                        offset_sec -= (long)_dstbias;
-                    }
-#else
-                    // tm_gmtoff: seconds east of UTC, set by localtime()
-                    offset_sec = tm->tm_gmtoff;
-#endif // _EPROSIMA_WINDOWS_PLATFORM
-                }
-
-                const char sign = (offset_sec >= 0) ? '+' : '-';
-                const long abs_offset = (offset_sec >= 0) ? offset_sec : -offset_sec;
-                const long hours = abs_offset / 3600;
-                const long minutes = (abs_offset % 3600) / 60;
-
-                char buf[16];
-                if (minutes != 0)
-                {
-                    snprintf(buf, sizeof(buf), "UTC%c%02ld:%02ld", sign, hours, minutes);
-                }
-                else
-                {
-                    snprintf(buf, sizeof(buf), "UTC%c%02ld", sign, hours);
-                }
-                processed_format += buf;
+                processed_format += utc_offset_string(*tm, local_time);
                 ++i;
             }
             else

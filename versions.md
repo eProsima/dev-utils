@@ -8,22 +8,24 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 ## Version 1.5.0
 
 This release includes the following **features**:
-* Update `read_next_command()` for the new topic filter in `DDS-Pipe`
+* Update `read_next_command()` for the new FastDDS-Spy filter
+
 
 This release will include the following **bugfixes**:
 * Fix wrong use of `ReturnCode` enumeration in logs
 * Fix `ReturnCode` comparisons
-* Fix wrong tag in nightly 2.x -> 1.x
+
 
 This release includes the following **CI improvements**:
-* Update `uncrustify`` to `0.78.1` (**ubuntu24** version)
+* Upgrade Linters CI runner image to `ubuntu-24.04`
+* Fix wrong tag in nightly 2.x -> 1.x
 * Remove nightlies that test dev-utils against Fast DDS 2.x
 
 This release includes the following **dependencies update**:
 
 |  | Repository | Old Version | New Version |
 |---|---|---|---|
-| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
+| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.4.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.4.1) |
 | Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.3.4](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.4) | [v2.3.5](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.5) |
 | Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v3.5.0](https://github.com/eProsima/Fast-DDS/releases/tag/v3.5.0) | [v3.6.0](https://github.com/eProsima/Fast-DDS/releases/tag/v3.6.0) |
 

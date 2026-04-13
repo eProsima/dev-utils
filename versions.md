@@ -20,6 +20,8 @@ This release includes the following **CI improvements**:
 * Upgrade Linters CI runner image to `ubuntu-24.04`
 * Fix wrong tag in nightly 2.x -> 1.x
 * Remove nightlies that test dev-utils against Fast DDS 2.x
+* Update foonathan version to 1.4.1
+
 
 This release includes the following **dependencies update**:
 

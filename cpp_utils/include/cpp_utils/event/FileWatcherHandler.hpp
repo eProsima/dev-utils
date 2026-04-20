@@ -18,6 +18,8 @@
 
 #pragma once
 
+#if !defined(__APPLE__)
+
 #include <functional>
 #include <string>
 
@@ -118,4 +120,4 @@ protected:
 } /* namespace utils */
 } /* namespace eprosima */
 
-
+#endif /* !defined(__APPLE__) */

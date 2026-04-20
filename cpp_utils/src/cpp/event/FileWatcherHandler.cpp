@@ -17,6 +17,8 @@
  *
  */
 
+#if !defined(__APPLE__)
+
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/Formatter.hpp>
@@ -112,3 +114,5 @@ void FileWatcherHandler::callback_unset_nts_() noexcept
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
+
+#endif /* !defined(__APPLE__) */

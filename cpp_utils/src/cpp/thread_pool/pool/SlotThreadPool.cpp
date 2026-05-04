@@ -153,6 +153,10 @@ void SlotThreadPool::thread_routine_()
     {
         logDebug(UTILS_THREAD_POOL, "Stopping thread: " << std::this_thread::get_id() << ".");
     }
+	catch (const utils::TimeoutException& e)
+	{
+		logDebug(UTILS_THREAD_POOL, "Timeout. Stopping thread: " << std::this_thread::get_id() << ".");
+	}
 }
 
 } /* namespace utils */

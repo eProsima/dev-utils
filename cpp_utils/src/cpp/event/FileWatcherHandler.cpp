@@ -82,8 +82,8 @@ void FileWatcherHandler::start_filewatcher_nts_()
     }
     catch (const std::exception& e)
     {
-        utils::InitializationException(STR_ENTRY <<
-                "Error creating file watcher: " << e.what());
+        utils::InitializationException(STR_ENTRY
+                << "Error creating file watcher: " << e.what());
     }
 
     filewatcher_started_.store(true);

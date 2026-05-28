@@ -30,7 +30,7 @@ namespace eprosima {
 namespace utils {
 
 //! Forward declaration of OwnerPtr to use it as friendly class in LesseePtr
-template <class T>
+template<class T>
 class OwnerPtr;
 
 /**
@@ -43,7 +43,7 @@ class OwnerPtr;
  *
  * @tparam T Type of the internal data.
  */
-template <class T>
+template<class T>
 class InternalPtrData
 {
 public:

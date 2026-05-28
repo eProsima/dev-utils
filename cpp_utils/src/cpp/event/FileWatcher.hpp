@@ -22,7 +22,7 @@
 
 #if !defined(__APPLE__)
 #include <FileWatch.hpp>
-#endif
+#endif // if !defined(__APPLE__)
 
 namespace eprosima {
 namespace utils {
@@ -43,12 +43,13 @@ class FileWatcher
 {
 public:
 
-    template <typename Callback>
+    template<typename Callback>
     FileWatcher(
             std::string,
             Callback&&)
     {
     }
+
 };
 
 #else

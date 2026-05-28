@@ -35,15 +35,6 @@ InternalPtrData<T>::InternalPtrData() noexcept
 }
 
 template<typename T>
-InternalPtrData<T>::InternalPtrData(
-        InternalPtrData&& other) noexcept
-    : reference_(std::move(other.reference_))
-    , shared_mutex_(std::move(other.shared_mutex_))
-    , deleter_(std::move(other.deleter_))
-{
-}
-
-template<typename T>
 InternalPtrData<T>::~InternalPtrData() noexcept
 {
     // Release data in case it still exists

@@ -18,11 +18,40 @@
 
 #pragma once
 
+#include <string>
+
+#if !defined(__APPLE__)
 #include <FileWatch.hpp>
+#endif
 
 namespace eprosima {
 namespace utils {
 namespace event {
+
+#if defined(__APPLE__)
+
+enum class FileWatchEvent
+{
+    added,
+    removed,
+    modified,
+    renamed_old,
+    renamed_new
+};
+
+class FileWatcher
+{
+public:
+
+    template <typename Callback>
+    FileWatcher(
+            std::string,
+            Callback&&)
+    {
+    }
+};
+
+#else
 
 class FileWatcher : public filewatch::FileWatch<std::string>
 {
@@ -31,6 +60,9 @@ class FileWatcher : public filewatch::FileWatch<std::string>
 
 using FileWatchEvent = filewatch::Event;
 
+#endif // defined(__APPLE__)
+
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
+

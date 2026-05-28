@@ -55,9 +55,9 @@ public:
     //! Create an empty (non valid) data
     InternalPtrData() noexcept;
 
-    //! Move constructor
+    //! Move constructor is disabled because the internal mutex is not movable
     InternalPtrData(
-            InternalPtrData&& other) noexcept;
+            InternalPtrData&& other) noexcept = delete;
 
     /**
      * @brief Destruct object

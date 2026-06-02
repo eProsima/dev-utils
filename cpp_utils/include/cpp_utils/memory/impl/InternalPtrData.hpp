@@ -30,7 +30,7 @@ namespace eprosima {
 namespace utils {
 
 //! Forward declaration of OwnerPtr to use it as friendly class in LesseePtr
-template <class T>
+template<class T>
 class OwnerPtr;
 
 /**
@@ -43,7 +43,7 @@ class OwnerPtr;
  *
  * @tparam T Type of the internal data.
  */
-template <class T>
+template<class T>
 class InternalPtrData
 {
 public:
@@ -55,9 +55,9 @@ public:
     //! Create an empty (non valid) data
     InternalPtrData() noexcept;
 
-    //! Move constructor
+    //! Move constructor is disabled because the internal mutex is not movable
     InternalPtrData(
-            InternalPtrData&& other) noexcept;
+            InternalPtrData&& other) noexcept = delete;
 
     /**
      * @brief Destruct object

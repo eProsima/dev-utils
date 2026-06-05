@@ -1,0 +1,88 @@
+name: macOS aarch64 Nix
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    name: Build on aarch64-darwin
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: System diagnostics
+        run: |
+          echo "==== uname ===="
+          uname -a
+          uname -m
+
+          echo "==== macOS ===="
+          sw_vers
+
+          echo "==== hardware ===="
+          sysctl -n machdep.cpu.brand_string || true
+          sysctl -n hw.memsize || true
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            sandbox = false
+
+      - name: Nix diagnostics
+        run: |
+          echo "==== nix ===="
+          nix --version
+          nix eval --raw --impure --expr 'builtins.currentSystem'
+          echo
+
+          echo "==== nix flake metadata ===="
+          nix flake metadata || true
+
+      - name: Compiler diagnostics outside Nix shell
+        run: |
+          echo "==== system clang ===="
+          which clang || true
+          clang --version || true
+          which clang++ || true
+          clang++ --version || true
+
+      - name: Compiler diagnostics inside Nix shell
+        run: |
+          nix develop --command bash -lc '
+            echo "==== current system ===="
+            nix eval --raw --impure --expr "builtins.currentSystem"
+            echo
+
+            echo "==== compiler ===="
+            echo "CC=$CC"
+            echo "CXX=$CXX"
+            echo "NIX_CC=$NIX_CC"
+            which clang || true
+            clang --version || true
+            which clang++ || true
+            clang++ --version || true
+            echo
+
+            echo "==== flags/env ===="
+            echo "NIX_CFLAGS_COMPILE=$NIX_CFLAGS_COMPILE"
+            echo "NIX_LDFLAGS=$NIX_LDFLAGS"
+            echo "SDKROOT=$SDKROOT"
+            echo "MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET"
+            echo
+
+            echo "==== clang++ include/link search ===="
+            clang++ -v -x c++ - -fsyntax-only < /dev/null || true
+          '
+
+      - name: Build
+        run: |
+          nix build -L --show-trace

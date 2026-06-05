@@ -44,9 +44,6 @@ jobs:
           nix eval --raw --impure --expr 'builtins.currentSystem'
           echo
 
-          echo "==== nix flake metadata ===="
-          nix flake metadata || true
-
       - name: Compiler diagnostics outside Nix shell
         run: |
           echo "==== system clang ===="
@@ -55,9 +52,22 @@ jobs:
           which clang++ || true
           clang++ --version || true
 
+      - name: Verify Nix flake entrypoint
+        run: |
+          if [ ! -f flake.nix ]; then
+            echo "::error file=flake.nix::This workflow expects a top-level flake.nix so it can run 'nix develop' and 'nix build'."
+            echo "Add a flake to the repository, or change the workflow to use the repository's actual Nix entrypoint."
+            exit 1
+          fi
+
+      - name: Nix flake metadata
+        run: |
+          echo "==== nix flake metadata ===="
+          nix flake metadata .
+
       - name: Compiler diagnostics inside Nix shell
         run: |
-          nix develop --command bash -lc '
+          nix develop . --command bash -lc '
             echo "==== current system ===="
             nix eval --raw --impure --expr "builtins.currentSystem"
             echo
@@ -85,4 +95,4 @@ jobs:
 
       - name: Build
         run: |
-          nix build -L --show-trace
+          nix build . -L --show-trace

@@ -56,12 +56,7 @@ void FileWatcherHandler::start_filewatcher_nts_()
 {
     logInfo(UTILS_FILEWATCHER, "Starting FileWatcher in file: " << file_path_);
 
-#if defined(__APPLE__)
-    logWarning(
-        UTILS_FILEWATCHER,
-        "File watching is disabled on macOS because the bundled backend only supports Windows and Linux.");
-    filewatcher_started_.store(true);
-#else
+#if FILEWATCH_ENABLED
     try
     {
         file_watch_handler_ = std::make_unique<FileWatcher>(
@@ -86,8 +81,12 @@ void FileWatcherHandler::start_filewatcher_nts_()
                 << "Error creating file watcher: " << e.what());
     }
 
+#else
+    logWarning(
+        UTILS_FILEWATCHER,
+        "File watching is not available on this platform.");
+#endif // FILEWATCH_ENABLED
     filewatcher_started_.store(true);
-#endif // defined(__APPLE__)
 
     logInfo(UTILS_FILEWATCHER, "Start Watching file: " << file_path_);
 }
@@ -119,4 +118,3 @@ void FileWatcherHandler::callback_unset_nts_() noexcept
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-

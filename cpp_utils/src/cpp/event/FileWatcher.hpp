@@ -20,39 +20,23 @@
 
 #include <string>
 
-#if !defined(__APPLE__)
+// The bundled FileWatch backend is only usable on Windows and Unix. It is disabled
+// on QNX (where it compiles but throws at runtime) and on any other platform.
+#if (defined(_WIN32) || defined(__unix__)) && !defined(__QNX__)
+#define FILEWATCH_ENABLED 1
+#else
+#define FILEWATCH_ENABLED 0
+#endif // FileWatch backend availability
+
+#if FILEWATCH_ENABLED
 #include <FileWatch.hpp>
-#endif // if !defined(__APPLE__)
+#endif // FILEWATCH_ENABLED
 
 namespace eprosima {
 namespace utils {
 namespace event {
 
-#if defined(__APPLE__)
-
-enum class FileWatchEvent
-{
-    added,
-    removed,
-    modified,
-    renamed_old,
-    renamed_new
-};
-
-class FileWatcher
-{
-public:
-
-    template<typename Callback>
-    FileWatcher(
-            std::string,
-            Callback&&)
-    {
-    }
-
-};
-
-#else
+#if FILEWATCH_ENABLED
 
 class FileWatcher : public filewatch::FileWatch<std::string>
 {
@@ -61,9 +45,14 @@ class FileWatcher : public filewatch::FileWatch<std::string>
 
 using FileWatchEvent = filewatch::Event;
 
-#endif // defined(__APPLE__)
+#else
+
+class FileWatcher
+{
+};
+
+#endif // FILEWATCH_ENABLED
 
 } /* namespace event */
 } /* namespace utils */
 } /* namespace eprosima */
-

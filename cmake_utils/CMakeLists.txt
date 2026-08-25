@@ -29,6 +29,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/installation_paths.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/configure_project.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/cmake_options.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/packaging/install_resources.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/packaging/install_package_xml.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/packaging/install_ament_index.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/packaging/eProsima_packaging.cmake)
 
 # Get all variables for project

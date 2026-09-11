@@ -75,14 +75,26 @@ jobs:
           dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Compile and run tests
-        id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+      # Build and test are kept as separate steps so that a compilation failure and a test
+      # failure are immediately distinguishable in the job summary and in the step timings.
+      - name: Compile
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build@v0
         with:
-          packages_names: ${{ env.code_packages_names }}
+          colcon_build_args: '--packages-up-to ${{ env.code_packages_names }}'
           cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
           workspace_dependencies: install
-          ctest_args: --label-exclude "xfail"
+          colcon_meta_file: src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+
+      - name: Run tests
+        id: test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_test@v0
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: install
+          # TEMPORARY: '--repeat until-fail:20' runs every test up to 20 times and stops at the
+          # first failure, to check that the SignalManager lost-wakeup fix removed the flakiness
+          # of SignalEventHandlerTest. Drop this flag before merging, it multiplies the CI time.
+          ctest_args: --label-exclude "xfail" --repeat until-fail:20
           colcon_meta_file: src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
           test_report_artifact: test_report${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}_${{ inputs.os }}_${{ matrix.cmake_build_type }}
 
@@ -92,7 +104,7 @@ jobs:
         if: success() || failure()
         with:
           name: "Report: ${{ inputs.os }} | ${{ matrix.cmake_build_type }} "
-          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          path: "${{ steps.test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           path-replace-backslashes: 'true'
           list-tests: 'failed'

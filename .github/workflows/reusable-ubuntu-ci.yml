@@ -114,26 +114,15 @@ jobs:
           dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build and test are kept as separate steps so that a compilation failure and a test
-      # failure are immediately distinguishable in the job summary and in the step timings.
-      - name: Compile
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build@main
-        with:
-          colcon_build_args: '--packages-up-to ${{ env.cpp_packages_names }}'
-          workspace_dependencies: install
-          cmake_build_type: Debug
-          cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
-
-      - name: Run tests
-        id: test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_test@main
+      - name: Compile and run tests
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
         with:
           packages_names: ${{ env.cpp_packages_names }}
           workspace_dependencies: install
-          # TEMPORARY: '--repeat until-fail:20' runs every test up to 20 times and stops at the
-          # first failure, to check that the SignalManager lost-wakeup fix removed the flakiness
-          # of SignalEventHandlerTest. Drop this flag before merging, it multiplies the CI time.
-          ctest_args: --label-exclude "xfail|xtsan" --repeat until-fail:20
+          cmake_build_type: Debug
+          cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xtsan"
           test_report_artifact: test_report_asan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 
@@ -142,7 +131,7 @@ jobs:
         if: success() || failure()
         with:
           name: "Report: ASAN "
-          path: "${{ steps.test.outputs.ctest_results_path }}*.xml"
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           list-tests: 'failed'
           list-suites: 'failed'
@@ -169,24 +158,9 @@ jobs:
           dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}_tsan
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build and test are kept as separate steps so that a compilation failure and a test
-      # failure are immediately distinguishable in the job summary and in the step timings.
-      - name: Compile
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build@v0
-        env:
-          # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
-          # These issues were fixed in GCC 12 so we upgrade to that version.
-          CC: gcc-12
-          CXX: g++-12
-        with:
-          colcon_build_args: '--packages-up-to ${{ env.cpp_packages_names }}'
-          workspace_dependencies: install
-          cmake_build_type: Debug
-          cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
-
-      - name: Run tests
-        id: test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_test@v0
+      - name: Compile and run tests
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         env:
           # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
           # These issues were fixed in GCC 12 so we upgrade to that version.
@@ -195,10 +169,9 @@ jobs:
         with:
           packages_names: ${{ env.cpp_packages_names }}
           workspace_dependencies: install
-          # TEMPORARY: '--repeat until-fail:20' runs every test up to 20 times and stops at the
-          # first failure, to check that the SignalManager lost-wakeup fix removed the flakiness
-          # of SignalEventHandlerTest. Drop this flag before merging, it multiplies the CI time.
-          ctest_args: --label-exclude "xfail|xasan" --repeat until-fail:20
+          cmake_build_type: Debug
+          cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xasan"
           test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
       - name: Test Report
@@ -206,7 +179,7 @@ jobs:
         if: success() || failure()
         with:
           name: "Report: TSAN "
-          path: "${{ steps.test.outputs.ctest_results_path }}*.xml"
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           list-tests: 'failed'
           list-suites: 'failed'

@@ -20,7 +20,7 @@
 #pragma once
 
 #include <algorithm>
-//#include <chrono>
+#include <chrono>
 #include <thread>
 
 #include <cpp_utils/exception/InconsistencyException.hpp>
@@ -156,13 +156,14 @@ void SignalManager<SigVal>::signal_handler_thread_routine_() noexcept
 {
     // Maximum time this thread blocks in signal_received_cv_ before re-checking signals_received_ ,
     // and thus maximum time a signal may take to be handled when its notification is missed.
-    //constexpr std::chrono::milliseconds MAXIMUM_WAIT_TIME(100);
+    constexpr std::chrono::milliseconds MAXIMUM_WAIT_TIME(100);
 
     while (!signal_handler_thread_stop_.load())
     {
         std::unique_lock<std::mutex> lock(signal_received_cv_mutex_);
-        signal_received_cv_.wait(
+        signal_received_cv_.wait_for(
             lock,
+            MAXIMUM_WAIT_TIME,
             [this]
             {
                 return signals_received_.load() > 0 ||

@@ -54,4 +54,10 @@ macro(eprosima_packaging)
 
     eprosima_install_resources()
 
+    # If compiled with ament, install the index ressources
+    if(DEFINED ENV{AMENT_PREFIX_PATH})
+        install_package_xml()
+        install_ament_index()
+    endif()
+
 endmacro()

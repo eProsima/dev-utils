@@ -35,6 +35,61 @@
 namespace eprosima {
 namespace utils {
 
+static std::string utc_offset_string(
+        const std::tm& tm,
+        bool local_time)
+{
+    if (!local_time)
+    {
+        return "UTC+00";
+    }
+
+    std::ostringstream os;
+    os << std::put_time(&tm, "%z");
+    const std::string z = os.str();
+
+    if (z.empty() || (z[0] != '+' && z[0] != '-'))
+    {
+        return "UTC+00";
+    }
+
+    std::string hh;
+    std::string mm = "00";
+
+    // +HH
+    if (z.size() == 3)
+    {
+        hh = z.substr(1, 2);
+    }
+    // +HHMM
+    else if (z.size() == 5)
+    {
+        hh = z.substr(1, 2);
+        mm = z.substr(3, 2);
+    }
+    // +HH:MM
+    else if (z.size() == 6 && z[3] == ':')
+    {
+        hh = z.substr(1, 2);
+        mm = z.substr(4, 2);
+    }
+    else
+    {
+        return "UTC+00";
+    }
+
+    std::string ret = "UTC";
+    ret += z[0];
+    ret += hh;
+    if (mm != "00")
+    {
+        ret += ":";
+        ret += mm;
+    }
+
+    return ret;
+}
+
 Timestamp now() noexcept
 {
     return Timeclock::now();
@@ -108,7 +163,24 @@ std::string timestamp_to_string(
 
     if (tm)
     {
-        ss << std::put_time(tm, format.c_str());
+        // Replace %Z with a cross-platform "UTC+HH" / "UTC+HH:MM" offset string.
+        // Standard %Z is platform-dependent: on Windows it outputs full localized names,
+        // while on Linux it outputs short abbreviations.
+        std::string processed_format;
+        processed_format.reserve(format.size() + 16);
+        for (std::size_t i = 0; i < format.size(); ++i)
+        {
+            if (format[i] == '%' && i + 1 < format.size() && format[i + 1] == 'Z')
+            {
+                processed_format += utc_offset_string(*tm, local_time);
+                ++i;
+            }
+            else
+            {
+                processed_format += format[i];
+            }
+        }
+        ss << std::put_time(tm, processed_format.c_str());
     }
     else
     {
@@ -129,8 +201,8 @@ Timestamp string_to_timestamp(
     if (ss.fail())
     {
         throw PreconditionNotMet(
-                  STR_ENTRY << "Format <" << format << "> to convert string to Timestamp is not valid for timestamp " << timestamp <<
-                      ".");
+                  STR_ENTRY << "Format <" << format << "> to convert string to Timestamp is not valid for timestamp "
+                            << timestamp << ".");
     }
 
     std::time_t utc_time;
@@ -189,8 +261,9 @@ time_t normalize(
     if (0 > time || time > max_value)
     {
         EPROSIMA_LOG_WARNING(TIME_UTILS,
-                "Timestamp value: " << time << " is out of range for Windows, clamping to 0 and " <<
-                max_value);
+                "Timestamp value: "
+                << time << " is out of range for Windows, clamping to 0 and "
+                << max_value);
         normalized_time = std::max((time_t) 0, std::min(max_value, time));
     }
 #endif // if _EPROSIMA_WINDOWS_PLATFORM

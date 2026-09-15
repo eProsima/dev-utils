@@ -20,6 +20,7 @@
 #pragma once
 
 #include <algorithm>
+#include <chrono>
 #include <thread>
 
 #include <cpp_utils/exception/InconsistencyException.hpp>
@@ -29,16 +30,16 @@ namespace eprosima {
 namespace utils {
 namespace event {
 
-template <Signal SigVal>
+template<Signal SigVal>
 std::recursive_mutex SignalManager<SigVal>::instance_mutex_;
 
-template <Signal SigVal>
+template<Signal SigVal>
 std::condition_variable SignalManager<SigVal>::signal_received_cv_;
 
-template <Signal SigVal>
+template<Signal SigVal>
 std::atomic<uint32_t> SignalManager<SigVal>::signals_received_(0);
 
-template <Signal SigVal>
+template<Signal SigVal>
 SignalManager<SigVal>& SignalManager<SigVal>::get_instance() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(instance_mutex_);
@@ -47,7 +48,7 @@ SignalManager<SigVal>& SignalManager<SigVal>::get_instance() noexcept
     return instance_;
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 SignalManager<SigVal>::SignalManager() noexcept
     : signal_handler_thread_stop_(false)
     , current_last_id_(0)
@@ -61,7 +62,7 @@ SignalManager<SigVal>::SignalManager() noexcept
         &SignalManager<SigVal>::signal_handler_thread_routine_, this);
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 SignalManager<SigVal>::~SignalManager() noexcept
 {
     {
@@ -76,7 +77,7 @@ SignalManager<SigVal>::~SignalManager() noexcept
             "Destroying SignalManager in signal: " << SigVal << ".");
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 UniqueCallbackId SignalManager<SigVal>::register_callback(
         std::function<void()> callback) noexcept
 {
@@ -91,7 +92,7 @@ UniqueCallbackId SignalManager<SigVal>::register_callback(
     return new_id;
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 void SignalManager<SigVal>::unregister_callback(
         UniqueCallbackId id)
 {
@@ -106,7 +107,7 @@ void SignalManager<SigVal>::unregister_callback(
             "Erase callback from signal " << SigVal << ".");
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 UniqueCallbackId SignalManager<SigVal>::new_unique_id_() noexcept
 {
     std::lock_guard<std::mutex> lock(last_id_mutex_);
@@ -114,7 +115,7 @@ UniqueCallbackId SignalManager<SigVal>::new_unique_id_() noexcept
     return current_last_id_;
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 void SignalManager<SigVal>::signal_handler_function_(
         int sigval) noexcept
 {
@@ -125,7 +126,7 @@ void SignalManager<SigVal>::signal_handler_function_(
     signal_received_();
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 void SignalManager<SigVal>::signal_received_() noexcept
 {
     // Normally \c signals_received_ should be guarded by \c signal_received_cv_mutex_ in order to prevent
@@ -136,7 +137,7 @@ void SignalManager<SigVal>::signal_received_() noexcept
     signal_received_cv_.notify_one();
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 void SignalManager<SigVal>::signal_handler_routine_() noexcept
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
@@ -150,18 +151,23 @@ void SignalManager<SigVal>::signal_handler_routine_() noexcept
     }
 }
 
-template <Signal SigVal>
+template<Signal SigVal>
 void SignalManager<SigVal>::signal_handler_thread_routine_() noexcept
 {
+    // Maximum time this thread blocks in signal_received_cv_ before re-checking signals_received_ ,
+    // and thus maximum time a signal may take to be handled when its notification is missed.
+    constexpr std::chrono::milliseconds MAXIMUM_WAIT_TIME(100);
+
     while (!signal_handler_thread_stop_.load())
     {
         std::unique_lock<std::mutex> lock(signal_received_cv_mutex_);
-        signal_received_cv_.wait(
+        signal_received_cv_.wait_for(
             lock,
+            MAXIMUM_WAIT_TIME,
             [this]
             {
                 return signals_received_.load() > 0 ||
-                signal_handler_thread_stop_.load();
+                       signal_handler_thread_stop_.load();
             });
 
         if (signal_handler_thread_stop_.load())

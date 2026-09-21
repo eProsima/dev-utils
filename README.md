@@ -5,8 +5,6 @@
 > This version of *eProsima Dev Utils* is no longer maintained and will receive no further releases, bugfixes or security updates.
 > Please migrate to the [latest release](https://github.com/eProsima/dev-utils/releases/latest), which is still compatible with *eProsima Fast DDS* v2.
 
-<a href="http://www.eprosima.com"><img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSd0PDlVz1U_7MgdTe0FRIWD0Jc9_YH-gGi0ZpLkr-qgCI6ZEoJZ5GBqQ" align="left" hspace="8" vspace="2" width="100" height="100" ></a>
-
 [![License](https://img.shields.io/github/license/eProsima/dev-utils.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Releases](https://img.shields.io/github/v/release/eProsima/dev-utils?sort=semver)](https://github.com/eProsima/dev-utils/releases)
 [![Issues](https://img.shields.io/github/issues/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/issues)
@@ -14,6 +12,8 @@
 [![Stars](https://img.shields.io/github/stars/eProsima/dev-utils.svg)](https://github.com/eProsima/dev-utils/stargazers)
 [![test](https://github.com/eProsima/dev-utils/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/dev-utils/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/eProsima/dev-utils/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/dev-utils)
+
+<a href="http://www.eprosima.com"><img src="resources/images/eprosima_logo.svg" alt="eProsima" width="100"></a>
 
 The packages that conform this repository are:
 

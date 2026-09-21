@@ -5,8 +5,34 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Forthcoming
 
+## Version 0.7.0
+
+**This is the last release of the 0.x series.
+The `0.x` branch has reached its End-of-Life (EOL) and will receive no further releases, bugfixes or security updates.
+Users are encouraged to migrate to the latest stable version of **dev-utils**.**
+
+This release includes the following features in `cmake-utils` project:
+* Extend `compile_tool` function with an optional argument to set extra include directories.
+
 This release includes the following features in `cpp-utils` project:
+* Add function to convert a number of bytes (e.g. `123456`) to a formatted string (e.g. `123.46KB`).
 * Add functions to convert QosPolicy's ids and masks to string.
+
+This release includes the following features in `py-utils` project:
+* Update the package setup to declare the testing dependencies as an extra.
+
+This release includes the following **CI improvements**:
+* Support multiple versions of Fast DDS in the CI.
+* Reuse the workflows of the same branch and inherit their secrets.
+* Empty the XTSAN tests list.
+
+This release includes the following **dependencies update**:
+
+|  | Repository | Old Version | New Version |
+|---|---|---|---|
+| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) | [v1.3.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.2.0](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.0) | [v2.2.8](https://github.com/eProsima/Fast-CDR/releases/tag/v2.2.8) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v2.14.0](https://github.com/eProsima/Fast-DDS/releases/tag/v2.14.0) | [v2.14.7](https://github.com/eProsima/Fast-DDS/releases/tag/v2.14.7) |
 
 ## Version 0.6.0
 

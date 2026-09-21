@@ -3,7 +3,6 @@
 > [!WARNING]
 > **The `0.x` branch has reached its End-of-Life (EOL).**
 > This version of *eProsima Dev Utils* is no longer maintained and will receive no further releases, bugfixes or security updates.
-> Please migrate to the [latest release](https://github.com/eProsima/dev-utils/releases/latest), which is still compatible with *eProsima Fast DDS* v2.
 
 [![License](https://img.shields.io/github/license/eProsima/dev-utils.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Releases](https://img.shields.io/github/v/release/eProsima/dev-utils?sort=semver)](https://github.com/eProsima/dev-utils/releases)

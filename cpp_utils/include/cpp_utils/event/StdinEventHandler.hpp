@@ -97,6 +97,21 @@ public:
     CPP_UTILS_DllAPI
     bool is_ignoring_input() const noexcept;
 
+    /**
+     * @brief Set a callback invoked when the user presses Tab.
+     *
+     * The callback receives the full current input line and returns a list of
+     * candidate completions for the last whitespace-delimited token. The handler
+     * then performs standard completion behavior: if a single match (or a longer
+     * common prefix) exists, the token is extended in place; if several matches
+     * exist, they are listed below the prompt, which is then redrawn.
+     *
+     * Pass an empty std::function to disable Tab completion.
+     */
+    CPP_UTILS_DllAPI
+    void set_tab_completion_callback(
+            std::function<std::vector<std::string>(const std::string&)> callback) noexcept;
+
 protected:
 
     /**
@@ -166,6 +181,9 @@ private:
 
     //! Whether to ignore input (e.g. during interactive commands like echo)
     std::atomic<bool> ignore_input_{false};
+
+    //! Optional callback invoked on Tab to obtain completion candidates for the current line
+    std::function<std::vector<std::string>(const std::string&)> tab_completion_callback_;
 
 };
 

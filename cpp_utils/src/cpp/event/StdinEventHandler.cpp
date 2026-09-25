@@ -550,6 +550,66 @@ void StdinEventHandler::stdin_listener_thread_routine_() noexcept
                 cursor_index = 0;
                 break;
             }
+            else if (c == '\t')
+            {
+                if (!tab_completion_callback_)
+                {
+                    continue;
+                }
+
+                std::vector<std::string> suggestions = tab_completion_callback_(read_str);
+                if (suggestions.empty())
+                {
+                    continue;
+                }
+
+                // Locate the last whitespace-delimited token in the line
+                size_t last_space = read_str.find_last_of(" \t");
+                size_t token_start = (last_space == std::string::npos) ? 0 : last_space + 1;
+                std::string current_token = read_str.substr(token_start);
+
+                // Compute the longest common prefix of all suggestions
+                std::string lcp = suggestions[0];
+                for (size_t i = 1; i < suggestions.size(); i++)
+                {
+                    size_t j = 0;
+                    while (j < lcp.size() && j < suggestions[i].size() && lcp[j] == suggestions[i][j])
+                    {
+                        j++;
+                    }
+                    lcp.resize(j);
+                }
+
+                if (suggestions.size() == 1 || lcp.size() > current_token.size())
+                {
+                    // Replace the last token with the unique match or the extended common prefix
+                    const std::string completion = (suggestions.size() == 1) ? suggestions[0] : lcp;
+                    std::string new_line = read_str.substr(0, token_start) + completion;
+                    update_line(">> ", read_str, cursor_index,
+                            [new_line](std::string& line, size_t& index)
+                            {
+                                line = new_line;
+                                index = line.size();
+                            });
+                }
+                else
+                {
+                    // Several matches: move cursor to end of line, list candidates, redraw prompt
+                    update_line(">> ", read_str, cursor_index,
+                            [](std::string& line, size_t& index)
+                            {
+                                index = line.size();
+                            });
+
+                    std::cout << "\n";
+                    for (const auto& s : suggestions)
+                    {
+                        std::cout << "  " << s << "\n";
+                    }
+                    std::cout << "\033[38;5;82m" << ">> " << "\033[0m" << read_str << std::flush;
+                    cursor_index = read_str.size();
+                }
+            }
             else
             {
                 char ch = static_cast<char>(c);
@@ -590,6 +650,12 @@ void StdinEventHandler::set_ignore_input(
 bool StdinEventHandler::is_ignoring_input() const noexcept
 {
     return ignore_input_.load(std::memory_order_relaxed);
+}
+
+void StdinEventHandler::set_tab_completion_callback(
+        std::function<std::vector<std::string>(const std::string&)> callback) noexcept
+{
+    tab_completion_callback_ = std::move(callback);
 }
 
 } /* namespace event */

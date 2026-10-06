@@ -114,6 +114,24 @@ void SlotThreadPool::slot(
     }
 }
 
+void SlotThreadPool::remove_slot(
+        const TaskId& task_id)
+{
+    // Lock to access the slot map
+    std::lock_guard<std::mutex> lock(slots_mutex_);
+
+    auto it = slots_.find(task_id);
+
+    if (it == slots_.end())
+    {
+        throw utils::ValueNotAllowedException(STR_ENTRY << "Slot " << task_id << " does not exist.");
+    }
+    else
+    {
+        slots_.erase(it);
+    }
+}
+
 utils::event::AwakeReason SlotThreadPool::wait_all_consumed(
         const utils::Duration_ms& timeout /* = 0 */)
 {

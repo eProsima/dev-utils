@@ -153,10 +153,13 @@ void SlotThreadPool::thread_routine_()
             slots_mutex_.lock();
 
             auto it = slots_.find(task_id);
-            // Check the slot is correct
+            // The slot may have been removed after the task was emitted and before it was consumed
             if (it == slots_.end())
             {
-                utils::tsnh(STR_ENTRY << "Slot in Queue must be stored in slots register");
+                slots_mutex_.unlock();
+                logDebug(UTILS_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " skipping task of removed slot "
+                                                       << task_id << ".");
+                continue;
             }
 
             Task& task = it->second;

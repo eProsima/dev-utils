@@ -7,11 +7,11 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Version 1.5.4
 
-This release will include the following **bugfixes**:
-* Prevent `SignalManager` from missing signals by periodically re-checking for received signals, solving flaky tests
+This release includes the following **improvements**:
+* Run the ``Uncrustify`` CI workflow only in pull requests
 
-This release will include the following **improvements**:
-* Run the Uncrustify CI workflow only in pull requests
+This release includes the following **bugfixes**:
+* Solve flaky tests
 
 This release includes the following **Dependencies Update**:
 

@@ -5,6 +5,22 @@ The *Forthcoming* section includes those features added in `main` branch that ar
 
 ## Forthcoming
 
+## Version 1.5.4
+
+This release includes the following **improvements**:
+* Run the ``Uncrustify`` CI workflow only in pull requests
+
+This release includes the following **bugfixes**:
+* Solve flaky tests
+
+This release includes the following **Dependencies Update**:
+
+|  | Repository | Old Version | New Version |
+|---|---|---|---|
+| Foonathan Memory Vendor | [eProsima/foonathan_memory_vendor](https://github.com/eProsima/foonathan_memory_vendor) | [v1.4.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.4.1) | [v1.4.1](https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.4.1) |
+| Fast CDR | [eProsima/Fast-CDR](https://github.com/eProsima/Fast-CDR) | [v2.3.6](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.6) | [v2.3.6](https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.6) |
+| Fast DDS | [eProsima/Fast-DDS](https://github.com/eProsima/Fast-DDS) | [v3.6.2](https://github.com/eProsima/Fast-DDS/releases/tag/v3.6.2) | [v3.6.2](https://github.com/eProsima/Fast-DDS/releases/tag/v3.6.2) |
+
 ## Version 1.5.3
 
 This release will include the following **improvements**:
